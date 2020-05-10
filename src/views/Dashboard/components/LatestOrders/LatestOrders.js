@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -20,6 +20,7 @@ import {
   TableSortLabel
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import { getStockDataBase } from '../../../../request/stockAPI';
 
 import mockData from './data';
 import { StatusBullet } from 'components';
@@ -56,6 +57,17 @@ const LatestOrders = props => {
   const classes = useStyles();
 
   const [orders] = useState(mockData);
+  const [data, setData] = useState({});
+
+  const getUserData = () => {
+    getStockDataBase(response => {
+      setData(response);
+    });
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   return (
     <Card

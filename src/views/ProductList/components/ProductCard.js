@@ -107,7 +107,10 @@ const ProductCard = props => {
   };
 
   useEffect(() => {
-    pedalePossibleCreate();
+    if (components !== undefined){
+      pedalePossibleCreate();
+    }
+    
   }, [product]);
 
   return (

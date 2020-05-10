@@ -62,7 +62,9 @@ const UsersByDevice = props => {
   });
 
   function generateRandomColor() {
-    return theme.palette.primary.main;
+    const randomColor = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6)
+    console.log("random color",randomColor);
+    return randomColor;
   }
 
   function formateData() {

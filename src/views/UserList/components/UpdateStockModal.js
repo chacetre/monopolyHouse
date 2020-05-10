@@ -94,7 +94,7 @@ function UpdateStockModal({ open, onClose, composent, className, ...rest }) {
   const saveOtherUpdateClose = () => {
     saveInDataBase();
     setValue('');
-    setStock('');
+    setStock(0);
   };
 
   useEffect(() => {

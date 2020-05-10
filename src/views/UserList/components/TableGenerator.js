@@ -103,7 +103,7 @@ const TableGenerator = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {componentInfo[keyName].map(user => (
+                      {Object.values(componentInfo[keyName]).map(user => (
                         <StyledTableRow>
                           <StyledTableCell>{user.label}</StyledTableCell>
                           <StyledTableCell>{user.stock}</StyledTableCell>
