@@ -116,7 +116,6 @@ function AddPedalModal({
 
   const saveClose = () => {
     console.log('pedalCurrent', pedalCurrent);
-    if (pedalCurrent.title === undefined || pedalCurrent.title === '') return;
     const today = new Date();
 
     let pedalScheme = {
@@ -134,10 +133,10 @@ function AddPedalModal({
     if (pedalInformations !== undefined) {
       pedalScheme = {
         ...pedalScheme,
-        id: pedalInformations.index
+        id: pedalInformations.id
       };
       console.log('save scheme', pedalScheme);
-      saveInDataBase(pedalInformations.index, pedalScheme);
+      saveInDataBase(pedalInformations.id, pedalScheme);
     } else {
       console.log('save scheme', pedalScheme);
       saveInDataBase(indexCurrentPedal, pedalScheme);
