@@ -19,6 +19,7 @@
 ## Contributors
 
 - [Christopher Escalon](https://github.com/escalonc) - Updating packages and fixing deprecated for spacing
+
 ## [0.2.0] 2019-05-13
 
 ## Updates
