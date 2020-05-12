@@ -54,14 +54,7 @@ function UpdateStockModal({ open, onClose, composent, className, ...rest }) {
 
   const handleChangeValeur = event => {
     setValue(event.target.value);
-
-    let stock = 0;
-    if (sousType !== undefined) {
-      stock = composentL.componentsStock[type][sousType][0].stock;
-    } else stock = composentL.componentsStock[type].values[0].stock;
-
-    console.log('stock', stock);
-
+    const stock = composentL.componentsStock[type][sousType][event.target.value].stock;
     setStock(stock);
   };
 
@@ -70,7 +63,11 @@ function UpdateStockModal({ open, onClose, composent, className, ...rest }) {
     console.log('values', values);
 
     setType(values[0]);
-    if (values.length > 1) setSousType(values[1]);
+    if (values.length > 1) {
+      setSousType(values[1]);
+      setStock()
+    }
+
     else setSousType(values[0]);
 
     console.log('event', values);
@@ -180,7 +177,7 @@ function UpdateStockModal({ open, onClose, composent, className, ...rest }) {
                 >
                   {composentL.componentsStock !== undefined &&
                     sousType !== undefined &&
-                    composentL.componentsStock[type][sousType].map((option, index) => (
+                    Object.values(composentL.componentsStock[type][sousType]).map((option, index) => (
                       <MenuItem key={index} value={index}>
                         {option.label}
                       </MenuItem>
