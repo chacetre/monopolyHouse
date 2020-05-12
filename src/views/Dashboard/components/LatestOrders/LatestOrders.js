@@ -58,6 +58,45 @@ const LatestOrders = props => {
 
   const [orders] = useState(mockData);
   const [data, setData] = useState({});
+  const [listLowStock, setListLowStock] = useState([]);
+
+  function getStockLow(){
+    if (data === undefined || data === null || data.componentsStock === undefined){
+      console.log('data',data)
+      return;
+    }
+
+    const listComponentLow = [];
+
+    console.log('data',data)
+    const listType = Object.values(data.componentsStock);
+
+    listType.forEach(element => {
+      const listSousType = Object.keys(element)
+
+      listSousType.forEach(sousType => {
+        if (sousType !== 'typeAvailable'){
+
+          Object.values(element[sousType]).forEach(value => {
+            
+            if (value.stock < 4){
+            const scheme = {
+              type : sousType,
+              value: value.label,
+              stock: value.stock
+            }
+
+            listComponentLow.push(scheme);
+          }
+          });
+        }
+      });
+      
+    });
+
+    console.log('listComponentLow',listComponentLow)
+    setListLowStock(listComponentLow);
+  }
 
   const getUserData = () => {
     getStockDataBase(response => {
@@ -69,21 +108,19 @@ const LatestOrders = props => {
     getUserData();
   }, []);
 
+  useEffect(() => {
+    if (data !== undefined){
+      getStockLow();
+    }
+    
+  }, [data]);
+
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
       <CardHeader
-        action={
-          <Button
-            color="primary"
-            size="small"
-            variant="outlined"
-          >
-            New entry
-          </Button>
-        }
         title="Liste de course"
       />
       <Divider />
@@ -93,44 +130,24 @@ const LatestOrders = props => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Order Ref</TableCell>
-                  <TableCell>Customer</TableCell>
-                  <TableCell sortDirection="desc">
-                    <Tooltip
-                      enterDelay={300}
-                      title="Sort"
-                    >
-                      <TableSortLabel
-                        active
-                        direction="desc"
-                      >
-                        Date
-                      </TableSortLabel>
-                    </Tooltip>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Composant</TableCell>
+                  <TableCell>
+Nombre restant
                   </TableCell>
-                  <TableCell>Status</TableCell>
+                  
                 </TableRow>
               </TableHead>
               <TableBody>
-                {orders.map(order => (
+                {listLowStock.map(order => (
                   <TableRow
                     hover
-                    key={order.id}
+                    
                   >
-                    <TableCell>{order.ref}</TableCell>
-                    <TableCell>{order.customer.name}</TableCell>
+                    <TableCell>{order.type}</TableCell>
+                    <TableCell>{order.value}</TableCell>
                     <TableCell>
-                      
-                    </TableCell>
-                    <TableCell>
-                      <div className={classes.statusContainer}>
-                        <StatusBullet
-                          className={classes.status}
-                          color={statusColors[order.status]}
-                          size="sm"
-                        />
-                        {order.status}
-                      </div>
+                    {order.stock}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -139,16 +156,6 @@ const LatestOrders = props => {
           </div>
         </PerfectScrollbar>
       </CardContent>
-      <Divider />
-      <CardActions className={classes.actions}>
-        <Button
-          color="primary"
-          size="small"
-          variant="text"
-        >
-          View all <ArrowRightIcon />
-        </Button>
-      </CardActions>
     </Card>
   );
 };
