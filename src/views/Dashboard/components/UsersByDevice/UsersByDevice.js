@@ -9,7 +9,8 @@ import {
   CardContent,
   IconButton,
   Divider,
-  Typography
+  Typography, 
+  colors
 } from '@material-ui/core';
 import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
@@ -46,6 +47,9 @@ const UsersByDevice = props => {
   const theme = useTheme();
   const [dataPedals, setDataPedals] = useState({});
   const [pedalsList, setPedalsList] = useState([]);
+ const colorBase = [colors.red, colors.green, colors.blue, colors.yellow];
+ const colorNumber = [300, 400, 500, 600, 700, 800, 900];
+
 
   const [data, setData] = useState({
     datasets: [
@@ -61,10 +65,17 @@ const UsersByDevice = props => {
     labels: ['Desktop', 'Tablet', 'Mobile']
   });
 
+  function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min +1)) + min;
+  }
+
   function generateRandomColor() {
-    const randomColor = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6)
-    console.log("random color",randomColor);
-    return randomColor;
+    const generateRandomBase = getRandomIntInclusive(0,colorBase.length-1);
+    const generateRandomShade = getRandomIntInclusive(0,colorNumber.length-1);
+    
+    return colorBase[generateRandomBase][colorNumber[generateRandomShade]];
   }
 
   function formateData() {
