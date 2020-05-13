@@ -85,6 +85,8 @@ function AddPedalModal({
   }
 
   const handleChange = (event, user, keyName) => {
+ event.persist();
+    console.log("event change",event.target.value );
     setPedalCurrent(prevFormState => ({
       ...prevFormState,
       components: {

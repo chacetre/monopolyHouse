@@ -107,7 +107,7 @@ const TableSelector = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {componentsInfo[keyName].map(user => (
+                      {Object.values(componentsInfo[keyName]).map(user => (
                         <StyledTableRow>
                           <StyledTableCell>{user.label}</StyledTableCell>
                           <StyledTableCell>

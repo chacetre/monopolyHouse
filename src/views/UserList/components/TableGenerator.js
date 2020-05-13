@@ -73,6 +73,8 @@ const TableGenerator = props => {
   const classes = useStyles();
   const [componentInfo, setComponentInfo] = useState({});
 
+  
+
   useEffect(() => {
     console.log('component tableGE', listTable);
     if (listTable !== undefined) {
