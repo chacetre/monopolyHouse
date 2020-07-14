@@ -50,7 +50,7 @@ const Sidebar = props => {
     },
     {
       title: 'Stock',
-      href: '/users',
+      href: '/stock',
       icon: <PeopleIcon />
     },
     {
