@@ -15,8 +15,10 @@ import {
   TableRow,
   TableContainer,
   CardHeader,
-  Grid
+  Grid,
+  IconButton
 } from '@material-ui/core';
+import DeleteRounded from '@material-ui/icons/DeleteRounded';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -77,6 +79,12 @@ const TableSelector = props => {
     onChange(event, user, keyName);
   };
 
+  function handleDelete(component){
+    console.log(component);
+    console.log('productData', listTable);
+    
+  }
+
   useEffect(() => {
     console.log('component tableGE', listTable);
     if (listTable !== undefined) {
@@ -124,6 +132,7 @@ const TableSelector = props => {
                               type="number"
                             />
                           </StyledTableCell>
+                          <StyledTableCell><IconButton onClick={() => handleDelete(user)}> <DeleteRounded/></IconButton></StyledTableCell>
                         </StyledTableRow>
                       ))}
                     </TableBody>

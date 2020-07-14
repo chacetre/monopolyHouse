@@ -75,7 +75,7 @@ function AddPedalModal({
 }) {
   const classes = useStyles();
 
-  const [componentCurrent, setComponentCurrent] = useState('resistor');
+  const [componentCurrent, setComponentCurrent] = useState('aop');
   const [componentsList, setComponentsList] = useState([]);
   const [pedalCurrent, setPedalCurrent] = useState({});
   const [indexCurrentPedal, setIndexCurrentPedal] = useState(0);

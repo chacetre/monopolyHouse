@@ -13,9 +13,11 @@ import {
   TableContainer,
   TableCell,
   Button,
-  TableRow
+  TableRow,
+  IconButton
 } from '@material-ui/core';
 import { getStockDataBase } from '../../../request/stockAPI';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -65,6 +67,9 @@ const StyledTableRow = withStyles(theme => ({
 function InformationsPedalModal({ open, onClose, productData, className, ...rest }) {
   const classes = useStyles();
   
+
+  
+
   const cancelClose = () => {
     onClose(false);
   };
@@ -92,7 +97,8 @@ function InformationsPedalModal({ open, onClose, productData, className, ...rest
           <Divider />
           <CardContent>
             {Object.keys(productData.components).map((component, i) => (
-              <TableContainer className={classes.container}>
+              <>{(productData.components[component].quantity !== '0' ||productData.components[component].quantity !== '' ) 
+              && <TableContainer className={classes.container}>
                 <Table stickyHeader size="small">
                   <TableBody>
                     <StyledTableRow>
@@ -101,7 +107,8 @@ function InformationsPedalModal({ open, onClose, productData, className, ...rest
                     </StyledTableRow>
                   </TableBody>
                 </Table>
-              </TableContainer>
+              </TableContainer>}
+              </>
             ))}
           </CardContent>
           <Divider />
