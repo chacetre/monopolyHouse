@@ -54,15 +54,17 @@ const ProductCard = props => {
   };
 
   function componentAvailable(component) {
+
+    console.log('component', component);
     const splitPathCompo = component.path.split('/');
-    console.log('splitPathCompo', splitPathCompo);
+    
+
     const valueCurrent =
       components.componentsStock[splitPathCompo[0]][splitPathCompo[1]];
     const index = valueCurrent.findIndex(p => p.value == splitPathCompo[2]);
 
     const stockComponents = valueCurrent[index].stock;
-    console.log('stockComponents',stockComponents);
-    console.log('quantity',component.quantity);
+
     return stockComponents > component.quantity;
   }
 
@@ -108,7 +110,7 @@ const ProductCard = props => {
 
   useEffect(() => {
     if (components !== undefined){
-      pedalePossibleCreate();
+      //pedalePossibleCreate();
     }
     
   }, [product]);
