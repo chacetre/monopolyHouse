@@ -1,74 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { makeStyles, withStyles } from '@material-ui/styles';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import clsx from "clsx";
+import { makeStyles, withStyles } from "@material-ui/styles";
 import {
   Modal,
   Card,
   CardHeader,
   CardContent,
-  Table,
-  TableBody,
   Divider,
-  TableContainer,
-  TableCell,
   Button,
-  TableRow,
+  Typography,
+  Grid,
+  colors, 
   IconButton
-} from '@material-ui/core';
-import { getStockDataBase } from '../../../request/stockAPI';
+} from "@material-ui/core";
+
+import CloseRounded from '@material-ui/icons/CloseRounded';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    outline: 'none',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    outline: "none",
     boxShadow: theme.shadows[20],
-    width: '40%',
-    maxHeight: '90%',
-    overflowY: 'auto',
-    maxWidth: '100%'
+    width: "40%",
+    maxHeight: "90%",
+    overflowY: "auto",
+    maxWidth: "100%",
   },
   actions: {
-    justifyContent: 'flex-end'
+    justifyContent: "flex-end",
   },
   center: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   divider: {
-    margin: 10
+    margin: 10,
+  },
+  buttonClose: {
+    backgroundColor : colors.red[500],
+    color : colors.grey[50],
+    
+  }, 
+  buttonModify :{
+    backgroundColor : colors.blue[500],
+    color : colors.grey[50],
+    marginRight: 5
   }
 }));
 
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white
-  },
-  body: {
-    fontSize: 14,
-    width : 100
-  }
-}))(TableCell);
 
-const StyledTableRow = withStyles(theme => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default
-    }
-  }
-}))(TableRow);
-
-function InformationsPedalModal({ open, onClose, productData, className, ...rest }) {
+function InformationsPedalModal({
+  open,
+  onClose,
+  productData,
+  className,
+  ...rest
+}) {
   const classes = useStyles();
-  
-
-  
 
   const cancelClose = () => {
     onClose(false);
@@ -82,32 +76,30 @@ function InformationsPedalModal({ open, onClose, productData, className, ...rest
     return null;
   }
   return (
-    <Modal onClose={onClose} open={open}>
+    <Modal open={open}>
       <Card {...rest} className={clsx(classes.root, className)}>
         <form>
           <CardHeader
             title={`Informations pédale : ${productData.title}`}
             action={
               <>
-                <Button onClick={cancelClose}>Close</Button>
-                <Button onClick={modifyClose}>Modifier</Button>
+                <Button onClick={modifyClose} className={classes.buttonModify}>Modifier</Button>
+                <IconButton onClick={cancelClose} ><CloseRounded/></IconButton>
               </>
             }
           />
           <Divider />
           <CardContent>
             {Object.keys(productData.components).map((component, i) => (
-              <>{(productData.components[component].quantity !== '0' ||productData.components[component].quantity !== '' ) 
-              && <TableContainer className={classes.container}>
-                <Table stickyHeader size="small">
-                  <TableBody>
-                    <StyledTableRow>
-                      <StyledTableCell>{productData.components[component].label}</StyledTableCell>
-                      <StyledTableCell>{productData.components[component].quantity}</StyledTableCell>
-                    </StyledTableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>}
+              <>
+                {(productData.components[component].quantity !== "0" ||
+                  productData.components[component].quantity !== "") && (
+                  <Grid container spacing={3} className={classes.container}>
+                    <Grid item xs={6}> <Typography>{productData.components[component].path}</Typography></Grid>
+                    <Grid item xs={3}><Typography>{productData.components[component].label}</Typography></Grid>
+                    <Grid item xs={3}><Typography>{productData.components[component].quantity}</Typography></Grid>
+                  </Grid>
+                )}
               </>
             ))}
           </CardContent>
@@ -122,12 +114,12 @@ InformationsPedalModal.propTypes = {
   className: PropTypes.string,
   customer: PropTypes.any,
   onClose: PropTypes.func,
-  open: PropTypes.bool
+  open: PropTypes.bool,
 };
 
 InformationsPedalModal.defaultProps = {
   open: false,
-  onClose: () => {}
+  onClose: () => {},
 };
 
 export default InformationsPedalModal;

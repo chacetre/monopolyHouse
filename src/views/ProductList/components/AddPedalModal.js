@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { makeStyles, withStyles } from '@material-ui/styles';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import clsx from "clsx";
+import { makeStyles, withStyles } from "@material-ui/styles";
 import {
   Modal,
   Card,
@@ -14,55 +14,55 @@ import {
   TextField,
   MenuItem,
   Button,
-  FormControl,
+  colors,
   Select,
-  InputLabel
-} from '@material-ui/core';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import TableSelector from './TableSelector';
-import { saveNewPedalsInDataBase } from '../../../request/pedalsAPI';
-import { getStockDataBase } from '../../../request/stockAPI';
+  InputLabel,
+} from "@material-ui/core";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import TableSelector from "./TableSelector";
+import { saveNewPedalsInDataBase } from "../../../request/pedalsAPI";
+import { getStockDataBase } from "../../../request/stockAPI";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    outline: 'none',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    outline: "none",
     boxShadow: theme.shadows[20],
-    width: '60%',
-    maxHeight: '90%',
-    overflowY: 'auto',
-    maxWidth: '100%'
+    width: "60%",
+    maxHeight: "90%",
+    overflowY: "auto",
+    maxWidth: "100%",
   },
   actions: {
-    justifyContent: 'flex-end'
+    justifyContent: "flex-end",
   },
   center: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   divider: {
-    margin: 10
-  }
+    margin: 10,
+  },
 }));
 
-const StyledToggleButtonGroup = withStyles(theme => ({
+const StyledToggleButtonGroup = withStyles((theme) => ({
   grouped: {
     margin: theme.spacing(1),
-    border: 'none',
+    border: "none",
     background: theme.palette.background.default,
     padding: theme.spacing(0, 3),
-    '&:not(:first-child)': {
-      borderRadius: theme.shape.borderRadius
+    "&:not(:first-child)": {
+      borderRadius: theme.shape.borderRadius,
     },
-    '&:first-child': {
-      borderRadius: theme.shape.borderRadius
-    }
-  }
+    "&:first-child": {
+      borderRadius: theme.shape.borderRadius,
+    },
+  },
 }))(ToggleButtonGroup);
 
 function AddPedalModal({
@@ -75,7 +75,7 @@ function AddPedalModal({
 }) {
   const classes = useStyles();
 
-  const [componentCurrent, setComponentCurrent] = useState('aop');
+  const [componentCurrent, setComponentCurrent] = useState("aop");
   const [componentsList, setComponentsList] = useState([]);
   const [pedalCurrent, setPedalCurrent] = useState({});
   const [indexCurrentPedal, setIndexCurrentPedal] = useState(0);
@@ -85,26 +85,26 @@ function AddPedalModal({
   }
 
   const handleChange = (event, user, keyName) => {
- event.persist();
-    console.log("event change",event.target.value );
-    setPedalCurrent(prevFormState => ({
+    event.persist();
+    console.log("event change", event.target.value);
+    setPedalCurrent((prevFormState) => ({
       ...prevFormState,
       components: {
         ...prevFormState.components,
         [user.value]: {
           label: user.label,
           path: `${componentCurrent}/${keyName}/${user.value}`,
-          quantity: event.target.value >= 0 ? event.target.value : 0
-        }
-      }
+          quantity: event.target.value >= 0 ? event.target.value : 0,
+        },
+      },
     }));
   };
 
-  const handleChangeName = event => {
+  const handleChangeName = (event) => {
     event.persist();
-    setPedalCurrent(prevFormState => ({
+    setPedalCurrent((prevFormState) => ({
       ...prevFormState,
-      title: event.target.value
+      title: event.target.value,
     }));
   };
 
@@ -117,7 +117,6 @@ function AddPedalModal({
   };
 
   const saveClose = () => {
-    console.log('pedalCurrent', pedalCurrent);
     const today = new Date();
 
     let pedalScheme = {
@@ -125,22 +124,20 @@ function AddPedalModal({
       totalMade: 0,
       createdAt:
         today.getDate() +
-        '/' +
+        "/" +
         (today.getMonth() + 1) +
-        '/' +
+        "/" +
         today.getFullYear(),
-      id: indexCurrentPedal
+      id: indexCurrentPedal,
     };
 
     if (pedalInformations !== undefined) {
       pedalScheme = {
         ...pedalScheme,
-        id: pedalInformations.id
+        id: pedalInformations.id,
       };
-      console.log('save scheme', pedalScheme);
       saveInDataBase(pedalInformations.id, pedalScheme);
     } else {
-      console.log('save scheme', pedalScheme);
       saveInDataBase(indexCurrentPedal, pedalScheme);
     }
 
@@ -150,18 +147,18 @@ function AddPedalModal({
 
   useEffect(() => {
     if (pedalInformations !== undefined) {
-      console.log('index modal pedal info', pedalInformations);
+      console.log("index modal pedal info", pedalInformations);
       setPedalCurrent(pedalInformations);
     }
   }, [pedalInformations]);
 
   useEffect(() => {
-    console.log('index modal from new', index);
+    console.log("index modal from new", index);
     setIndexCurrentPedal(index);
   }, [index]);
 
   useEffect(() => {
-    getStockDataBase(response => {
+    getStockDataBase((response) => {
       setComponentsList(response);
     });
   }, []);
@@ -170,17 +167,23 @@ function AddPedalModal({
     return null;
   }
 
+  console.log("pedale", pedalCurrent);
   return (
+    
     <Modal onClose={onClose} open={open}>
       <Card {...rest} className={clsx(classes.root, className)}>
         <form>
           <CardHeader
-            title="Ajouter une nouvelle pédale"
+            title={
+              pedalCurrent.title === undefined
+                ? "Ajouter une nouvelle pédale"
+                : `Modifier : ${pedalCurrent.title}`
+            }
             action={
               <>
-                <Button onClick={cancelClose}>Close</Button>
-                <Button color="primary" onClick={saveClose} variant="contained">
-                  Save
+                <Button onClick={cancelClose}>Annuler</Button>
+                <Button color="secondary" onClick={saveClose} variant="contained">
+                  Sauvegarder
                 </Button>
               </>
             }
@@ -195,43 +198,43 @@ function AddPedalModal({
               placeholder="hello"
               name="namePedal"
               onChange={handleChangeName}
-              value={pedalCurrent.title || ''}
-            >
-              Stock
-            </TextField>
+              value={pedalCurrent.title || ""}
+            />
             <Divider className={classes.divider} />
-            <StyledToggleButtonGroup
-              size="small"
-              value={componentCurrent}
-              exclusive
-              onChange={handleComponent}
-              aria-label="text alignment"
-              className={classes.center}
-            >
-              {componentsList.componentsAvailable !== undefined &&
-                componentsList.componentsAvailable
-                  .slice(6, componentsList.componentsAvailable.length)
-                  .map(user => (
+            <div>
+              <StyledToggleButtonGroup
+                size="small"
+                value={componentCurrent}
+                exclusive
+                onChange={handleComponent}
+                aria-label="text alignment"
+                className={classes.center}
+              >
+                {componentsList.componentsAvailable
+                  .sort()
+                  .slice(0, 8)
+                  .map((user) => (
                     <ToggleButton value={user} aria-label="left aligned">
                       {user}
                     </ToggleButton>
                   ))}
-            </StyledToggleButtonGroup>
-            <StyledToggleButtonGroup
-              size="small"
-              value={componentCurrent}
-              exclusive
-              onChange={handleComponent}
-              aria-label="text alignment"
-              className={classes.center}
-            >
-              {componentsList.componentsAvailable !== undefined &&
-                componentsList.componentsAvailable.slice(0, 6).map(user => (
+              </StyledToggleButtonGroup>
+              <StyledToggleButtonGroup
+                size="small"
+                value={componentCurrent}
+                exclusive
+                onChange={handleComponent}
+                aria-label="text alignment"
+                className={classes.center}
+              >
+                {componentsList.componentsAvailable.slice(8).map((user) => (
                   <ToggleButton value={user} aria-label="left aligned">
                     {user}
                   </ToggleButton>
                 ))}
-            </StyledToggleButtonGroup>
+              </StyledToggleButtonGroup>
+            </div>
+
             <TableSelector
               listTable={componentsList.componentsStock[componentCurrent]}
               componentsExisted={pedalCurrent.components || {}}
@@ -249,12 +252,12 @@ AddPedalModal.propTypes = {
   className: PropTypes.string,
   customer: PropTypes.any,
   onClose: PropTypes.func,
-  open: PropTypes.bool
+  open: PropTypes.bool,
 };
 
 AddPedalModal.defaultProps = {
   open: false,
-  onClose: () => {}
+  onClose: () => {},
 };
 
 export default AddPedalModal;

@@ -55,36 +55,33 @@ const ProductCard = props => {
 
   function componentAvailable(component) {
 
-    console.log('component', component);
     const splitPathCompo = component.path.split('/');
     
-
     const valueCurrent =
       components.componentsStock[splitPathCompo[0]][splitPathCompo[1]];
     const index = valueCurrent.findIndex(p => p.value == splitPathCompo[2]);
 
     const stockComponents = valueCurrent[index].stock;
-
-    return stockComponents > component.quantity;
+   
+    return parseInt(stockComponents) > parseInt(component.quantity);
   }
 
   function pedalePossibleCreate() {
-    Object.values(product.components).every(element => {
+    var availaibleComponents = true;
+    Object.values(product.components).every(element => {   
       if (!componentAvailable(element)) {
-        console.log(false);
-        setTextPossibleCreate('no');
-        return false;
-      }
-      else{
+        console.log('non faisable', element);
+        availaibleComponents = false;
+        return ;
+      }});
+     
+      if (availaibleComponents){
         setTextPossibleCreate('ouiiiii');
-      } return true
-    });
-    
+      }
   }
 
   function getNewStockComponent(component, stockNeed) {
     const splitPathCompo = component.path.split('/');
-    console.log('splitPathCompo', splitPathCompo);
     const valueCurrent =
       components.componentsStock[splitPathCompo[0]][splitPathCompo[1]];
     const index = valueCurrent.findIndex(p => p.value == splitPathCompo[2]);
@@ -97,7 +94,6 @@ const ProductCard = props => {
   }
 
   function updateStockComponents() {
-    console.log('product', product);
     Object.values(product.components).forEach(element => {
       getNewStockComponent(element);
     });
@@ -110,7 +106,7 @@ const ProductCard = props => {
 
   useEffect(() => {
     if (components !== undefined){
-      //pedalePossibleCreate();
+      pedalePossibleCreate();
     }
     
   }, [product]);
@@ -128,7 +124,7 @@ const ProductCard = props => {
 
       <AddPedalModal
         pedalInformations={product}
-        onClose={color => {
+        onClose={() => {
           setOpenModifyModal(false);
         }}
         open={openModifyModal}

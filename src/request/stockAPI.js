@@ -60,7 +60,6 @@ export const getStockDataBase = (callback) => {
   let ref = Firebase.database().ref("/stock");
   ref.on("value", (snapshot) => {
     const data = snapshot.val();
-    console.log("stock API", data);
     callback(data);
   });
 };

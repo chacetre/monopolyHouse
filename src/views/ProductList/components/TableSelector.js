@@ -132,7 +132,6 @@ const TableSelector = props => {
                               type="number"
                             />
                           </StyledTableCell>
-                          <StyledTableCell><IconButton onClick={() => handleDelete(user)}> <DeleteRounded/></IconButton></StyledTableCell>
                         </StyledTableRow>
                       ))}
                     </TableBody>
