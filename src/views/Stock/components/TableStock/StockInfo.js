@@ -170,7 +170,7 @@ const StockInfo = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {Object.values(stockComponents).map((user, index) => (
+                {Object.values(stockComponents).sort((a, b) => (a.label > b.label) ? 1 : -1).map((user, index) => (
                   <StyledTableRow>
                     <StyledTableCell>{user.label}</StyledTableCell>
                     <StyledTableCell>

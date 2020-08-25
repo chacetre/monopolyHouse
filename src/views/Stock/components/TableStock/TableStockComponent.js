@@ -55,10 +55,7 @@ const TableStockComponent = (props) => {
   useEffect(() => {
     console.log("component tableGE", listTable);
     if (listTable !== undefined) {
-      const index = Object.keys(listTable).findIndex(
-        (p) => p.attr1 == "typeAvailable"
-      );
-      Object.keys(listTable).slice(index);
+
       setComponentInfo(listTable);
     }
   }, [listTable]);

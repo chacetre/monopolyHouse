@@ -120,6 +120,7 @@ const ProductCard = props => {
           setOpenModifyModal(modifyAction);
         }}
         open={openModal}
+        components={components}
       />
 
       <AddPedalModal

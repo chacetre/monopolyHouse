@@ -3,16 +3,11 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Divider, Drawer } from '@material-ui/core';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import PeopleIcon from '@material-ui/icons/People';
+import HomeRounded from '@material-ui/icons/HomeRounded';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
-import ImageIcon from '@material-ui/icons/Image';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import SettingsIcon from '@material-ui/icons/Settings';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
+import StoreMallDirectoryRounded from '@material-ui/icons/StoreMallDirectoryRounded';
 
-import { Profile, SidebarNav, UpgradePlan } from './components';
+import {SidebarNav } from './components';
 
 const useStyles = makeStyles(theme => ({
   drawer: {
@@ -46,12 +41,12 @@ const Sidebar = props => {
     {
       title: 'Dashboard',
       href: '/dashboard',
-      icon: <DashboardIcon />
+      icon: <HomeRounded />
     },
     {
       title: 'Stock',
       href: '/stock',
-      icon: <PeopleIcon />
+      icon: <StoreMallDirectoryRounded />
     },
     {
       title: 'Modele Pedales',

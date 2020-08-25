@@ -9,14 +9,16 @@ import {
   CardContent,
   Divider,
   Button,
-  Typography,
+  TableRow,
   Grid,
-  colors, 
-  IconButton
+  colors,
+  IconButton,
+  Table,
+  TableCell,
+  TableBody,
 } from "@material-ui/core";
-
-import CloseRounded from '@material-ui/icons/CloseRounded';
-
+import LensRounded from '@material-ui/icons/LensRounded'
+import CloseRounded from "@material-ui/icons/CloseRounded";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,26 +45,38 @@ const useStyles = makeStyles((theme) => ({
     margin: 10,
   },
   buttonClose: {
-    backgroundColor : colors.red[500],
-    color : colors.grey[50],
-    
-  }, 
-  buttonModify :{
-    backgroundColor : colors.blue[500],
-    color : colors.grey[50],
-    marginRight: 5
-  }
+    backgroundColor: colors.red[500],
+    color: colors.grey[50],
+  },
+  buttonModify: {
+    backgroundColor: colors.blue[500],
+    color: colors.grey[50],
+    marginRight: 5,
+  },
 }));
-
 
 function InformationsPedalModal({
   open,
   onClose,
   productData,
+  components,
   className,
   ...rest
 }) {
   const classes = useStyles();
+
+  function componentAvailable(component) {
+
+    const splitPathCompo = component.path.split('/');
+    
+    const valueCurrent =
+      components.componentsStock[splitPathCompo[0]][splitPathCompo[1]];
+    const index = valueCurrent.findIndex(p => p.value == splitPathCompo[2]);
+
+    const stockComponents = valueCurrent[index].stock;
+   
+    return parseInt(stockComponents) > parseInt(component.quantity);
+  }
 
   const cancelClose = () => {
     onClose(false);
@@ -75,6 +89,7 @@ function InformationsPedalModal({
   if (!open) {
     return null;
   }
+
   return (
     <Modal open={open}>
       <Card {...rest} className={clsx(classes.root, className)}>
@@ -83,25 +98,42 @@ function InformationsPedalModal({
             title={`Informations pédale : ${productData.title}`}
             action={
               <>
-                <Button onClick={modifyClose} className={classes.buttonModify}>Modifier</Button>
-                <IconButton onClick={cancelClose} ><CloseRounded/></IconButton>
+                <Button onClick={modifyClose} className={classes.buttonModify}>
+                  Modifier
+                </Button>
+                <IconButton onClick={cancelClose}>
+                  <CloseRounded />
+                </IconButton>
               </>
             }
           />
           <Divider />
           <CardContent>
-            {Object.keys(productData.components).map((component, i) => (
-              <>
-                {(productData.components[component].quantity !== "0" ||
-                  productData.components[component].quantity !== "") && (
-                  <Grid container spacing={3} className={classes.container}>
-                    <Grid item xs={6}> <Typography>{productData.components[component].path}</Typography></Grid>
-                    <Grid item xs={3}><Typography>{productData.components[component].label}</Typography></Grid>
-                    <Grid item xs={3}><Typography>{productData.components[component].quantity}</Typography></Grid>
-                  </Grid>
-                )}
-              </>
-            ))}
+            <Table container spacing={3} className={classes.container}>
+              <TableBody>
+                {Object.keys(productData.components).map((component, i) => (
+                  <>
+                    {(productData.components[component].quantity !== "0" ||
+                      productData.components[component].quantity !== "") && (
+                      <TableRow>
+                        <TableCell>
+                          {productData.components[component].path}
+                        </TableCell>
+                        <TableCell>
+                          {productData.components[component].label}
+                        </TableCell>
+                        <TableCell align="right">
+                          {productData.components[component].quantity}
+                        </TableCell>
+                        <TableCell align="right" justifyContent="center">
+                          {!componentAvailable(productData.components[component]) ? <LensRounded style={{color : "#ef9a9a"}} fontSize="small"/> : null}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
+                ))}
+              </TableBody>
+            </Table>
           </CardContent>
           <Divider />
         </form>
