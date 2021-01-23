@@ -7,7 +7,7 @@ export default {
       backgroundColor: palette.primary.light
     },
     '&$selected': {
-      backgroundColor: palette.primary.main,
+      backgroundColor: palette.secondary.dark,
       color: palette.white,
       '&:hover': {
         backgroundColor: 'rgba(208, 208, 208, 0.30)',

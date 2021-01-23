@@ -1,11 +1,11 @@
-
 const config = {
-  apiKey: 'AIzaSyDj8JH3lFulGlpyD8FDgRZhOtyCew4VKnc',
-  authDomain: 'hookapp-fa7a3.firebaseapp.com',
-  databaseURL: 'https://hookapp-fa7a3.firebaseio.com',
-  projectId: 'hookapp-fa7a3',
-  storageBucket: 'hookapp-fa7a3.appspot.com',
-  messagingSenderId: '274279220456'
+  apiKey: "AIzaSyAikUwhVcRNQEGL2LQzWmiIaerFg-wjKM4",
+  authDomain: "rentalproject-fc839.firebaseapp.com",
+  databaseURL: "https://rentalproject-fc839-default-rtdb.firebaseio.com",
+  projectId: "rentalproject-fc839",
+  storageBucket: "rentalproject-fc839.appspot.com",
+  messagingSenderId: "380474278914",
+  appId: "1:380474278914:web:284c16d69efbef0c25531b",
 };
 
 export default config;

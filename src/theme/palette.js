@@ -8,15 +8,26 @@ export default {
   white,
   primary: {
     contrastText: white,
-    dark: colors.grey[900],
-    main: colors.grey[900],
-    light: colors.grey[100]
+    dark: '#90D8FF',
+    main: '#90D8FF',
+    light: '#90D8FF'
   },
   secondary: {
     contrastText: white,
-    dark: colors.blue[900],
-    main: colors.blue['A400'],
-    light: colors.blue['A400']
+    dark: '#486C7F',
+    main: '#486C7F',
+    light: '#486C7F'
+  },
+  thirdary:{
+    contrastText: white,
+    main: '#73ADCC',
+    light: '#DCF3FF'
+  },
+  action: {
+    contrastText: white,
+    dark: colors.amber[900],
+    main: colors.amber[600],
+    light: colors.amber[100]
   },
   success: {
     contrastText: white,

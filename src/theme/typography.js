@@ -85,5 +85,10 @@ export default {
     letterSpacing: '0.33px',
     lineHeight: '13px',
     textTransform: 'uppercase'
+  },
+  letter: {
+    color: palette.text.secondary,
+    fontSize: '20px',
+    fontWeight: 500,
   }
 };

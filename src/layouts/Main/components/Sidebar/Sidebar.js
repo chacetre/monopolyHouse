@@ -8,6 +8,7 @@ import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import StoreMallDirectoryRounded from '@material-ui/icons/StoreMallDirectoryRounded';
 
 import {SidebarNav } from './components';
+import { AccountCircleRounded, CategoryRounded, HouseRounded, ReceiptRounded } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
   drawer: {
@@ -39,20 +40,26 @@ const Sidebar = props => {
 
   const pages = [
     {
-      title: 'Dashboard',
-      href: '/dashboard',
+      title: 'Logements',
+      href: '/accommodations',
       icon: <HomeRounded />
     },
     {
-      title: 'Stock',
-      href: '/stock',
-      icon: <StoreMallDirectoryRounded />
+      title: 'Quittances',
+      href: '/receipts',
+      icon: <ReceiptRounded />
     },
     {
-      title: 'Modele Pedales',
+      title: 'Paramètres',
       href: '/products',
-      icon: <ShoppingBasketIcon />
+      icon: <CategoryRounded />
+    },
+    {
+      title: 'Profil',
+      href: '/products',
+      icon: <AccountCircleRounded />
     }
+    
   ];
 
   return (
