@@ -4,6 +4,8 @@ import { Switch, Redirect } from "react-router-dom";
 import Accommodation from "views/Accomodation";
 import ChooseBoos from "views/ChooseBoss";
 import Receipt from "views/Receipt";
+import Settings from "views/Settings";
+import TemplateEdit from "views/Settings/Components/TemplateEdit";
 
 import { RouteWithLayout } from "./components";
 import { Main as MainLayout, Minimal as MinimalLayout } from "./layouts";
@@ -17,6 +19,7 @@ import {
   SignIn as SignInView,
   NotFound as NotFoundView,
   SignIn,
+  Account,
 } from "./views";
 
 const Routes = () => {
@@ -25,7 +28,13 @@ const Routes = () => {
       <Redirect exact from="/" to="/select-your-boss" />
 
       <PrivateRoute
-        component={AccountView}
+        component={ChooseBoos}
+        exact
+        layout={MinimalLayout}
+        path="/select-your-boss"
+      />
+      <PrivateRoute
+        component={Account}
         exact
         layout={MainLayout}
         path="/account"
@@ -42,17 +51,24 @@ const Routes = () => {
         layout={MainLayout}
         path="/accommodations"
       />
-      <PrivateRoute
-        component={ChooseBoos}
-        exact
-        layout={MinimalLayout}
-        path="/select-your-boss"
-      />
+      
       <RouteWithLayout
         component={NotFoundView}
         exact
         layout={MinimalLayout}
         path="/not-found"
+      />
+      <RouteWithLayout
+        component={Settings}
+        exact
+        layout={MainLayout}
+        path="/settings"
+      />
+      <RouteWithLayout
+        component={TemplateEdit}
+        exact
+        layout={MainLayout}
+        path="/settings/template/:idTemplate"
       />
 
       <RouteWithLayout

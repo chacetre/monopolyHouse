@@ -28,10 +28,11 @@ export const deleteValueInDataBase = (type, soustype, index) => {
 };
 
 
-export const updateStockAfterAddPedals = (path, value) => {
+export const updateOwner = (owner) => {
+  const existingUser = JSON.parse(localStorage.getItem("logged_user"));
   Firebase.database()
-    .ref(`/stock/componentsStock/${path}/stock`)
-    .set(value);
+    .ref(`${existingUser}/owners/${owner.id}`)
+    .set(owner);
   console.log("DATA SAVED");
 };
 

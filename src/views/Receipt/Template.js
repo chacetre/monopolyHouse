@@ -75,7 +75,6 @@ const Template = ({ owner, accomodation, date, ...rest }) => {
   }
 
   useEffect(() => {
-    console.log("date change", date)
     setDateReceipt(date);
   }, [date]);
 

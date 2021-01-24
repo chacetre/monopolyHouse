@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
+import React, { useState, useEffect } from "react";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/styles";
 import {
   Card,
   CardHeader,
@@ -10,174 +10,192 @@ import {
   Divider,
   Grid,
   Button,
-  TextField
-} from '@material-ui/core';
+  TextField,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+} from "@material-ui/core";
+import { useOwner } from "../../../../context/owner";
+import { updateOwner } from "request/ownerAPI";
 
 const useStyles = makeStyles(() => ({
-  root: {}
+  root: {},
 }));
 
-const AccountDetails = props => {
+const AccountDetails = (props) => {
   const { className, ...rest } = props;
-
   const classes = useStyles();
-
-  const [values, setValues] = useState({
-    firstName: 'Shen',
-    lastName: 'Zhi',
-    email: 'shen.zhi@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
+  const { ownerInformations } = useOwner();
+  const [localOwner, setLocalOwner] = useState({
+    firstname: "",
+    lastname: "",
+    address: "",
   });
 
-  const handleChange = event => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
+  const handleChange = (event) => {
+    console.log(event.target.value)
+    setLocalOwner({
+      ...localOwner,
+      [event.target.name]: event.target.value,
     });
   };
 
-  const states = [
-    {
-      value: 'alabama',
-      label: 'Alabama'
-    },
-    {
-      value: 'new-york',
-      label: 'New York'
-    },
-    {
-      value: 'san-francisco',
-      label: 'San Francisco'
+  const handleAddress = (event) => {
+    setLocalOwner({
+      ...localOwner,
+      address: {
+        ...localOwner.address,
+        [event.target.name]: event.target.value.toLowerCase(),
+      }
+    });
+  };
+
+  function handleUpdateOwner(){
+    console.log(localOwner)
+    updateOwner(localOwner)
+  }
+
+  useEffect(() => {
+    if (ownerInformations !== undefined) {
+      console.log("owner", ownerInformations);
+      setLocalOwner(ownerInformations);
     }
-  ];
+  }, [ownerInformations]);
 
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
-      <form
-        autoComplete="off"
-        noValidate
-      >
-        <CardHeader
-          subheader="The information can be edited"
-          title="Profile"
-        />
+    <Card {...rest} className={clsx(classes.root, className)}>
+      <form autoComplete="off" noValidate>
+        <CardHeader title="Profil" />
         <Divider />
         <CardContent>
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+          <Grid container spacing={1}>
+            <Grid item md={12} xs={12}>
+              <RadioGroup
+                row
+                name="isSociety"
+                defaultValue="top"
+                onChange={handleChange}
+                className={classes.center}
+              >
+                <FormControlLabel
+                  value={"false"}
+                  control={
+                    <Radio
+                      color="secondary"
+                      checked={Boolean(localOwner.isSociety) === false}
+                    />
+                  }
+                  label="Particulier"
+                  labelPlacement="right"
+                  disabled={false}
+                />
+                <FormControlLabel
+                  value={"true"}
+                  control={
+                    <Radio
+                      color="secondary"
+                      checked={Boolean(localOwner.isSociety) === true}
+                    />
+                  }
+                  label="Entreprise"
+                  disabled={false}
+                  labelPlacement="right"
+                />
+              </RadioGroup>
+            </Grid>
+            <Grid item md={12} xs={12}>
+              <RadioGroup
+                row
+                name="civility"
+                defaultValue="top"
+                onChange={handleChange}
+                className={classes.center}
+              >
+                <FormControlLabel
+                  value={"m"}
+                  control={
+                    <Radio
+                      color="secondary"
+                      checked={localOwner.civility === "m"}
+                    />
+                  }
+                  label="M."
+                  labelPlacement="right"
+                  disabled={false}
+                />
+                <FormControlLabel
+                  value={"mme"}
+                  control={
+                    <Radio
+                      color="secondary"
+                      checked={localOwner.civility === "mme"}
+                    />
+                  }
+                  label="Mme"
+                  disabled={false}
+                  labelPlacement="right"
+                />
+              </RadioGroup>
+            </Grid>
+
+            <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 helperText="Please specify the first name"
-                label="First name"
+                label="Prénom"
                 margin="dense"
-                name="firstName"
+                name="firstname"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={localOwner.firstname || ""}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+            <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
-                label="Last name"
+                label="Nom"
                 margin="dense"
-                name="lastName"
+                name="lastname"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                value={localOwner.lastname || ""}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+            <Grid item md={12} xs={12}>
               <TextField
                 fullWidth
-                label="Email Address"
+                label="Numero et rue"
                 margin="dense"
-                name="email"
-                onChange={handleChange}
+                name="street"
+                onChange={handleAddress}
+                value={localOwner.address.street || ""}
                 required
-                value={values.email}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+            <Grid item md={3} xs={6}>
               <TextField
                 fullWidth
-                label="Phone Number"
+                label="Code postal"
                 margin="dense"
-                name="phone"
-                onChange={handleChange}
-                type="number"
-                value={values.phone}
+                name="postalCode"
+                onChange={handleAddress}
+                value={localOwner.address.postalCode || ""}
+                required
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+            <Grid item md={9} xs={6}>
               <TextField
                 fullWidth
-                label="Select State"
+                label="Ville"
                 margin="dense"
-                name="state"
-                onChange={handleChange}
+                name="city"
+                onChange={handleAddress}
+                value={localOwner.address.city || ""}
                 required
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map(option => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Country"
-                margin="dense"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
                 variant="outlined"
               />
             </Grid>
@@ -185,11 +203,8 @@ const AccountDetails = props => {
         </CardContent>
         <Divider />
         <CardActions>
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Save details
+          <Button color="primary" variant="contained" onClick={handleUpdateOwner}>
+            Sauvegarder
           </Button>
         </CardActions>
       </form>
@@ -198,7 +213,7 @@ const AccountDetails = props => {
 };
 
 AccountDetails.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
 };
 
 export default AccountDetails;

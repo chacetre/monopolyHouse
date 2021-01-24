@@ -72,6 +72,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 10,
     textAlign: "right",
   },
+  left: {
+    paddingTop: 10,
+    textAlign: "left",
+  },
   gridCell: {
     justifyContent: "center",
   },
@@ -150,15 +154,17 @@ const CardAccommodation = (accomodationInfos) => {
     }));
   };
 
-  function calculateTotal(){
+  function calculateTotal() {
+    var numFixe = Number(currentAccommo.loyer.fixe);
+    var numCharges = Number(currentAccommo.loyer.charges);
+    var numTVA =
+      currentAccommo.isCommercial != undefined
+        ? Number(currentAccommo.loyer.tva)
+        : 0;
 
-    var numFixe = Number(currentAccommo.loyer.fixe)
-    var numCharges = Number(currentAccommo.loyer.charges)
-    var numTVA = currentAccommo.isCommercial != undefined ? Number(currentAccommo.loyer.tva) : 0
-
-    return numFixe + numCharges + numTVA
+    return numFixe + numCharges + numTVA;
   }
-   
+
   function handleModify() {
     if (isModifying) {
       updateAccomodation(currentAccommo);
@@ -180,7 +186,8 @@ const CardAccommodation = (accomodationInfos) => {
           {currentAccommo.address != undefined && (
             <>
               {currentAccommo.address.street} -{" "}
-              {currentAccommo.address.postalCode} {currentAccommo.address.city.toUpperCase()}
+              {currentAccommo.address.postalCode}{" "}
+              {currentAccommo.address.city.toUpperCase()}
             </>
           )}
         </Typography>
@@ -291,10 +298,7 @@ const CardAccommodation = (accomodationInfos) => {
                 label="Total"
                 variant="outlined"
                 fullWidth
-                value={
-                  currentAccommo.loyer != undefined &&
-                  calculateTotal()
-                }
+                value={currentAccommo.loyer != undefined && calculateTotal()}
                 disabled
                 inputProps={{ "aria-label": "naked" }}
               />
@@ -309,7 +313,10 @@ const CardAccommodation = (accomodationInfos) => {
                 Locataire
               </Typography>
               <Typography variant="overline" className={classes.titleSection}>
-                Date d'entrée : {currentAccommo.rental != undefined ? currentAccommo.rental.startDate : ""}
+                Date d'entrée :{" "}
+                {currentAccommo.rental != undefined
+                  ? currentAccommo.rental.startDate
+                  : ""}
               </Typography>
             </div>
           </Grid>
@@ -380,6 +387,15 @@ const CardAccommodation = (accomodationInfos) => {
       </Paper>
 
       <Paper elevation={0} className={classes.paper}>
+        <div className={classes.left}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            Revision de loyer
+          </Button>
+        </div>
         <div className={classes.right}>
           <Button className={classes.button}>Supprimer</Button>
           <Button

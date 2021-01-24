@@ -51,12 +51,12 @@ const Sidebar = props => {
     },
     {
       title: 'Paramètres',
-      href: '/products',
+      href: '/settings',
       icon: <CategoryRounded />
     },
     {
       title: 'Profil',
-      href: '/products',
+      href: '/account',
       icon: <AccountCircleRounded />
     }
     

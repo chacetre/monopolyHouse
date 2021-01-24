@@ -74,36 +74,12 @@ function MonthYearPicker({
   handleChange,
   onClose,
   initialValue,
-  currentAccomodation,
-  ownerInformations,
   ...rest
 }) {
   const classes = useStyles();
   const [year, setYear] = useState(2100);
   const [monthSelect, setMonth] = useState("Jan");
-  const [dateReceipt, setDateReceipt] = useState({});
-
-  function createPDF() {
-    console.log("create PDF",);
-
-    var namePDF = currentAccomodation.rental.firstname + "_" + currentAccomodation.rental.lastname + "_" + monthSelect + "_" + year + ".pdf"
-
-    const input = document.querySelector(".divToPrint");
-    if (input != null) {
-      html2canvas(input).then((canvas) => {
-        const image = canvas.toDataURL("image/png");
-        const pdf = jsPDF("p", "mm", "a4");
-        const width = 210;
-        const height = 297;
-        pdf.addImage(image, 0, 0, width, height);
-        pdf.save(namePDF);
-      });
-    } else {
-      console.log("isNULL");
-    }
-  }
-
-
+  
   function handlePrevious() {
     setYear((year) =>  Number(year) - 1);
   }
@@ -121,7 +97,6 @@ function MonthYearPicker({
   };
 
   const okClose = () => {
-    createPDF()
     onClose(monthSelect, year);
   };
 
@@ -131,10 +106,6 @@ function MonthYearPicker({
       setMonth(initialValue.split(" ")[0].toLowerCase());
     }
   }, [initialValue]);
-
-  useEffect(() => {
-    setDateReceipt({ month: monthSelect, year: year });
-  }, [monthSelect, year]);
 
   if (!open) {
     return null;
@@ -151,10 +122,10 @@ function MonthYearPicker({
           }
           action={
             <>
-              <IconButton onClick={handlePrevious}>
+              <IconButton size="small" onClick={handlePrevious}>
                 <KeyboardArrowLeftRounded />
               </IconButton>
-              <IconButton onClick={handleNext}>
+              <IconButton size="small" onClick={handleNext}>
                 <KeyboardArrowRightRounded />
               </IconButton>
             </>
@@ -190,9 +161,8 @@ function MonthYearPicker({
         </CardContent>
         <CardActions className={classes.actionBar}>
           <Button className={classes.expand} onClick={cancelClose}>Annuler</Button>
-          <Button onClick={okClose} variant="contained">Télécharger</Button>
+          <Button onClick={okClose} variant="contained">Valider</Button>
         </CardActions>
-        <Template owner={ownerInformations} accomodation={currentAccomodation} date={dateReceipt} />
       </Card>
       
     </Modal>

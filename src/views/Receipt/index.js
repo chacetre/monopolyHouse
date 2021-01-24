@@ -12,7 +12,7 @@ import Paper from "@material-ui/core/Paper";
 import html2canvas from "html2canvas";
 import Template from "./Template";
 import jsPDF from "jspdf";
-import { AddRounded } from "@material-ui/icons";
+import { CalendarTodayRounded, GetAppRounded } from "@material-ui/icons";
 import { useOwner } from "../../context/owner";
 import { getAccomodationByOwner } from "request/accomodationAPI";
 import MonthYearPicker from "components/MonthYearPicker";
@@ -50,6 +50,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
+  icon: {
+    marginLeft: 10,
+    height : 40,
+    width: 40
+  }
 }));
 
 const Receipt = () => {
@@ -65,8 +70,6 @@ const Receipt = () => {
   const [showPicker, setShowPicker] = useState(false);
 
   function createPDF(currentAccomodation) {
-    console.log("create PDF");
-
     var namePDF = currentAccomodation.rental.firstname + "_" + currentAccomodation.rental.lastname + "_" + dateReceipt.month + "_" + dateReceipt.year + ".pdf"
 
     const input = document.querySelector(".divToPrint");
@@ -175,27 +178,27 @@ const Receipt = () => {
                   <TableCell align="right">
                     <Button
                       size="small"
-                      variant="contained"
-                      onClick={() => createPDF(row)}
+                      variant="outlined"
+                      onClick={() => showCalendar(row)}
                     >
-                      {currentDate}
+                      {dateReceipt.month} {dateReceipt.year} <CalendarTodayRounded/>
                     </Button>
-                    <IconButton onClick={() => showCalendar(row)}>
-                      <AddRounded />
-                    </IconButton>
+                    <Button variant="contained" className={classes.icon}  onClick={() => createPDF(row)} >
+                      <GetAppRounded />
+                    </Button>
                   </TableCell>
                   <TableCell align="right">
                     <Button
                       size="small"
-                      variant="contained"
+                      variant="outlined"
                       onClick={createPDF}
                     >
                       {currentDate}
                     </Button>
                     <Template owner={ownerInformations} accomodation={row} date={dateReceipt} />
-                    <IconButton>
-                      <AddRounded />
-                    </IconButton>
+                    <Button className={classes.icon} >
+                      <GetAppRounded />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
