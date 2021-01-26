@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import validate from "validate.js";
 import clsx from "clsx";
 import { makeStyles, withStyles } from "@material-ui/styles";
 import {
@@ -14,11 +15,11 @@ import {
   Radio,
   RadioGroup,
   FormControlLabel,
-  MenuItem,
+  FormControl,
   Button,
   TextField,
   Select,
-  InputLabel,
+  FormHelperText,
 } from "@material-ui/core";
 import firebase from "firebase/app";
 import Particulier from "./Particulier";
@@ -26,6 +27,7 @@ import { useOwner } from "../../../context/owner";
 import Society from "./Society";
 import { saveNewAccommodation } from "request/accomodationAPI";
 import Loyer from "./Loyer";
+import Address from "./Address";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,23 +69,69 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const schema = {
+  address: {
+    presence: { allowEmpty: false, message: "is required" },
+  },
+  isCommercial: {
+    presence: { allowEmpty: false, message: "is required" },
+  },
+};
+
+const schemaAddress = {
+  postalCode: {
+    presence: { allowEmpty: false, message: "is required" },
+    length: {
+      maximum: 5,
+      minimum: 5,
+    },
+  },
+  street: {
+    presence: { allowEmpty: false, message: "is required" },
+  },
+  city: {
+    presence: { allowEmpty: false, message: "is required" },
+  },
+};
+
+const schemaLoyer = {
+  fixe: {
+    presence: { allowEmpty: false, message: "is required" },
+  },
+  charges: {
+    presence: { allowEmpty: false, message: "is required" },
+  },
+};
+
+const schemaRental = {};
+
 function AddEstateModal({ open, className, onClose, ...rest }) {
   const classes = useStyles();
   const { ownerInformations } = useOwner();
-  const [currentOwner, setCurrentAccommo] = useState({
-    rental: {},
-    address: {},
+  const [currentAccommo, setCurrentAccommo] = useState({
+    isValid: false,
+    values: {
+      rental: {},
+      address: {},
+    },
+    touched: {},
+    errors: {},
   });
 
   function createEstateDB() {
     const timestamp = Date.now();
-    saveNewAccommodation(currentOwner, timestamp, ownerInformations.id);
+    saveNewAccommodation(
+      currentAccommo.values,
+      timestamp,
+      ownerInformations.id
+    );
     onClose();
   }
 
   function createEstate() {
-    console.log(currentOwner);
-    createEstateDB();
+    if (currentAccommo.isValid) {
+      createEstateDB();
+    }
   }
 
   const handleChange = (event) => {
@@ -91,7 +139,17 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
 
     setCurrentAccommo((formState) => ({
       ...formState,
-      [event.target.name]: event.target.value,
+      values: {
+        ...formState.values,
+        [event.target.name]:
+          event.target.type === "checkbox"
+            ? event.target.checked
+            : event.target.value,
+      },
+      touched: {
+        ...formState.touched,
+        [event.target.name]: true,
+      },
     }));
   };
 
@@ -100,9 +158,16 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
 
     setCurrentAccommo((formState) => ({
       ...formState,
-      loyer: {
-        ...formState.loyer,
-        [event.target.name]: event.target.value,
+      values: {
+        ...formState.values,
+        loyer: {
+          ...formState.values.loyer,
+          [event.target.name]: event.target.value,
+        },
+      },
+      touched: {
+        ...formState.touched,
+        [event.target.name]: true,
       },
     }));
   };
@@ -112,9 +177,16 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
 
     setCurrentAccommo((formState) => ({
       ...formState,
-      rental: {
-        ...formState.rental,
-        [event.target.name]: event.target.value,
+      values: {
+        ...formState.values,
+        rental: {
+          ...formState.values.rental,
+          [event.target.name]: event.target.value,
+        },
+      },
+      touched: {
+        ...formState.touched,
+        [event.target.name]: true,
       },
     }));
   };
@@ -124,9 +196,16 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
 
     setCurrentAccommo((formState) => ({
       ...formState,
-      address: {
-        ...formState.address,
-        [event.target.name]: event.target.value.toLowerCase(),
+      values: {
+        ...formState.values,
+        address: {
+          ...formState.values.address,
+          [event.target.name]: event.target.value,
+        },
+      },
+      touched: {
+        ...formState.touched,
+        [event.target.name]: true,
       },
     }));
   };
@@ -136,7 +215,39 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
   };
 
   const hasError = (field) =>
-    currentOwner.touched[field] && currentOwner.errors[field] ? true : false;
+    currentAccommo.touched[field] && currentAccommo.errors[field]
+      ? true
+      : false;
+
+  useEffect(() => {
+    const errorsGeneral = validate(currentAccommo.values, schema);
+    const errorsAddress = validate(
+      currentAccommo.values.address,
+      schemaAddress
+    );
+    const errorsRental = validate(currentAccommo.values.rental, schemaRental);
+    const errorsLoyer = validate(currentAccommo.values.loyer, schemaLoyer);
+
+    let errors = Object.assign(
+      {},
+      errorsGeneral,
+      errorsAddress,
+      errorsRental,
+      errorsLoyer
+    );
+
+    if (Object.keys(errors).length === 0) {
+      errors = undefined;
+    }
+
+    console.log("errors", errors)
+
+    setCurrentAccommo((formState) => ({
+      ...formState,
+      isValid: errors ? false : true,
+      errors: errors || {},
+    }));
+  }, [currentAccommo.values]);
 
   if (!open) {
     return null;
@@ -148,111 +259,56 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
         <CardHeader title={"Ajouter un nouveau bien"} />
         <Divider />
         <CardContent>
-          <RadioGroup
-            row
-            aria-label="isCommercial"
-            name="isCommercial"
-            defaultValue="top"
-            onChange={handleChange}
-            className={classes.gridCell}
+          <FormControl
+            component="fieldset"
+            error={true}
+            className={classes.formControl}
           >
-            <Typography variant="h4" className={classes.titleSection}>
-              1. Type de bien
-            </Typography>
-            <FormControlLabel
-              value={"false"}
-              control={
-                <Radio
-                  color="primary"
-                  checked={currentOwner.isCommercial === "false"}
-                />
-              }
-              label="Habitation"
-              labelPlacement="right"
-            />
-            <FormControlLabel
-              value={"true"}
-              control={
-                <Radio
-                  color="primary"
-                  checked={currentOwner.isCommercial === "true"}
-                />
-              }
-              label="Local Commercial"
-              labelPlacement="right"
-            />
-          </RadioGroup>
-
+            <RadioGroup
+              row
+              name="isCommercial"
+              defaultValue="top"
+              onChange={handleChange}
+              className={classes.gridCell}
+            >
+              <Typography variant="h4" className={classes.titleSection}>
+                1. Type de bien
+              </Typography>
+              <FormControlLabel
+                value={"false"}
+                control={
+                  <Radio
+                    color="primary"
+                    checked={currentAccommo.values.isCommercial === "false"}
+                  />
+                }
+                label="Habitation"
+                labelPlacement="right"
+              />
+              <FormControlLabel
+                value={"true"}
+                control={
+                  <Radio
+                    color="primary"
+                    checked={currentAccommo.values.isCommercial === "true"}
+                  />
+                }
+                label="Local Commercial"
+                labelPlacement="right"
+              />
+            </RadioGroup>
+            {hasError("isCommercial") ? (
+              <Typography>currentAccommo.errors.isCommercial[0]</Typography>
+            ) : null}
+          </FormControl>
           <Typography variant="h4" className={classes.titleSection}>
             2. Adresse
           </Typography>
 
-          <Grid container spacing={2} className={classes.container}>
-            <Grid item xs={12}>
-              <TextField
-                size="small"
-                fullWidth
-                label="Numero et rue"
-                name="street"
-                onChange={handleChangeAddress}
-                type="text"
-                value={
-                  (currentOwner.address != undefined &&
-                    currentOwner.address.street) ||
-                  ""
-                }
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                size="small"
-                fullWidth
-                label="Complément d'adresse (ex: numero d'appartement"
-                name="otherInformations"
-                onChange={handleChangeAddress}
-                type="text"
-                value={
-                  (currentOwner.address != undefined &&
-                    currentOwner.address.otherInformations) ||
-                  ""
-                }
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField
-                size="small"
-                fullWidth
-                label="Code Postal"
-                name="postalCode"
-                onChange={handleChangeAddress}
-                type="text"
-                value={
-                  (currentOwner.address != undefined &&
-                    currentOwner.address.postalCode) ||
-                  ""
-                }
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                size="small"
-                fullWidth
-                label="City"
-                name="city"
-                onChange={handleChangeAddress}
-                type="text"
-                value={
-                  (currentOwner.address != undefined &&
-                    currentOwner.address.city) ||
-                  ""
-                }
-                variant="outlined"
-              />
-            </Grid>
-          </Grid>
+          <Address
+            handleChange={handleChangeAddress}
+            currentAccommo={currentAccommo}
+          />
 
           <RadioGroup
             row
@@ -269,7 +325,9 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
               control={
                 <Radio
                   color="primary"
-                  checked={currentOwner.rental.isParticulier === "null"}
+                  checked={
+                    currentAccommo.values.rental.isParticulier === "null"
+                  }
                 />
               }
               label="Vide"
@@ -280,7 +338,9 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
               control={
                 <Radio
                   color="primary"
-                  checked={currentOwner.rental.isParticulier === "true"}
+                  checked={
+                    currentAccommo.values.rental.isParticulier === "true"
+                  }
                 />
               }
               label="Particulier"
@@ -291,7 +351,9 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
               control={
                 <Radio
                   color="primary"
-                  checked={currentOwner.rental.isParticulier === "false"}
+                  checked={
+                    currentAccommo.values.rental.isParticulier === "false"
+                  }
                 />
               }
               label="Entreprise"
@@ -299,31 +361,35 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
             />
           </RadioGroup>
           <TextField
-                size="small"
-                fullWidth
-                label="Date d'entrée"
-                name="startDate"
-                onChange={handleChangeRental}
-                type="text"
-                value={
-                  (currentOwner.rental != undefined &&
-                    currentOwner.rental.startDate) ||
-                  ""
-                }
-                variant="outlined"
-              />
+            size="small"
+            fullWidth
+            error={hasError("startDate")}
+            helperText={
+              hasError("startDate") ? currentAccommo.errors.startDate[0] : null
+            }
+            label="Date d'entrée"
+            name="startDate"
+            onChange={handleChangeRental}
+            type="text"
+            value={
+              (currentAccommo.values.rental != undefined &&
+                currentAccommo.values.rental.startDate) ||
+              ""
+            }
+            variant="outlined"
+          />
           <div className={classes.container}>
-            {currentOwner.rental.isParticulier === "true" && (
+            {currentAccommo.values.rental.isParticulier === "true" && (
               <Particulier
                 handleChange={handleChangeRental}
-                currentOwner={currentOwner}
+                currentOwner={currentAccommo.values}
                 disabled={true}
               />
             )}
-            {currentOwner.rental.isParticulier === "false" && (
+            {currentAccommo.values.rental.isParticulier === "false" && (
               <Society
                 handleChange={handleChangeRental}
-                currentEstate={currentOwner}
+                currentEstate={currentAccommo.values}
                 disabled={true}
               />
             )}
@@ -334,7 +400,7 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
           </Typography>
           <Loyer
             handleChange={handleChangeLoyer}
-            currentEstate={currentOwner}
+            currentEstate={currentAccommo.values}
           />
         </CardContent>
         <Divider />

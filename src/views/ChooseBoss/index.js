@@ -103,9 +103,9 @@ const ChooseBoos = (props) => {
         <Grid container>
           <Grid item xs={8}>
             <div className={classes.content}>
-              <Typography variant="h2">Selectionne ton proprio !</Typography>
+              <Typography variant="h2">Sélectionne ton proprio !</Typography>
               <Typography variant="overline">
-                Choisit le propriétaire dont tu souhaites voir les biens
+                Choisi le propriétaire dont tu souhaites voir les biens
               </Typography>
             </div>
           </Grid>

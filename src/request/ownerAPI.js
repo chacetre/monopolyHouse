@@ -1,7 +1,6 @@
 import Firebase from "firebase";
 
 
-
 export const saveNewComponentInDataBase = (owner, id) => {
   const existingUser = JSON.parse(localStorage.getItem("logged_user"));
   Firebase.database().ref(existingUser + "/owners/" + id).set({

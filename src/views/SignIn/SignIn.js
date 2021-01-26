@@ -187,8 +187,11 @@ const SignIn = (props) => {
     }));
   };
 
-  const hasError = (field) =>
-    formState.touched[field] && formState.errors[field] ? true : false;
+  const hasError = (field) => {
+    return formState.touched[field] && formState.errors[field]
+      ? true
+      : false;
+  };
 
   return (
     <div className={classes.root}>

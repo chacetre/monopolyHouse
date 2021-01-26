@@ -28,7 +28,6 @@ import AddEstateModal from "./Components/AddEstateModal";
 import CardAccommodation from "./Components/CardAccomodation";
 import { getAccomodationByOwner } from "request/accomodationAPI";
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(3),
@@ -103,14 +102,14 @@ const StyledToggleButtonGroup = withStyles((theme) => ({
 const Accommodation = () => {
   const classes = useStyles();
   const { ownerInformations } = useOwner();
-  const [showAddEstateModal, setShowAddEstateModal] = useState(false);
+  const [showAddEstateModal, setShowAddEstateModal] = useState(true);
   const [component, setComponent] = useState("");
   const [accommodations, setData] = useState(null);
   const [listFiltre, setFiltres] = useState([]);
- 
+
   function getAccommodationsInformations() {
-    if (ownerInformations.id != undefined){
-      getAccomodationByOwner(ownerInformations.id,(response) => {
+    if (ownerInformations.id != undefined) {
+      getAccomodationByOwner(ownerInformations.id, (response) => {
         setData(response);
       });
     }
@@ -124,10 +123,9 @@ const Accommodation = () => {
     setShowAddEstateModal(true);
   }
 
-
   function suffisammentGrand(element) {
-    if (component == ""){
-      return true
+    if (component == "") {
+      return true;
     }
     return element.address.city == component;
   }
@@ -141,14 +139,13 @@ const Accommodation = () => {
   }, [ownerInformations]);
 
   useEffect(() => {
-    if (accommodations != undefined){
+    if (accommodations != undefined) {
       var listTemp = new Array();
-      Object.values(accommodations).forEach(element => {
-        listTemp.push(element.address.city)
+      Object.values(accommodations).forEach((element) => {
+        listTemp.push(element.address.city);
       });
 
-      setFiltres(listTemp)
-      console.log(listTemp)
+      setFiltres(Array.from(new Set(listTemp)));
     }
   }, [accommodations]);
 
@@ -190,6 +187,9 @@ const Accommodation = () => {
           aria-label="text alignment"
           className={classes.center}
         >
+          <ToggleButton value={""} aria-label="left aligned">
+            Tous
+          </ToggleButton>
           {listFiltre.map((filtre) => (
             <ToggleButton value={filtre} aria-label="left aligned">
               {filtre}
@@ -199,11 +199,13 @@ const Accommodation = () => {
       </div>
       <Grid container spacing={5}>
         {accommodations !== null &&
-          Object.values(accommodations).filter(suffisammentGrand).map((product) => (
-            <Grid item xs={6}>
-              <CardAccommodation accomodationInfos={product}/>
-            </Grid>
-          ))}
+          Object.values(accommodations)
+            .filter(suffisammentGrand)
+            .map((product) => (
+              <Grid item xs={6}>
+                <CardAccommodation accomodationInfos={product} />
+              </Grid>
+            ))}
       </Grid>
     </div>
   );

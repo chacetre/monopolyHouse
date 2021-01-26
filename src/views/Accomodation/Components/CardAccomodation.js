@@ -69,7 +69,6 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
   },
   right: {
-    paddingTop: 10,
     textAlign: "right",
   },
   left: {
@@ -173,7 +172,6 @@ const CardAccommodation = (accomodationInfos) => {
   }
 
   useEffect(() => {
-    console.log("accomodationInfos", accomodationInfos);
     if (accomodationInfos != undefined) {
       setCurrentAccommo(accomodationInfos.accomodationInfos);
     }
@@ -230,81 +228,6 @@ const CardAccommodation = (accomodationInfos) => {
             labelPlacement="right"
           />
         </RadioGroup>
-
-        <Typography variant="h4" className={classes.titleSection}>
-          Loyer
-        </Typography>
-        <Typography variant="overline" className={classes.titleSection}>
-          Indice Insee de ref :T1
-        </Typography>
-
-        <Paper elevation={0} className={classes.paper}>
-          <Grid container spacing={2}>
-            <Grid item lg={3} md={3} xs={3}>
-              <TextField
-                size="small"
-                label="Fixe"
-                variant="outlined"
-                fullWidth
-                disabled={!isModifying}
-                name="fixe"
-                value={
-                  (currentAccommo.loyer != undefined &&
-                    currentAccommo.loyer.fixe) ||
-                  ""
-                }
-                onChange={handleChangeLoyer}
-              />
-            </Grid>
-
-            <Grid item lg={3} md={3} xs={3}>
-              <TextField
-                size="small"
-                label="Charges"
-                variant="outlined"
-                fullWidth
-                disabled={!isModifying}
-                name="charges"
-                value={
-                  (currentAccommo.loyer != undefined &&
-                    currentAccommo.loyer.charges) ||
-                  ""
-                }
-                onChange={handleChangeLoyer}
-              />
-            </Grid>
-            {currentAccommo.isCommercial == "true" && (
-              <Grid item lg={3} md={3} xs={3}>
-                <TextField
-                  size="small"
-                  label="TVA en %"
-                  variant="outlined"
-                  fullWidth
-                  disabled={!isModifying}
-                  name="tva"
-                  value={
-                    (currentAccommo.loyer != undefined &&
-                      currentAccommo.loyer.tva) ||
-                    ""
-                  }
-                  onChange={handleChangeLoyer}
-                />
-              </Grid>
-            )}
-
-            <Grid item lg={3} md={3} xs={3} className={classes.gridCell}>
-              <CssTextField
-                size="small"
-                label="Total"
-                variant="outlined"
-                fullWidth
-                value={currentAccommo.loyer != undefined && calculateTotal()}
-                disabled
-                inputProps={{ "aria-label": "naked" }}
-              />
-            </Grid>
-          </Grid>
-        </Paper>
 
         <Grid container spacing={4} className={classes.containerTitle}>
           <Grid item className={classes.gridCell}>
@@ -385,28 +308,99 @@ const CardAccommodation = (accomodationInfos) => {
             </Paper>
           )}
       </Paper>
+      <Typography variant="h4" className={classes.titleSection}>
+        Loyer
+      </Typography>
+      <Typography variant="overline" className={classes.titleSection}>
+        Indice Insee de ref : {currentAccommo.loyer != undefined && currentAccommo.loyer.insee}
+      </Typography>
 
       <Paper elevation={0} className={classes.paper}>
-        <div className={classes.left}>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-          >
-            Revision de loyer
-          </Button>
-        </div>
-        <div className={classes.right}>
-          <Button className={classes.button}>Supprimer</Button>
-          <Button
-            variant="contained"
-            startIcon={<CreateRounded />}
-            onClick={handleModify}
-          >
-            {!isModifying && "Modifier"}
-            {isModifying && "Sauvegarder"}
-          </Button>
-        </div>
+        <Grid container spacing={2}>
+          <Grid item lg={3} md={3} xs={3}>
+            <TextField
+              size="small"
+              label="Fixe"
+              variant="outlined"
+              fullWidth
+              disabled={!isModifying}
+              name="fixe"
+              value={
+                (currentAccommo.loyer != undefined &&
+                  currentAccommo.loyer.fixe) ||
+                ""
+              }
+              onChange={handleChangeLoyer}
+            />
+          </Grid>
+
+          <Grid item lg={3} md={3} xs={3}>
+            <TextField
+              size="small"
+              label="Charges"
+              variant="outlined"
+              fullWidth
+              disabled={!isModifying}
+              name="charges"
+              value={
+                (currentAccommo.loyer != undefined &&
+                  currentAccommo.loyer.charges) ||
+                ""
+              }
+              onChange={handleChangeLoyer}
+            />
+          </Grid>
+          {currentAccommo.isCommercial == "true" && (
+            <Grid item lg={3} md={3} xs={3}>
+              <TextField
+                size="small"
+                label="TVA en %"
+                variant="outlined"
+                fullWidth
+                disabled={!isModifying}
+                name="tva"
+                value={
+                  (currentAccommo.loyer != undefined &&
+                    currentAccommo.loyer.tva) ||
+                  ""
+                }
+                onChange={handleChangeLoyer}
+              />
+            </Grid>
+          )}
+
+          <Grid item lg={3} md={3} xs={3} className={classes.gridCell}>
+            <CssTextField
+              size="small"
+              label="Total"
+              variant="outlined"
+              fullWidth
+              value={currentAccommo.loyer != undefined && calculateTotal()}
+              disabled
+              inputProps={{ "aria-label": "naked" }}
+            />
+          </Grid>
+        </Grid>
+      </Paper>
+      <Paper elevation={0} className={classes.paper}>
+        <Grid container className={classes.containerTitle}>
+          <Grid item md={6} xs={6}>
+            <Button variant="contained" color="secondary">
+              Revision de loyer
+            </Button>
+          </Grid>
+          <Grid item md={6} xs={6} className={classes.right}>
+            <Button className={classes.button}>Supprimer</Button>
+            <Button
+              variant="contained"
+              startIcon={<CreateRounded />}
+              onClick={handleModify}
+            >
+              {!isModifying && "Modifier"}
+              {isModifying && "Sauvegarder"}
+            </Button>
+          </Grid>
+        </Grid>
       </Paper>
     </Paper>
   );

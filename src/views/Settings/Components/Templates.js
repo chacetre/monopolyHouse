@@ -88,7 +88,8 @@ const Templates = (props) => {
         <Grid item lg={6} md={6} xs={6} className={classes.cellRight}>
           <Button variant="contained">Ajouter un template</Button>
         </Grid>
-        {Object.values(listTemplate).map((template) => (
+        
+        {listTemplate !== null && Object.values(listTemplate).map((template) => (
           <>
             <Grid item lg={4} md={4} xs={4} className={classes.title}>
               <Card>

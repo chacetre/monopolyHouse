@@ -194,7 +194,7 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
                       checked={currentOwner.values.civility === "mr"}
                     />
                   }
-                  label="Mr"
+                  label="M."
                   labelPlacement="right"
                 />
                 <FormControlLabel
@@ -219,7 +219,7 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
                     ? currentOwner.errors.firstname[0]
                     : null
                 }
-                label="Firstname"
+                label="Prénom"
                 name="firstname"
                 onChange={handleChange}
                 type="text"
@@ -233,7 +233,7 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
                 helperText={
                   hasError("lastname") ? currentOwner.errors.lastname[0] : null
                 }
-                label="Lastname"
+                label="Nom"
                 name="lastname"
                 onChange={handleChange}
                 type="text"
