@@ -102,7 +102,7 @@ const StyledToggleButtonGroup = withStyles((theme) => ({
 const Accommodation = () => {
   const classes = useStyles();
   const { ownerInformations } = useOwner();
-  const [showAddEstateModal, setShowAddEstateModal] = useState(true);
+  const [showAddEstateModal, setShowAddEstateModal] = useState(false);
   const [component, setComponent] = useState("");
   const [accommodations, setData] = useState(null);
   const [listFiltre, setFiltres] = useState([]);

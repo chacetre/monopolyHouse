@@ -122,6 +122,8 @@ const Receipt = () => {
     }
   }, [currentDate]);
 
+  console.log("hello",accommodations )
+
   return (
     <div className={classes.root}>
       <div className={classes.content}>
@@ -166,7 +168,7 @@ const Receipt = () => {
                     <div>{row.address.city.toUpperCase()}</div>
                   </TableCell>
                   <TableCell>
-                    {!row.isParticulier
+                    {row.rental.isParticulier !== "false"
                       ? row.rental.civility.toUpperCase() +
                         " " +
                         row.rental.firstname.toUpperCase() +
@@ -189,14 +191,14 @@ const Receipt = () => {
                   </TableCell>
                   <TableCell align="right">
                     <Button
-                      size="small"
-                      variant="outlined"
-                      onClick={createPDF}
+                        size="small"
+                        variant="outlined"
+                        onClick={() => showCalendar(row)}
                     >
-                      {currentDate}
+                      {dateReceipt.month} {dateReceipt.year} <CalendarTodayRounded/>
                     </Button>
                     <Template owner={ownerInformations} accomodation={row} date={dateReceipt} />
-                    <Button className={classes.icon} >
+                    <Button variant="contained" className={classes.icon} >
                       <GetAppRounded />
                     </Button>
                   </TableCell>

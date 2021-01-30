@@ -106,8 +106,7 @@ const Template = ({ owner, accomodation, date, ...rest }) => {
           <div className={classes.expediteur}>
             {
               <Typography variant="letter">
-                {" "}
-                {accomodation.rental.isParticulier
+                {accomodation.rental.isParticulier !== "false"
                   ? accomodation.rental.firstname.toUpperCase() +
                     " " +
                     accomodation.rental.lastname.toUpperCase()

@@ -28,6 +28,12 @@ import Society from "./Society";
 import { saveNewAccommodation } from "request/accomodationAPI";
 import Loyer from "./Loyer";
 import Address from "./Address";
+import Stepper from "@material-ui/core/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
+import LogementArea from "./LogementArea";
+import LocataireArea from "./LocataireArea";
+import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,6 +73,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 0,
     marginBottom: theme.spacing(2),
   },
+  paper:{
+    padding: 10
+  },
+  right: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }, button : {
+    marginLeft: 15
+  },
+  indiceInsee:{
+    marginBottom: 10
+  }
 }));
 
 const schema = {
@@ -101,18 +120,30 @@ const schemaLoyer = {
   charges: {
     presence: { allowEmpty: false, message: "is required" },
   },
+  indiceInsee: {
+    presence: { allowEmpty: false, message: "is required" },
+  }
 };
+
+function getSteps() {
+  return ['Informations Logement', 'Informations Locataire', 'Loyer'];
+}
 
 const schemaRental = {};
 
 function AddEstateModal({ open, className, onClose, ...rest }) {
   const classes = useStyles();
   const { ownerInformations } = useOwner();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const steps = getSteps();
   const [currentAccommo, setCurrentAccommo] = useState({
     isValid: false,
     values: {
-      rental: {},
+      rental: {
+        isParticulier : "true"
+      },
       address: {},
+      loyer: {}
     },
     touched: {},
     errors: {},
@@ -121,14 +152,16 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
   function createEstateDB() {
     const timestamp = Date.now();
     saveNewAccommodation(
-      currentAccommo.values,
-      timestamp,
-      ownerInformations.id
+        currentAccommo.values,
+        timestamp,
+        ownerInformations.id
     );
     onClose();
   }
 
   function createEstate() {
+
+    console.log("currentAccomo", currentAccommo.errors)
     if (currentAccommo.isValid) {
       createEstateDB();
     }
@@ -142,9 +175,9 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
       values: {
         ...formState.values,
         [event.target.name]:
-          event.target.type === "checkbox"
-            ? event.target.checked
-            : event.target.value,
+            event.target.type === "checkbox"
+                ? event.target.checked
+                : event.target.value,
       },
       touched: {
         ...formState.touched,
@@ -214,26 +247,34 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
     onClose();
   };
 
+
+  const handleNext = () => {
+    if (activeStep + 1 === steps.length){
+      createEstate()
+    }
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
   const hasError = (field) =>
-    currentAccommo.touched[field] && currentAccommo.errors[field]
-      ? true
-      : false;
+      currentAccommo.touched[field] && currentAccommo.errors[field]
+          ? true
+          : false;
 
   useEffect(() => {
     const errorsGeneral = validate(currentAccommo.values, schema);
     const errorsAddress = validate(
-      currentAccommo.values.address,
-      schemaAddress
+        currentAccommo.values.address,
+        schemaAddress
     );
     const errorsRental = validate(currentAccommo.values.rental, schemaRental);
     const errorsLoyer = validate(currentAccommo.values.loyer, schemaLoyer);
 
     let errors = Object.assign(
-      {},
-      errorsGeneral,
-      errorsAddress,
-      errorsRental,
-      errorsLoyer
+        {},
+        errorsGeneral,
+        errorsAddress,
+        errorsRental,
+        errorsLoyer
     );
 
     if (Object.keys(errors).length === 0) {
@@ -254,162 +295,67 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
   }
 
   return (
-    <Modal onClose={onClose} open={open}>
-      <Card {...rest} className={clsx(classes.root, className)}>
-        <CardHeader title={"Ajouter un nouveau bien"} />
-        <Divider />
-        <CardContent>
-          <FormControl
-            component="fieldset"
-            error={true}
-            className={classes.formControl}
-          >
-            <RadioGroup
-              row
-              name="isCommercial"
-              defaultValue="top"
-              onChange={handleChange}
-              className={classes.gridCell}
+      <Modal onClose={onClose} open={open}>
+        <Card {...rest} className={clsx(classes.root, className)}>
+          <CardHeader title={"Ajouter un nouveau bien"} />
+          <Divider />
+          <CardContent>
+
+            <Stepper activeStep={activeStep}>
+              {steps.map((label, index) => {
+                const stepProps = {};
+                const labelProps = {};
+                return (
+                    <Step key={label} {...stepProps}>
+                      <StepLabel {...labelProps}>{label}</StepLabel>
+                    </Step>
+                );
+              })}
+            </Stepper>
+
+            <Paper className={classes.paper}>
+              {activeStep === 0 && <LogementArea handleChange={handleChange} handleChangeRental={handleChangeRental} currentAccommo={currentAccommo} hasError={hasError} handleChangeAddress ={handleChangeAddress} />}
+              {activeStep === 1 && <LocataireArea handleChange={handleChange} handleChangeRental={handleChangeRental} currentAccommo={currentAccommo} hasError={hasError}/>}
+              {activeStep === 2 &&
+
+              <>
+                <TextField
+                    size="small"
+                    fullWidth
+                    className={classes.indiceInsee}
+                    error={hasError("indiceInsee")}
+                    helperText="Doit etre sous la forme : T1, T2, T3, T4"
+                    label="Indice Insee de référence"
+                    name="indiceInsee"
+                    onChange={handleChangeRental}
+                    type="text"
+                    value={
+                      ((currentAccommo.values.loyer.indiceInsee) || "")
+                    }
+                    variant="outlined"
+                />
+                <Loyer
+                    handleChange={handleChangeLoyer}
+                    currentEstate={currentAccommo.values}
+                />
+              </>
+              }
+            </Paper>
+          </CardContent>
+          <Divider />
+          <CardActions disableSpacing className={classes.right}>
+            <Button onClick={cancelClose}>annuler</Button>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                className={classes.button}
             >
-              <Typography variant="h4" className={classes.titleSection}>
-                1. Type de bien
-              </Typography>
-              <FormControlLabel
-                value={"false"}
-                control={
-                  <Radio
-                    color="primary"
-                    checked={currentAccommo.values.isCommercial === "false"}
-                  />
-                }
-                label="Habitation"
-                labelPlacement="right"
-              />
-              <FormControlLabel
-                value={"true"}
-                control={
-                  <Radio
-                    color="primary"
-                    checked={currentAccommo.values.isCommercial === "true"}
-                  />
-                }
-                label="Local Commercial"
-                labelPlacement="right"
-              />
-            </RadioGroup>
-            {hasError("isCommercial") ? (
-              <Typography>currentAccommo.errors.isCommercial[0]</Typography>
-            ) : null}
-          </FormControl>
-          <Typography variant="h4" className={classes.titleSection}>
-            2. Adresse
-          </Typography>
-
-          <Address
-            handleChange={handleChangeAddress}
-            currentAccommo={currentAccommo}
-          />
-
-          <RadioGroup
-            row
-            name="isParticulier"
-            defaultValue="top"
-            onChange={handleChangeRental}
-            className={classes.gridCell}
-          >
-            <Typography variant="h4" className={classes.titleSection}>
-              3. Locataire
-            </Typography>
-            <FormControlLabel
-              value={"null"}
-              control={
-                <Radio
-                  color="primary"
-                  checked={
-                    currentAccommo.values.rental.isParticulier === "null"
-                  }
-                />
-              }
-              label="Vide"
-              labelPlacement="right"
-            />
-            <FormControlLabel
-              value={"true"}
-              control={
-                <Radio
-                  color="primary"
-                  checked={
-                    currentAccommo.values.rental.isParticulier === "true"
-                  }
-                />
-              }
-              label="Particulier"
-              labelPlacement="right"
-            />
-            <FormControlLabel
-              value={"false"}
-              control={
-                <Radio
-                  color="primary"
-                  checked={
-                    currentAccommo.values.rental.isParticulier === "false"
-                  }
-                />
-              }
-              label="Entreprise"
-              labelPlacement="right"
-            />
-          </RadioGroup>
-          <TextField
-            size="small"
-            fullWidth
-            error={hasError("startDate")}
-            helperText={
-              hasError("startDate") ? currentAccommo.errors.startDate[0] : null
-            }
-            label="Date d'entrée"
-            name="startDate"
-            onChange={handleChangeRental}
-            type="text"
-            value={
-              (currentAccommo.values.rental != undefined &&
-                currentAccommo.values.rental.startDate) ||
-              ""
-            }
-            variant="outlined"
-          />
-          <div className={classes.container}>
-            {currentAccommo.values.rental.isParticulier === "true" && (
-              <Particulier
-                handleChange={handleChangeRental}
-                currentOwner={currentAccommo.values}
-                disabled={true}
-              />
-            )}
-            {currentAccommo.values.rental.isParticulier === "false" && (
-              <Society
-                handleChange={handleChangeRental}
-                currentEstate={currentAccommo.values}
-                disabled={true}
-              />
-            )}
-          </div>
-
-          <Typography variant="h4" className={classes.titleSection}>
-            4. Loyer
-          </Typography>
-          <Loyer
-            handleChange={handleChangeLoyer}
-            currentEstate={currentAccommo.values}
-          />
-        </CardContent>
-        <Divider />
-        <CardActions disableSpacing>
-          <Button onClick={cancelClose}>annuler</Button>
-          <Button onClick={createEstate}>créer</Button>
-        </CardActions>
-      </Card>
-    </Modal>
+              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+            </Button>
+          </CardActions>
+        </Card>
+      </Modal>
   );
 }
 

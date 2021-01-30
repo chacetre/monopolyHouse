@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 const Topbar = (props) => {
   const { className, onSidebarOpen, ...rest } = props;
   const classes = useStyles();
-  const { setOwnerInformations, ownerInformations } = useOwner();
+  const {setOwnerInformations, ownerInformations } = useOwner();
   const [owners, setData] = useState(null);
 
   function getBossInformations() {
@@ -63,11 +63,14 @@ const Topbar = (props) => {
 
   function handleChangeUser(event)  {
     var currentOwner = Object.values(owners).find((user) => user.id = event.target.value)
+    console.log('ownerInfor handle',currentOwner )
     setOwnerInformations(currentOwner);
   };
 
   useEffect(() => {
+    console.log('ownerInfor',ownerInformations )
     getBossInformations();
+
   }, [ownerInformations]);
 
   return (
@@ -98,7 +101,7 @@ const Topbar = (props) => {
                 {owners !== null &&
                   Object.values(owners).map((owner) => (
                     <MenuItem value={owner.id}>
-                      {!owner.isParticulier ? owner.firstname + " " + owner.lastname : owner.socialIdentity} 
+                      {!owner.isSociety ? owner.firstname + " " + owner.lastname : owner.socialIdentity}
                     </MenuItem>
                   ))}
         

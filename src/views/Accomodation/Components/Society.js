@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Society = (props) => {
   const { className, disabled, handleChange, currentEstate, ...rest } = props;
-  const classes = useStyles();
   const [currentEstateL, setCurrentEstateL] = useState({});
   const [isModifying, setModify] =useState(false);
 
@@ -56,7 +55,6 @@ const Society = (props) => {
 
   useEffect(() => {
     if (currentEstate !== undefined) setCurrentEstateL(currentEstate);
-    
   }, [currentEstate]);
 
   return (
@@ -69,7 +67,7 @@ const Society = (props) => {
           name="socialIdentity"
           onChange={handleChange}
           type="text"
-          value={currentEstateL.rental != undefined && currentEstateL.rental.socialIdentity || ""}
+          value={currentEstateL.rental !== undefined && (currentEstateL.rental.socialIdentity || "")}
           variant="outlined"
           disabled={!isModifying}/>
         </Grid>

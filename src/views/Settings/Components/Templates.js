@@ -64,6 +64,10 @@ const Templates = (props) => {
     setShowTemplate(true);
   }
 
+  function handleAddTemplate(){
+    history.push(`/settings/template/new`);
+  }
+
   useEffect(() => {
     getTemplates();
   }, []);
@@ -86,7 +90,7 @@ const Templates = (props) => {
           </Typography>
         </Grid>
         <Grid item lg={6} md={6} xs={6} className={classes.cellRight}>
-          <Button variant="contained">Ajouter un template</Button>
+          <Button variant="contained" onClick={handleAddTemplate}>Ajouter un template</Button>
         </Grid>
         
         {listTemplate !== null && Object.values(listTemplate).map((template) => (

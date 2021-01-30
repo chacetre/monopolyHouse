@@ -110,6 +110,8 @@ const TemplateEdit = () => {
   }
 
   useEffect(() => {
+
+    if (idTemplate !== "new")
     getTemplate();
   }, []);
 
@@ -243,7 +245,7 @@ const TemplateEdit = () => {
               </IconButton>
             </Grid>
             <Grid item lg={12} md={12} xs={12} className={classes.cellRight}>
-              <Button variant="outlined" style={{marginRight : 10}}>Annuler</Button>
+              <Button variant="outlined" style={{marginRight : 10}} onClick={() => history.goBack()}>Annuler</Button>
               <Button variant="contained" onClick={saveChange}>
                 Valider
               </Button>

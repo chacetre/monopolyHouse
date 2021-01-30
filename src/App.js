@@ -44,7 +44,7 @@ const App = (props) => {
 
   const setOwner = (data) => {
     localStorage.setItem("owner", JSON.stringify(data));
-    setUserInformations(data);
+    setOwnerInformations(data);
   };
 
   const setUser = (data) => {

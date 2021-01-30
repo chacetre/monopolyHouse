@@ -83,7 +83,7 @@ const Loyer = (props) => {
 
     var numFixe = Number(currentEstateL.loyer.fixe)
     var numCharges = Number(currentEstateL.loyer.charges)
-    var numTVA = currentEstateL.isCommercial != undefined ? Number(currentEstateL.loyer.tva) : 0
+    var numTVA = currentEstateL.isCommercial !== "false" ? Number(currentEstateL.loyer.tva) : 0
 
     return numFixe + numCharges + numTVA
   }

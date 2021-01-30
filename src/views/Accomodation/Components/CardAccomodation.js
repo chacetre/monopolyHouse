@@ -157,11 +157,12 @@ const CardAccommodation = (accomodationInfos) => {
     var numFixe = Number(currentAccommo.loyer.fixe);
     var numCharges = Number(currentAccommo.loyer.charges);
     var numTVA =
-      currentAccommo.isCommercial != undefined
+      currentAccommo.isCommercial !== "false"
         ? Number(currentAccommo.loyer.tva)
         : 0;
 
-    return numFixe + numCharges + numTVA;
+    var totalTVA = numTVA !== 0 ? (numTVA * numFixe / 100) : 0
+    return numFixe + numCharges + totalTVA;
   }
 
   function handleModify() {
@@ -302,7 +303,7 @@ const CardAccommodation = (accomodationInfos) => {
             <Paper elevation={0} className={classes.paper}>
               <Society
                 disabled={isModifying}
-                currentOwner={currentAccommo}
+                currentEstate={currentAccommo}
                 handleChange={handleChangeRental}
               />
             </Paper>
@@ -384,12 +385,12 @@ const CardAccommodation = (accomodationInfos) => {
       </Paper>
       <Paper elevation={0} className={classes.paper}>
         <Grid container className={classes.containerTitle}>
-          <Grid item md={6} xs={6}>
+          <Grid item md={4} xs={4}>
             <Button variant="contained" color="secondary">
               Revision de loyer
             </Button>
           </Grid>
-          <Grid item md={6} xs={6} className={classes.right}>
+          <Grid item md={8} xs={8} className={classes.right}>
             <Button className={classes.button}>Supprimer</Button>
             <Button
               variant="contained"
