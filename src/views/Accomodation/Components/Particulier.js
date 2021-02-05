@@ -1,46 +1,13 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import clsx from "clsx";
-import { makeStyles } from "@material-ui/styles";
 import {
-  Card,
-  CardContent,
-  CardActions,
-  Typography,
   Grid,
   TextField,
-  Paper,
   Radio,
   RadioGroup,
   FormControlLabel,
 } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-  imageContainer: {
-    marginRight: 20,
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: "5px",
-    overflow: "hidden",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    justifyItems: "center",
-  },
-  image: {
-    width: "100%",
-  },
-  statsItem: {
-    display: "flex",
-    alignItems: "center",
-  },
-  statsIcon: {
-    color: theme.palette.icon,
-    marginRight: theme.spacing(1),
-  },
-}));
 
 const Particulier = ({ handleChange, currentOwner, disabled, ...rest }) => {
   const [currentAccomodation, setCurrentAccomodation] = useState({});
@@ -69,7 +36,7 @@ const Particulier = ({ handleChange, currentOwner, disabled, ...rest }) => {
               <Radio
                 color="primary"
                 checked={
-                  currentAccomodation.rental != undefined &&
+                  currentAccomodation.rental !== undefined &&
                   currentAccomodation.rental.civility === "mr"
                 }
               />
@@ -84,7 +51,7 @@ const Particulier = ({ handleChange, currentOwner, disabled, ...rest }) => {
               <Radio
                 color="primary"
                 checked={
-                  currentAccomodation.rental != undefined &&
+                  currentAccomodation.rental !== undefined &&
                   currentAccomodation.rental.civility === "mme"
                 }
               />
@@ -104,7 +71,7 @@ const Particulier = ({ handleChange, currentOwner, disabled, ...rest }) => {
           onChange={handleChange}
           type="text"
           value={
-            (currentAccomodation.rental != undefined &&
+            (currentAccomodation.rental !== undefined &&
               currentAccomodation.rental.lastname) ||
             ""
           }
@@ -121,7 +88,7 @@ const Particulier = ({ handleChange, currentOwner, disabled, ...rest }) => {
           onChange={handleChange}
           type="text"
           value={
-            (currentAccomodation.rental != undefined &&
+            (currentAccomodation.rental  &&
               currentAccomodation.rental.firstname) ||
             ""
           }

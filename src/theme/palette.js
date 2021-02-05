@@ -8,15 +8,15 @@ export default {
   white,
   primary: {
     contrastText: white,
-    dark: '#90D8FF',
+    dark: '#BED2FA',
     main: '#BED2FA',
     light: '#BED2FA'
   },
   secondary: {
     contrastText: white,
-    dark: '#486C7F',
+    dark: '#3662C1',
     main: '#3662C1',
-    light: '#486C7F'
+    light: '#3662C1'
   },
   thirdary:{
     contrastText: white,

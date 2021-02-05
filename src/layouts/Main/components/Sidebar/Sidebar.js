@@ -2,13 +2,11 @@ import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Divider, Drawer } from '@material-ui/core';
+import { Drawer } from '@material-ui/core';
 import HomeRounded from '@material-ui/icons/HomeRounded';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import StoreMallDirectoryRounded from '@material-ui/icons/StoreMallDirectoryRounded';
 
 import {SidebarNav } from './components';
-import { AccountCircleRounded, CategoryRounded, HouseRounded, ReceiptRounded } from '@material-ui/icons';
+import { AccountCircleRounded, CategoryRounded, ReceiptRounded } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
   drawer: {

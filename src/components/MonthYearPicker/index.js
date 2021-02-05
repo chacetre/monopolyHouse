@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { makeStyles, withStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles";
 import {
   Modal,
   Card,
@@ -11,23 +11,13 @@ import {
   Grid,
   Divider,
   Typography,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  MenuItem,
   Button,
-  IconButton,
-  Select,
-  InputLabel,
-  TextField,
+  IconButton
 } from "@material-ui/core";
 import {
   KeyboardArrowRightRounded,
   KeyboardArrowLeftRounded,
 } from "@material-ui/icons";
-import html2canvas from "html2canvas";
-import Template from "../../views/Receipt/Template";
-import jsPDF from "jspdf";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -101,7 +91,7 @@ function MonthYearPicker({
   };
 
   useEffect(() => {
-    if (initialValue != undefined) {
+    if (initialValue !== undefined) {
       setYear(initialValue.split(" ")[1]);
       setMonth(initialValue.split(" ")[0].toLowerCase());
     }
@@ -136,7 +126,7 @@ function MonthYearPicker({
           <Grid container spacing={3}>
             {month.map((row) => (
               <Grid item xs={3}>
-                {monthSelect == row && (
+                {monthSelect === row && (
                   <Button
                     variant="contained"
                     color="secondary"
@@ -146,7 +136,7 @@ function MonthYearPicker({
                     {row}
                   </Button>
                 )}
-                {monthSelect != row && (
+                {monthSelect !== row && (
                   <Button
                     variant="outlined"
                     fullWidth

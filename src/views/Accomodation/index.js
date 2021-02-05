@@ -1,28 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/styles";
-import { func } from "prop-types";
 import {
   Typography,
   Grid,
-  Card,
-  CardContent,
-  CardActions,
   Button,
-  IconButton,
-  CardHeader,
-  TextField,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  Paper,
 } from "@material-ui/core";
 import { colors } from "@material-ui/core";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import DeleteRounded from "@material-ui/icons/DeleteRounded";
-import CreateRounded from "@material-ui/icons/CreateRounded";
-import Particulier from "./Components/Particulier";
-import Society from "./Components/Society";
 import { useOwner } from "../../context/owner";
 import AddEstateModal from "./Components/AddEstateModal";
 import CardAccommodation from "./Components/CardAccomodation";
@@ -108,7 +93,7 @@ const Accommodation = () => {
   const [listFiltre, setFiltres] = useState([]);
 
   function getAccommodationsInformations() {
-    if (ownerInformations.id != undefined) {
+    if (ownerInformations.id !== undefined) {
       getAccomodationByOwner(ownerInformations.id, (response) => {
         setData(response);
       });
@@ -124,10 +109,10 @@ const Accommodation = () => {
   }
 
   function suffisammentGrand(element) {
-    if (component == "") {
+    if (component === "") {
       return true;
     }
-    return element.address.city == component;
+    return element.address.city === component;
   }
 
   useEffect(() => {
@@ -139,8 +124,8 @@ const Accommodation = () => {
   }, [ownerInformations]);
 
   useEffect(() => {
-    if (accommodations != undefined) {
-      var listTemp = new Array();
+    if (accommodations) {
+      var listTemp = [];
       Object.values(accommodations).forEach((element) => {
         listTemp.push(element.address.city);
       });

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { makeStyles, withStyles } from "@material-ui/styles";
+import { makeStyles} from "@material-ui/styles";
 import {
   Modal,
   Card,
@@ -10,15 +10,11 @@ import {
   CardActions,
   Grid,
   Divider,
-  Typography,
   Radio,
   RadioGroup,
   FormControlLabel,
-  MenuItem,
   Button,
   TextField,
-  Select,
-  InputLabel,
 } from "@material-ui/core";
 import firebase from "firebase/app";
 

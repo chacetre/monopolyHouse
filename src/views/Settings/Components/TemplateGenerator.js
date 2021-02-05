@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 
 import { Divider, Grid, Typography } from "@material-ui/core";
-import { database } from "firebase";
 
 const lastDay = {
   janvier: 31,
@@ -68,14 +67,13 @@ const TemplateGenerator = ({
   ...rest
 }) => {
   const classes = useStyles();
-  const [dateReceipt, setDateReceipt] = useState({});
   const [templateLocal, setTemplate] = useState({});
 
   function calculateTotal() {
     var numFixe = Number(accomodation.loyer.fixe);
     var numCharges = Number(accomodation.loyer.charges);
     var numTVA =
-      accomodation.isCommercial == undefined
+      accomodation.isCommercial === undefined
         ? Number(accomodation.loyer.tva)
         : 0;
 
@@ -103,9 +101,6 @@ const TemplateGenerator = ({
     return textTranslate;
   }
 
-  useEffect(() => {
-    setDateReceipt(date);
-  }, [date]);
 
   useEffect(() => {
     if (template.textBody !== undefined) {
@@ -113,7 +108,7 @@ const TemplateGenerator = ({
       var newTextStart = change(template.textStart || "");
       var newTextEnd = change(template.textEnd || "");
 
-      setTemplate((test) => ({
+      setTemplate(() => ({
         ...template,
         textBody: newTextBody,
         textStart: newTextStart,

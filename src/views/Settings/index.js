@@ -1,20 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles, withStyles } from "@material-ui/styles";
-import { func } from "prop-types";
+import React from "react";
+import { makeStyles} from "@material-ui/styles";
 import {
-  Typography,
   Grid,
-  Card,
-  CardContent,
-  CardActions,
-  Button,
-  IconButton,
-  CardHeader,
-  TextField,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  Paper,
   Divider,
 } from "@material-ui/core";
 import { colors } from "@material-ui/core";
@@ -80,7 +67,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Settings = () => {
   const classes = useStyles();
-  const [listTemplate, setTemplates] = useState([]);
 
   return (
     <div className={classes.root}>

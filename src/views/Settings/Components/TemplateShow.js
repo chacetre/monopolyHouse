@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import clsx from "clsx";
-import { makeStyles, withStyles } from "@material-ui/styles";
-import { func } from "prop-types";
+import { makeStyles} from "@material-ui/styles";
 import {
   Modal,
   Card,
@@ -10,11 +9,6 @@ import {
   Button,
   CardHeader,
 } from "@material-ui/core";
-import {
-  getIndexesAPI,
-  updateIndexesAPI,
-  saveNewIndex,
-} from "request/settingsAPI";
 import TemplateGenerator from "./TemplateGenerator";
 
 const useStyles = makeStyles((theme) => ({
