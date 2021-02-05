@@ -9,13 +9,13 @@ export default {
   primary: {
     contrastText: white,
     dark: '#90D8FF',
-    main: '#90D8FF',
-    light: '#90D8FF'
+    main: '#BED2FA',
+    light: '#BED2FA'
   },
   secondary: {
     contrastText: white,
     dark: '#486C7F',
-    main: '#486C7F',
+    main: '#3662C1',
     light: '#486C7F'
   },
   thirdary:{
@@ -25,9 +25,9 @@ export default {
   },
   action: {
     contrastText: white,
-    dark: colors.amber[900],
-    main: colors.amber[600],
-    light: colors.amber[100]
+    dark: colors.red[700],
+    main: colors.red["A200"],
+    light: colors.red["A100"]
   },
   success: {
     contrastText: white,

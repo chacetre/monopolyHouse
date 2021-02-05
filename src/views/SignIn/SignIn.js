@@ -38,87 +38,47 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     width: "100%",
   },
-  grid: {
-    height: "100%",
-  },
-  quoteContainer: {
-    [theme.breakpoints.down("md")]: {
-      display: "none",
-    },
-  },
-  quote: {
-    backgroundColor: theme.palette.neutral,
-    height: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundImage: "url(/images/auth.jpg)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-  },
-  quoteInner: {
-    textAlign: "center",
-    flexBasis: "600px",
-  },
-  quoteText: {
-    color: theme.palette.white,
-    fontWeight: 300,
-  },
-  name: {
-    marginTop: theme.spacing(3),
-    color: theme.palette.white,
-  },
-  bio: {
-    color: theme.palette.white,
-  },
-  contentContainer: {},
   content: {
     height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    textAlign: "center",
-  },
-  contentHeader: {
-    display: "flex",
-    alignItems: "center",
-    paddingTop: theme.spacing(5),
-    paddingBototm: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-  },
-  logoImage: {
-    marginLeft: theme.spacing(4),
-  },
-  contentBody: {
-    flexGrow: 1,
-    display: "flex",
-    alignItems: "center",
-    [theme.breakpoints.down("md")]: {
-      justifyContent: "center",
-    },
+    
   },
   form: {
-    paddingLeft: 100,
-    paddingRight: 100,
-    paddingBottom: 125,
-    flexBasis: 700,
-    [theme.breakpoints.down("sm")]: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
+    display: "flex",
+    width: "75%",
+    flexDirection: "column",
   },
   title: {
-    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(2),
+    color : theme.palette.white,
   },
-  sugestion: {
-    marginTop: theme.spacing(2),
+  image: {
+    width: "75%",
+    padding: theme.spacing(3),
   },
   textField: {
-    marginTop: theme.spacing(2),
+    backgroundColor: theme.palette.white,
+    borderRadius: 5,
+    marginBottom : theme.spacing(2)
   },
   signInButton: {
     margin: theme.spacing(2, 0),
+    color : theme.palette.white,
+    backgroundColor: theme.palette.action.main,
+  },
+  leftContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  contentBody: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: theme.spacing(10),
+    backgroundColor: theme.palette.secondary.main,
   },
 }));
 
@@ -155,8 +115,8 @@ const SignIn = (props) => {
       .then((user) => {
         console.log("user", user.user.uid);
         if (user.user !== null) {
-          setUserInformations(user.user.uid)
-          var dateNow = new Date().getTime() + 86400000
+          setUserInformations(user.user.uid);
+          var dateNow = new Date().getTime() + 86400000;
           setAuthTokens(dateNow.toString());
           history.push("/select-your-boss");
         } else {
@@ -188,57 +148,68 @@ const SignIn = (props) => {
   };
 
   const hasError = (field) => {
-    return formState.touched[field] && formState.errors[field]
-      ? true
-      : false;
+    return formState.touched[field] && formState.errors[field] ? true : false;
   };
 
   return (
     <div className={classes.root}>
-      <div className={classes.content}>
-        <div className={classes.form}>
-          <Typography className={classes.title} variant="h2">
-            Connexion
-          </Typography>
-          <TextField
-            className={classes.textField}
-            error={hasError("email")}
-            fullWidth
-            helperText={hasError("email") ? formState.errors.email[0] : null}
-            label="Identifiant"
-            name="email"
-            onChange={handleChange}
-            type="text"
-            value={formState.values.email || ""}
-            variant="outlined"
-          />
-          <TextField
-            className={classes.textField}
-            error={hasError("password")}
-            fullWidth
-            helperText={
-              hasError("password") ? formState.errors.password[0] : null
-            }
-            label="Mot de passe"
-            name="password"
-            onChange={handleChange}
-            type="password"
-            value={formState.values.password || ""}
-            variant="outlined"
-          />
-          <Button
-            className={classes.signInButton}
-            color="primary"
-            disabled={!formState.isValid}
-            fullWidth
-            size="large"
-            onClick={postLogin}
-            variant="contained"
-          >
-            Connexion
-          </Button>
-        </div>
-      </div>
+      <Grid container className={classes.content}>
+        <Grid item lg={5} className={classes.leftContent}>
+          <div className={classes.image}>
+            <img alt="Logo" src="/images/login.svg" />
+          </div>
+        </Grid>
+        <Grid item lg={7}>
+          <div className={classes.contentBody}>
+            <div className={classes.form}>
+              <Typography className={classes.title} variant="h2">
+                Connexion
+              </Typography>
+              <TextField
+                className={classes.textField}
+                error={hasError("email")}
+                fullWidth
+                helperText={
+                  hasError("email") ? formState.errors.email[0] : null
+                }
+                label="Identifiant"
+                name="email"
+                onChange={handleChange}
+                type="text"
+                value={formState.values.email || ""}
+                variant="outlined"
+              />
+              <TextField
+                className={classes.textField}
+                error={hasError("password")}
+                fullWidth
+                helperText={
+                  hasError("password") ? formState.errors.password[0] : null
+                }
+                label="Mot de passe"
+                name="password"
+                onChange={handleChange}
+                type="password"
+                value={formState.values.password || ""}
+                variant="outlined"
+              />
+              <Button
+                className={classes.signInButton}
+                disabled={!formState.isValid}
+                fullWidth
+                size="large"
+                onClick={postLogin}
+                variant="contained"
+              >
+                Connexion
+              </Button>
+            </div>
+            <div>
+              <Typography className={classes.title} variant="caption">Version 0.2</Typography>
+            </div>
+          </div>
+        </Grid>
+      </Grid>
     </div>
   );
 };

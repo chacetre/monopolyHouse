@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(3),
     margin: theme.spacing(2),
-    color: theme.palette.white,
+    color: theme.palette.primary.main,
   },
   content: {
     marginBottom: theme.spacing(2),
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     textAlign: "center",
     cursor: "pointer",
-    backgroundColor: theme.palette.thirdary.main,
+    backgroundColor: theme.palette.secondary.main,
     borderRadius: 10,
   },
 }));
