@@ -2,32 +2,20 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import validate from "validate.js";
 import clsx from "clsx";
-import { makeStyles, withStyles } from "@material-ui/styles";
+import { makeStyles} from "@material-ui/styles";
 import {
   Modal,
   Card,
   CardHeader,
   CardContent,
   CardActions,
-  Grid,
   Divider,
-  Typography,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
   Button,
   TextField,
-  Select,
-  FormHelperText,
 } from "@material-ui/core";
-import firebase from "firebase/app";
-import Particulier from "./Particulier";
 import { useOwner } from "../../../context/owner";
-import Society from "./Society";
 import { saveNewAccommodation } from "request/accomodationAPI";
 import Loyer from "./Loyer";
-import Address from "./Address";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
@@ -314,7 +302,7 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
 
             <Paper className={classes.paper}>
               {activeStep === 0 && <LogementArea handleChange={handleChange} handleChangeRental={handleChangeRental} currentAccommo={currentAccommo} hasError={hasError} handleChangeAddress ={handleChangeAddress} />}
-              {activeStep === 1 && <LocataireArea handleChange={handleChange} handleChangeRental={handleChangeRental} currentAccommo={currentAccommo} hasError={hasError}/>}
+              {activeStep === 1 && <LocataireArea handleChangeRental={handleChangeRental} currentAccommo={currentAccommo} hasError={hasError}/>}
               {activeStep === 2 &&
 
               <>
