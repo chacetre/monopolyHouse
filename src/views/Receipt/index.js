@@ -121,8 +121,6 @@ const Receipt = () => {
     }
   }, [currentDate]);
 
-  console.log("hello",accommodations )
-
   return (
     <div className={classes.root}>
       <div className={classes.content}>
@@ -158,7 +156,7 @@ const Receipt = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {accommodations !== undefined &&
+            {accommodations &&
               Object.values(accommodations).map((row) => (
                 <TableRow key={row.id}>
                   <TableCell component="th" scope="row">
