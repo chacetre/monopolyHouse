@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles, withStyles } from "@material-ui/styles";
-import { func } from "prop-types";
+import { makeStyles } from "@material-ui/styles";
 import {
   Typography,
   Grid,
@@ -12,9 +11,6 @@ import {
   Chip,
 } from "@material-ui/core";
 import {
-  getIndexesAPI,
-  updateIndexesAPI,
-  saveNewIndex,
   getTemplatesAPI,
 } from "request/settingsAPI";
 import TemplateShow from "./TemplateShow";

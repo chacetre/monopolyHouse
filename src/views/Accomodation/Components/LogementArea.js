@@ -1,16 +1,12 @@
-import React, { useState, useEffect} from "react";
-
-import { makeStyles, withStyles } from "@material-ui/styles";
+import React from "react";
+import { makeStyles} from "@material-ui/styles";
 import {
     Typography,
-    Paper,
     Radio,
     RadioGroup,
     FormControlLabel, FormControl,
 } from "@material-ui/core";
 import Address from "./Address";
-
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 const LogementArea = (props) => {
-    const {handleChange, handleChangeRental, currentAccommo,hasError,handleChangeAddress, ...rest } = props;
+    const {handleChange, currentAccommo,hasError,handleChangeAddress} = props;
     const classes = useStyles();
 
     return (

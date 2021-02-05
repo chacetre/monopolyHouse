@@ -67,7 +67,7 @@ const Template = ({ owner, accomodation, date, ...rest }) => {
     var numFixe = Number(accomodation.loyer.fixe);
     var numCharges = Number(accomodation.loyer.charges);
     var numTVA =
-      accomodation.isCommercial == undefined
+      accomodation.isCommercial === undefined
         ? Number(accomodation.loyer.tva)
         : 0;
 

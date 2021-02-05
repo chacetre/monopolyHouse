@@ -301,7 +301,7 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
             </Stepper>
 
             <Paper className={classes.paper}>
-              {activeStep === 0 && <LogementArea handleChange={handleChange} handleChangeRental={handleChangeRental} currentAccommo={currentAccommo} hasError={hasError} handleChangeAddress ={handleChangeAddress} />}
+              {activeStep === 0 && <LogementArea handleChange={handleChange} currentAccommo={currentAccommo} hasError={hasError} handleChangeAddress ={handleChangeAddress} />}
               {activeStep === 1 && <LocataireArea handleChangeRental={handleChangeRental} currentAccommo={currentAccommo} hasError={hasError}/>}
               {activeStep === 2 &&
 

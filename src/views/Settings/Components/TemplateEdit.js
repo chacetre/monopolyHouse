@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { makeStyles, withStyles } from "@material-ui/styles";
-import { func } from "prop-types";
+import { makeStyles} from "@material-ui/styles";
 import {
   Typography,
   Grid,
@@ -15,7 +14,7 @@ import {
 } from "@material-ui/core";
 import { getTemplateByIdAPI, updateTemplateAPI } from "request/settingsAPI";
 import { useParams } from "react-router-dom";
-import { InfoRounded, Report } from "@material-ui/icons";
+import { InfoRounded } from "@material-ui/icons";
 import {
   fakeAccomodation,
   fakeDate,
@@ -110,10 +109,9 @@ const TemplateEdit = () => {
   }
 
   useEffect(() => {
-
     if (idTemplate !== "new")
     getTemplate();
-  }, []);
+  }, [idTemplate]);
 
   return (
     <div className={classes.root}>

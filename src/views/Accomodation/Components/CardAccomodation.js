@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/styles";
-import { func } from "prop-types";
 import {
   Typography,
   Grid,
-  Card,
-  CardContent,
-  CardActions,
   Button,
-  IconButton,
-  CardHeader,
   TextField,
   Radio,
   RadioGroup,
@@ -17,13 +11,9 @@ import {
   Paper,
 } from "@material-ui/core";
 import { colors } from "@material-ui/core";
-import ToggleButton from "@material-ui/lab/ToggleButton";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import DeleteRounded from "@material-ui/icons/DeleteRounded";
 import CreateRounded from "@material-ui/icons/CreateRounded";
 import Particulier from "./Particulier";
 import Society from "./Society";
-import { useOwner } from "../../../context/owner";
 import { updateAccomodation } from "request/accomodationAPI";
 
 const CssTextField = withStyles({
@@ -112,7 +102,6 @@ const useStyles = makeStyles((theme) => ({
 
 const CardAccommodation = (accomodationInfos) => {
   const classes = useStyles();
-  const { ownerInformations } = useOwner();
   const [currentAccommo, setCurrentAccommo] = useState({});
   const [isModifying, setModify] = useState(false);
 
@@ -173,7 +162,7 @@ const CardAccommodation = (accomodationInfos) => {
   }
 
   useEffect(() => {
-    if (accomodationInfos != undefined) {
+    if (accomodationInfos !== undefined) {
       setCurrentAccommo(accomodationInfos.accomodationInfos);
     }
   }, [accomodationInfos]);
@@ -182,7 +171,7 @@ const CardAccommodation = (accomodationInfos) => {
     <Paper variant="outlined" className={classes.container}>
       <Paper elvation={0} className={classes.titleBar}>
         <Typography variant="h3" className={classes.textWhite}>
-          {currentAccommo.address != undefined && (
+          {currentAccommo.address !== undefined && (
             <>
               {currentAccommo.address.street} -{" "}
               {currentAccommo.address.postalCode}{" "}
@@ -192,7 +181,7 @@ const CardAccommodation = (accomodationInfos) => {
         </Typography>
 
         <Typography variant="h4" className={classes.textWhite}>
-          {currentAccommo.address != undefined &&
+          {currentAccommo.address !== undefined &&
             currentAccommo.address.otherInformations}
         </Typography>
       </Paper>
@@ -238,7 +227,7 @@ const CardAccommodation = (accomodationInfos) => {
               </Typography>
               <Typography variant="overline" className={classes.titleSection}>
                 Date d'entrée :{" "}
-                {currentAccommo.rental != undefined
+                {currentAccommo.rental !== undefined
                   ? currentAccommo.rental.startDate
                   : ""}
               </Typography>
@@ -259,7 +248,7 @@ const CardAccommodation = (accomodationInfos) => {
                   <Radio
                     color="secondary"
                     checked={
-                      currentAccommo.rental != undefined &&
+                      currentAccommo.rental !== undefined &&
                       currentAccommo.rental.isParticulier === "true"
                     }
                   />
@@ -274,7 +263,7 @@ const CardAccommodation = (accomodationInfos) => {
                   <Radio
                     color="secondary"
                     checked={
-                      currentAccommo.rental != undefined &&
+                      currentAccommo.rental !== undefined &&
                       currentAccommo.rental.isParticulier === "false"
                     }
                   />
@@ -287,8 +276,8 @@ const CardAccommodation = (accomodationInfos) => {
           </Grid>
         </Grid>
 
-        {currentAccommo.rental != undefined &&
-          currentAccommo.rental.isParticulier == "true" && (
+        {currentAccommo.rental !== undefined &&
+          currentAccommo.rental.isParticulier === "true" && (
             <Paper elevation={0} className={classes.paper}>
               <Particulier
                 disabled={isModifying}
@@ -298,8 +287,8 @@ const CardAccommodation = (accomodationInfos) => {
             </Paper>
           )}
 
-        {currentAccommo.rental != undefined &&
-          currentAccommo.rental.isParticulier == "false" && (
+        {currentAccommo.rental !== undefined &&
+          currentAccommo.rental.isParticulier === "false" && (
             <Paper elevation={0} className={classes.paper}>
               <Society
                 disabled={isModifying}
@@ -313,7 +302,7 @@ const CardAccommodation = (accomodationInfos) => {
         Loyer
       </Typography>
       <Typography variant="overline" className={classes.titleSection}>
-        Indice Insee de ref : {currentAccommo.loyer != undefined && currentAccommo.loyer.insee}
+        Indice Insee de ref : {currentAccommo.loyer !== undefined && currentAccommo.loyer.insee}
       </Typography>
 
       <Paper elevation={0} className={classes.paper}>
@@ -327,7 +316,7 @@ const CardAccommodation = (accomodationInfos) => {
               disabled={!isModifying}
               name="fixe"
               value={
-                (currentAccommo.loyer != undefined &&
+                (currentAccommo.loyer !== undefined &&
                   currentAccommo.loyer.fixe) ||
                 ""
               }
@@ -344,14 +333,14 @@ const CardAccommodation = (accomodationInfos) => {
               disabled={!isModifying}
               name="charges"
               value={
-                (currentAccommo.loyer != undefined &&
+                (currentAccommo.loyer !== undefined &&
                   currentAccommo.loyer.charges) ||
                 ""
               }
               onChange={handleChangeLoyer}
             />
           </Grid>
-          {currentAccommo.isCommercial == "true" && (
+          {currentAccommo.isCommercial === "true" && (
             <Grid item lg={3} md={3} xs={3}>
               <TextField
                 size="small"
@@ -361,7 +350,7 @@ const CardAccommodation = (accomodationInfos) => {
                 disabled={!isModifying}
                 name="tva"
                 value={
-                  (currentAccommo.loyer != undefined &&
+                  (currentAccommo.loyer !== undefined &&
                     currentAccommo.loyer.tva) ||
                   ""
                 }
@@ -376,7 +365,7 @@ const CardAccommodation = (accomodationInfos) => {
               label="Total"
               variant="outlined"
               fullWidth
-              value={currentAccommo.loyer != undefined && calculateTotal()}
+              value={currentAccommo.loyer !== undefined && calculateTotal()}
               disabled
               inputProps={{ "aria-label": "naked" }}
             />

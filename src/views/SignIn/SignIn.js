@@ -1,14 +1,12 @@
-import React, { useContext, createContext, useState, useEffect } from "react";
-import { Link as RouterLink, withRouter, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 import validate from "validate.js";
 import { makeStyles } from "@material-ui/styles";
 import {
   Grid,
   Button,
-  IconButton,
   TextField,
-  Link,
   Typography,
 } from "@material-ui/core";
 import { useAuth } from "../../context/auth";

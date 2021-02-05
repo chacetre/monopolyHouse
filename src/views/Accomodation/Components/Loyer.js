@@ -1,22 +1,11 @@
 import React, { useState, useEffect} from "react";
-
 import { makeStyles, withStyles } from "@material-ui/styles";
 import PropTypes from "prop-types";
-import clsx from "clsx";
 import {
-  Card,
-  CardContent,
-  CardActions,
-  Typography,
-  Grid,
   TextField,
   Paper,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
+  Grid
 } from "@material-ui/core";
-
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,7 +64,7 @@ const CssTextField = withStyles({
   
 
 const Loyer = (props) => {
-  const {handleChange, currentEstate, ...rest } = props;
+  const {handleChange, currentEstate} = props;
   const classes = useStyles();
   const [currentEstateL, setCurrentEstateL] = useState({});
   
@@ -105,7 +94,7 @@ const Loyer = (props) => {
           variant="outlined"
           fullWidth
           name="fixe"
-            value={ currentEstateL.loyer != undefined && currentEstateL.loyer.fixe || ""}
+            value={(currentEstateL.loyer !== undefined && currentEstateL.loyer.fixe) || ""}
           onChange={handleChange}
         />
       </Grid>
@@ -117,11 +106,11 @@ const Loyer = (props) => {
           variant="outlined"
           fullWidth
           name="charges"
-            value={currentEstateL.loyer != undefined && currentEstateL.loyer.charges || ""}
+            value={(currentEstateL.loyer !== undefined && currentEstateL.loyer.charges) || ""}
           onChange={handleChange}
         />
       </Grid>
-      {currentEstateL.isCommercial == "true" && (
+      {currentEstateL.isCommercial === "true" && (
         <Grid item lg={3} md={3} xs={3}>
           <TextField
             size="small"
@@ -129,7 +118,7 @@ const Loyer = (props) => {
             variant="outlined"
             fullWidth
             name="tva"
-            value={currentEstateL.loyer != undefined && currentEstateL.loyer.tva || ""}
+            value={currentEstateL.loyer !== undefined ? currentEstateL.loyer.tva : ""}
             onChange={handleChange}
           />
         </Grid>
@@ -143,7 +132,7 @@ const Loyer = (props) => {
           fullWidth
           disabled
           value={
-            currentEstateL.loyer != undefined &&
+            currentEstateL.loyer !== undefined &&
             calculateTotal()
           }
         />
