@@ -17,10 +17,6 @@ import { OwnerContext } from "context/owner";
 
 const browserHistory = createBrowserHistory();
 
-Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
-  draw: chartjs.draw,
-});
-
 validate.validators = {
   ...validate.validators,
   ...validators,
