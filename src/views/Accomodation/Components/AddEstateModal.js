@@ -128,7 +128,6 @@ const schemaLoyer = {
 function getSteps() {
   return ['Informations Logement', 'Informations Locataire', 'Loyer'];
 }
-
 const schemaRental = {};
 
 function AddEstateModal({ open, className, onClose, ...rest }) {
