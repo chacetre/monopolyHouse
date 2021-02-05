@@ -11,12 +11,6 @@ import { RouteWithLayout } from "./components";
 import { Main as MainLayout, Minimal as MinimalLayout } from "./layouts";
 
 import {
-  Dashboard as DashboardView,
-  ProductList as ProductListView,
-  Stock as UserListView,
-  Account as AccountView,
-  SignUp as SignUpView,
-  SignIn as SignInView,
   NotFound as NotFoundView,
   SignIn,
   Account,
