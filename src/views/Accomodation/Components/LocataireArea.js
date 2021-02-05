@@ -1,24 +1,14 @@
-import React, { useState, useEffect} from "react";
+import React from "react";
 
-import { makeStyles, withStyles } from "@material-ui/styles";
-import PropTypes from "prop-types";
-import clsx from "clsx";
+import { makeStyles } from "@material-ui/styles";
 import {
-    Card,
-    CardContent,
-    CardActions,
-    Typography,
-    Grid,
     TextField,
-    Paper,
     Radio,
     RadioGroup,
     FormControlLabel, FormControl,
 } from "@material-ui/core";
 import Particulier from "./Particulier";
 import Society from "./Society";
-
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 const LocataireArea = (props) => {
-    const {handleChange, handleChangeRental, currentAccommo,hasError, ...rest } = props;
+    const {handleChangeRental, currentAccommo,hasError } = props;
     const classes = useStyles();
 
     return (

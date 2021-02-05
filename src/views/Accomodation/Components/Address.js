@@ -1,19 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import { makeStyles, withStyles } from "@material-ui/styles";
+import { makeStyles} from "@material-ui/styles";
 import PropTypes from "prop-types";
-import clsx from "clsx";
 import {
-  Card,
-  CardContent,
-  CardActions,
-  Typography,
   Grid,
-  TextField,
-  Paper,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
+  TextField
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Address = (props) => {
-  const { handleChange, currentAccommo, ...rest } = props;
+  const { handleChange, currentAccommo } = props;
   const classes = useStyles();
 
   const hasError = (field) => {
@@ -69,7 +60,7 @@ const Address = (props) => {
           onChange={handleChange}
           type="text"
           value={
-            (currentAccommo.values.address != undefined &&
+            (currentAccommo.values.address !== undefined &&
               currentAccommo.values.address.street) ||
             ""
           }
@@ -91,7 +82,7 @@ const Address = (props) => {
           onChange={handleChange}
           type="text"
           value={
-            (currentAccommo.values.address != undefined &&
+            (currentAccommo.values.address !== undefined &&
               currentAccommo.values.address.otherInformations) ||
             ""
           }
@@ -113,11 +104,10 @@ const Address = (props) => {
           onChange={handleChange}
           type="text"
           value={
-            (currentAccommo.values.address != undefined &&
+            (currentAccommo.values.address !== undefined &&
               currentAccommo.values.address.postalCode) ||
             ""
           }
-          variant="outlined"
         />
       </Grid>
       <Grid item xs={9}>
@@ -131,7 +121,7 @@ const Address = (props) => {
           onChange={handleChange}
           type="text"
           value={
-            (currentAccommo.values.address != undefined &&
+            (currentAccommo.values.address !== undefined &&
               currentAccommo.values.address.city) ||
             ""
           }

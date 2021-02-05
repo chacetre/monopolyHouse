@@ -7,7 +7,6 @@ import {
   AppBar,
   Toolbar,
   Select,
-  InputLabel,
   MenuItem,
   FormControl,
   Grid,
