@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
-import { func } from "prop-types";
-import { Typography, Button, Divider, IconButton } from "@material-ui/core";
+import { Typography, Button} from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -91,7 +90,7 @@ const Receipt = () => {
     var numFixe = Number(estate.loyer.fixe);
     var numCharges = Number(estate.loyer.charges);
     var numTVA =
-      estate.isCommercial == undefined ? Number(estate.loyer.tva) : 0;
+      estate.isCommercial === undefined ? Number(estate.loyer.tva) : 0;
 
     return numFixe + numCharges + numTVA;
   }
@@ -112,7 +111,7 @@ const Receipt = () => {
   }, []);
 
   useEffect(() => {
-    if (currentDate != undefined) {
+    if (currentDate !== undefined) {
 
       var splitDate = currentDate.split(" ");
       setDateReceipt({
@@ -159,7 +158,7 @@ const Receipt = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {accommodations != undefined &&
+            {accommodations !== undefined &&
               Object.values(accommodations).map((row) => (
                 <TableRow key={row.id}>
                   <TableCell component="th" scope="row">

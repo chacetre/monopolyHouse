@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
   },
   titleBar: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.secondary.main,
     color: colors.grey[50],
     marginBottom: 10,
     textAlign: "center",

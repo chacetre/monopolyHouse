@@ -124,7 +124,7 @@ const Accommodation = () => {
   }, [ownerInformations]);
 
   useEffect(() => {
-    if (accommodations !== undefined) {
+    if (accommodations) {
       var listTemp = [];
       Object.values(accommodations).forEach((element) => {
         listTemp.push(element.address.city);
