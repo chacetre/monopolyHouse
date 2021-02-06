@@ -17,6 +17,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import firebase from "firebase/app";
+import { saveNewOwnerInDataBase } from "request/ownerAPI";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,8 +57,7 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
 
   function createProprioParticulier() {
     const timestamp = Date.now();
-
-    database.ref("id_user/owners/" + timestamp).set({
+    const owner = {
       id: timestamp,
       civility: currentOwner.values.civility,
       lastname: currentOwner.values.lastname,
@@ -71,8 +71,9 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
         street: "23 rue henri martin",
       },
       isOwner: true,
-    });
+    }
 
+    saveNewOwnerInDataBase(owner, timestamp)
     onClose();
   }
 
