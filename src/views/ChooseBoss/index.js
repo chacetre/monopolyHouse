@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
-import {
-  Typography,
-  Button,
-  Paper,
-  Grid
-} from "@material-ui/core";
+import { Typography, Button, Paper, Grid } from "@material-ui/core";
 import AddOwnerModal from "./components/AddOwnerModal";
 import { getOwnerDataBase } from "request/ownerAPI";
 import { useOwner } from "../../context/owner";
@@ -18,9 +13,14 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     marginBottom: theme.spacing(2),
+    textAlign: "center",
   },
   textWhite: {
     color: theme.palette.white,
+  },
+  containerCard: {
+    paddingLeft: theme.spacing(10),
+    paddingRight: theme.spacing(10)
   },
   expediteur: {
     textAlign: "right",
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 20,
   },
   imageHeader: {
-    width: "20%",
+    width: "30%",
     marginBottom: 20,
   },
   paper: {
@@ -56,6 +56,14 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     cursor: "pointer",
     backgroundColor: theme.palette.secondary.main,
+    borderRadius: 10,
+  },
+  paperAdd: {
+    padding: 20,
+    height: "100%",
+    textAlign: "center",
+    cursor: "pointer",
+    backgroundColor: theme.palette.action.main,
     borderRadius: 10,
   },
 }));
@@ -69,7 +77,6 @@ const ChooseBoos = (props) => {
 
   function getBossInformations() {
     getOwnerDataBase((response) => {
-      console.log("response get owner", response);
       setData(response);
     });
   }
@@ -79,7 +86,6 @@ const ChooseBoos = (props) => {
   }
 
   function handleClickCard(owner) {
-    console.log(owner);
     setOwnerInformations(owner);
     history.push("/accommodations");
   }
@@ -88,36 +94,24 @@ const ChooseBoos = (props) => {
     getBossInformations();
   }, []);
 
-
   return (
     <div className={classes.root}>
       <div className={classes.explanation}>
         <div className={classes.centerText}>
           <img
             alt="Product"
-            className={classes.image}
-            src={"/images/logos/logo_houses.svg"}
+            className={classes.imageHeader}
+            src={"/images/logos/logo_bis.svg"}
+            color="#FFF000"
           />
         </div>
-        <Grid container>
-          <Grid item xs={8}>
-            <div className={classes.content}>
-              <Typography variant="h2">Sélectionne ton proprio !</Typography>
-              <Typography variant="overline">
-                Choisi le propriétaire dont tu souhaites voir les biens
-              </Typography>
-            </div>
-          </Grid>
-          <Grid item xs={4} className={classes.expediteur}>
-            <Button
-              variant="contained"
-              onClick={handleAddOwner}
-              className={classes.expediteur}
-            >
-              AJOUTER UN proprio
-            </Button>
-          </Grid>
-        </Grid>
+
+        <div className={classes.content}>
+          <Typography variant="h2">Sélectionne ton proprio !</Typography>
+          <Typography variant="overline">
+            Choisi le propriétaire dont tu souhaites voir les biens
+          </Typography>
+        </div>
       </div>
 
       <AddOwnerModal
@@ -127,7 +121,21 @@ const ChooseBoos = (props) => {
         }}
       />
 
-      <Grid container spacing={4}>
+      <Grid container spacing={4} className={classes.containerCard}>
+        <Grid item xs={3}>
+          <Paper
+            elevation={0}
+            className={classes.paperAdd}
+            onClick={handleAddOwner}
+          >
+            <img
+              alt="Product"
+              className={classes.image}
+              src={"/images/avatars/icon_add.svg"}
+            />
+            <Typography variant="h3" className={classes.textWhite}> Ajouter un proprio</Typography>
+          </Paper>
+        </Grid>
         {owners != null &&
           Object.values(owners).map((owner, index) => (
             <Grid item xs={3}>

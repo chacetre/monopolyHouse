@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
-import { Typography, Button} from "@material-ui/core";
+import { Typography, Button } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -9,12 +9,12 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import html2canvas from "html2canvas";
-import Template from "./Template";
 import jsPDF from "jspdf";
 import { CalendarTodayRounded, GetAppRounded } from "@material-ui/icons";
 import { useOwner } from "../../context/owner";
 import { getAccomodationByOwner } from "request/accomodationAPI";
 import MonthYearPicker from "components/MonthYearPicker";
+import TemplateGenerator from "../Settings/Components/TemplateGenerator";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,9 +51,12 @@ const useStyles = makeStyles((theme) => ({
   },
   icon: {
     marginLeft: 10,
-    height : 40,
-    width: 40
-  }
+    height: 30,
+    width: 20,
+  },
+  iconDate: {
+    marginLeft: 10,
+  },
 }));
 
 const Receipt = () => {
@@ -67,9 +70,19 @@ const Receipt = () => {
   const [currentAccomodation, setCurrentAccommodation] = useState(null);
   const [dateReceipt, setDateReceipt] = useState({});
   const [showPicker, setShowPicker] = useState(false);
+  const defaultLoyerCall = 123
+  const defaultQuittance = 123
 
   function createPDF(currentAccomodation) {
-    var namePDF = currentAccomodation.rental.firstname + "_" + currentAccomodation.rental.lastname + "_" + dateReceipt.month + "_" + dateReceipt.year + ".pdf"
+    var namePDF =
+      currentAccomodation.rental.firstname +
+      "_" +
+      currentAccomodation.rental.lastname +
+      "_" +
+      dateReceipt[currentAccomodation.id]?.month || dateReceipt.default.month +
+      "_" +
+      dateReceipt[currentAccomodation.id].year || dateReceipt.default.year +
+      ".pdf";
 
     const input = document.querySelector(".divToPrint");
     if (input != null) {
@@ -103,7 +116,7 @@ const Receipt = () => {
 
   function showCalendar(currentAccomodation) {
     setShowPicker((prev) => !prev);
-    setCurrentAccommodation(currentAccomodation)
+    setCurrentAccommodation(currentAccomodation);
   }
 
   useEffect(() => {
@@ -112,12 +125,14 @@ const Receipt = () => {
 
   useEffect(() => {
     if (currentDate !== undefined) {
-
       var splitDate = currentDate.split(" ");
-      setDateReceipt({
-        month: splitDate[0],
-        year: splitDate[1],
-      });
+      setDateReceipt((prev) => ({
+        ...prev,
+        default: {
+          month: splitDate[0],
+          year: splitDate[1],
+        },
+      }));
     }
   }, [currentDate]);
 
@@ -139,7 +154,13 @@ const Receipt = () => {
         currentAccomodation={currentAccomodation}
         ownerInformations={ownerInformations}
         onClose={(monthReturn, yearReturn) => {
-          setDateReceipt({ month: monthReturn, year: yearReturn });
+          setDateReceipt((formState) => ({
+            ...formState,
+            [currentAccomodation.id]: {
+              month: monthReturn,
+              year: yearReturn,
+            },
+          }));
           setShowPicker(false);
         }}
       />
@@ -150,9 +171,9 @@ const Receipt = () => {
             <TableRow>
               <TableCell>Logements</TableCell>
               <TableCell>Locataire</TableCell>
-              <TableCell align="right">Montant du loyer</TableCell>
-              <TableCell align="right">Appel de loyer</TableCell>
-              <TableCell align="right">Quittance</TableCell>
+              <TableCell>Montant du loyer</TableCell>
+              <TableCell>Appel de loyer</TableCell>
+              <TableCell>Quittance</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -173,29 +194,53 @@ const Receipt = () => {
                         row.rental.lastname.toUpperCase()
                       : row.rental.socialIdentity}
                   </TableCell>
-                  <TableCell align="right">{calculateLoyer(row)} €</TableCell>
-                  <TableCell align="right">
+                  <TableCell>{calculateLoyer(row)} €</TableCell>
+                  <TableCell>
                     <Button
                       size="small"
                       variant="outlined"
                       onClick={() => showCalendar(row)}
                     >
-                      {dateReceipt.month} {dateReceipt.year} <CalendarTodayRounded/>
+                      {dateReceipt[row.id]?.month || dateReceipt.default.month}{" "}
+                      {dateReceipt[row.id]?.year || dateReceipt.default.year}
+                      <CalendarTodayRounded className={classes.iconDate} />
                     </Button>
-                    <Button variant="contained" className={classes.icon}  onClick={() => createPDF(row)} >
+                    <TemplateGenerator
+                      owner={ownerInformations}
+                      accomodation={row}
+                      date={dateReceipt[row.id] || dateReceipt.default}
+                      template={row.templates?.loyerCall || defaultLoyerCall}
+                      display={false}
+                      toPrint
+                      type="id"
+                    />
+                    <Button
+                      variant="contained"
+                      className={classes.icon}
+                      onClick={() => createPDF(row)}
+                    >
                       <GetAppRounded />
                     </Button>
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell>
                     <Button
-                        size="small"
-                        variant="outlined"
-                        onClick={() => showCalendar(row)}
+                      size="small"
+                      variant="outlined"
+                      onClick={() => showCalendar(row)}
                     >
-                      {dateReceipt.month} {dateReceipt.year} <CalendarTodayRounded/>
+                      {dateReceipt.month} {dateReceipt.year}{" "}
+                      <CalendarTodayRounded className={classes.iconDate} />
                     </Button>
-                    <Template owner={ownerInformations} accomodation={row} date={dateReceipt} />
-                    <Button variant="contained" className={classes.icon} >
+                    <TemplateGenerator
+                      owner={ownerInformations}
+                      accomodation={row}
+                      date={dateReceipt[row.id] || dateReceipt.default}
+                      template={row.templates?.quittance || defaultQuittance}
+                      display={false}
+                      toPrint
+                      type="id"
+                    />
+                    <Button variant="contained" className={classes.icon}>
                       <GetAppRounded />
                     </Button>
                   </TableCell>
@@ -204,8 +249,6 @@ const Receipt = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      
     </div>
   );
 };

@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Template = ({ owner, accomodation, date, ...rest }) => {
+const Template = ({ owner, accomodation, date, template, ...rest }) => {
   const classes = useStyles();
   const [dateReceipt, setDateReceipt] = useState({});
 

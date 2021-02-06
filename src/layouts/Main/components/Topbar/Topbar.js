@@ -17,7 +17,7 @@ import { useOwner } from "context/owner";
 const useStyles = makeStyles((theme) => ({
   root: {
     boxShadow: "none",
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.secondary.dark,
   },
   flexGrow: {
     flexGrow: 1,
@@ -80,7 +80,7 @@ const Topbar = (props) => {
             <RouterLink className={classes.rootLink} to="/">
               <img
                 alt="Logo"
-                src="/images/logos/logo_houses_white.svg"
+                src="/images/logos/logo_bis_white.svg"
                 width="200"
               />
             </RouterLink>

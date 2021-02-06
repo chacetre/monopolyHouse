@@ -30,6 +30,14 @@ export const updateTemplateAPI = (id, value) => {
     .set(value);
 };
 
+export const createTemplateAPI = (value) => {
+  const timestamp = Date.now();
+  const existingUser = JSON.parse(localStorage.getItem("logged_user"));
+  Firebase.database()
+    .ref(existingUser + "/templates/" + timestamp)
+    .set({...value, id : timestamp});
+};
+
 export const getTemplatesAPI = (callback) => {
   const existingUser = JSON.parse(localStorage.getItem("logged_user"));
   let ref = Firebase.database().ref(existingUser + "/templates");

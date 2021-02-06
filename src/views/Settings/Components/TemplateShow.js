@@ -7,8 +7,8 @@ import {
   CardContent,
   CardActions,
   Button,
-  CardHeader,
 } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 import TemplateGenerator from "./TemplateGenerator";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +33,11 @@ const useStyles = makeStyles((theme) => ({
   cellRight: {
     textAlign: "right",
     paddingRight: 25,
+  },
+  cardActions: {
+    display: "flex",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
 }));
 
@@ -80,10 +85,15 @@ const fakeDate = {
 
 const Templates = ({ open, className, onClose, template, ...rest }) => {
   const classes = useStyles();
+  let history = useHistory();
 
   const cancelClose = () => {
     onClose();
   };
+
+  function editTemplate(id) {
+    history.push(`/settings/template/${id}`);
+  }
 
   if (!open) {
     return null;
@@ -92,18 +102,20 @@ const Templates = ({ open, className, onClose, template, ...rest }) => {
   return (
     <Modal onClose={onClose} open={open}>
       <Card {...rest} className={clsx(classes.root, className)}>
-        <CardHeader title={template.name} />
         <CardContent>
           <TemplateGenerator
             owner={fakeOwner}
             accomodation={fakeAccomodation}
             date = {fakeDate}
-            template={template}
+            template={template.id}
+            type="id"
           />
         </CardContent>
         <CardActions disableSpacing>
-          <Button onClick={cancelClose}>annuler</Button>
-          <Button>Modifier</Button>
+          <div className={classes.cardActions}>
+          <Button onClick={cancelClose} variant="contained" color="primary" style={{marginRight: 10}} >annuler</Button>
+          <Button onClick={editTemplate} variant="contained" >Modifier</Button>
+          </div>
         </CardActions>
       </Card>
     </Modal>

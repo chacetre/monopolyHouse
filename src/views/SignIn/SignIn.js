@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import validate from "validate.js";
-import { makeStyles } from "@material-ui/styles";
-import {
-  Grid,
-  Button,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { makeStyles, withStyles } from "@material-ui/styles";
+import { Grid, Button, TextField, Typography } from "@material-ui/core";
 import { useAuth } from "../../context/auth";
 import { useUser } from "../../context/userInformations";
 import firebase from "firebase/app";
@@ -29,6 +24,15 @@ const schema = {
   },
 };
 
+const CssTextField = withStyles((theme) => ({
+  root: {
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: theme.palette.white,
+      fontSize: 16,
+    },
+  },
+}))(TextField);
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.default,
@@ -38,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     height: "100%",
-    
   },
   form: {
     display: "flex",
@@ -47,20 +50,28 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     marginBottom: theme.spacing(2),
-    color : theme.palette.white,
+    color: theme.palette.white
+  },
+  titleTextfield: {
+    marginBottom: theme.spacing(1),
+    color: theme.palette.white,
+    textAlign: "left"
+  },
+  containerTextfield:{
+    display: "flex",
+    flexDirection: "column",
   },
   image: {
     width: "75%",
     padding: theme.spacing(3),
   },
   textField: {
-    backgroundColor: theme.palette.white,
     borderRadius: 5,
-    marginBottom : theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   signInButton: {
     margin: theme.spacing(2, 0),
-    color : theme.palette.white,
+    color: theme.palette.white,
     backgroundColor: theme.palette.action.main,
   },
   leftContent: {
@@ -154,7 +165,7 @@ const SignIn = (props) => {
       <Grid container className={classes.content}>
         <Grid item lg={5} className={classes.leftContent}>
           <div className={classes.image}>
-            <img alt="Logo" src="/images/login.svg" />
+            <img alt="Logo" src="/images/welcome.svg" />
           </div>
         </Grid>
         <Grid item lg={7}>
@@ -163,34 +174,42 @@ const SignIn = (props) => {
               <Typography className={classes.title} variant="h2">
                 Connexion
               </Typography>
-              <TextField
-                className={classes.textField}
-                error={hasError("email")}
-                fullWidth
-                helperText={
-                  hasError("email") ? formState.errors.email[0] : null
-                }
-                label="Identifiant"
-                name="email"
-                onChange={handleChange}
-                type="text"
-                value={formState.values.email || ""}
-                variant="outlined"
-              />
-              <TextField
-                className={classes.textField}
-                error={hasError("password")}
-                fullWidth
-                helperText={
-                  hasError("password") ? formState.errors.password[0] : null
-                }
-                label="Mot de passe"
-                name="password"
-                onChange={handleChange}
-                type="password"
-                value={formState.values.password || ""}
-                variant="outlined"
-              />
+              <div className={classes.containerTextfield}>
+                <Typography variant="overline" className={classes.titleTextfield}>
+                  Identifiant
+                </Typography>
+                <CssTextField
+                  className={classes.textField}
+                  error={hasError("email")}
+                  fullWidth
+                  helperText={
+                    hasError("email") ? formState.errors.email[0] : null
+                  }
+                  name="email"
+                  onChange={handleChange}
+                  type="text"
+                  value={formState.values.email || ""}
+                  variant="outlined"
+                />
+              </div>
+              <div className={classes.containerTextfield}>
+                <Typography variant="overline" className={classes.titleTextfield}>
+                  Mot de passe
+                </Typography>
+                <CssTextField
+                  className={classes.textField}
+                  error={hasError("password")}
+                  fullWidth
+                  helperText={
+                    hasError("password") ? formState.errors.password[0] : null
+                  }
+                  name="password"
+                  onChange={handleChange}
+                  type="password"
+                  value={formState.values.password || ""}
+                  variant="outlined"
+                />
+              </div>
               <Button
                 className={classes.signInButton}
                 disabled={!formState.isValid}
@@ -203,7 +222,9 @@ const SignIn = (props) => {
               </Button>
             </div>
             <div>
-              <Typography className={classes.title} variant="caption">Version 0.2</Typography>
+              <Typography className={classes.title} variant="caption">
+                Version 0.2
+              </Typography>
             </div>
           </div>
         </Grid>

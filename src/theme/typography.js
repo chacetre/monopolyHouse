@@ -90,5 +90,6 @@ export default {
     color: palette.text.secondary,
     fontSize: '20px',
     fontWeight: 500,
+    fontFamily: 'Roboto'
   }
 };

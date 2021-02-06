@@ -7,15 +7,11 @@ import {
   Button,
   CardHeader,
   CardContent,
-  CardActions,
-  Chip,
+  CardActions
 } from "@material-ui/core";
-import {
-  getTemplatesAPI,
-} from "request/settingsAPI";
+import { getTemplatesAPI } from "request/settingsAPI";
 import TemplateShow from "./TemplateShow";
 import { useHistory } from "react-router-dom";
-import { FaceOutlined } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -36,6 +32,19 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(0.5),
     },
   },
+  cardActions: {
+    display: "flex",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  media: {
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: "35%", // 16:9
+  },
+  title :{
+    textAlign: "center"
+  }
 }));
 
 const Templates = (props) => {
@@ -60,7 +69,7 @@ const Templates = (props) => {
     setShowTemplate(true);
   }
 
-  function handleAddTemplate(){
+  function handleAddTemplate() {
     history.push(`/settings/template/new`);
   }
 
@@ -78,7 +87,7 @@ const Templates = (props) => {
         }}
       />
       <Grid container spacing={5}>
-        <Grid item lg={6} md={6} xs={6} className={classes.title}>
+        <Grid item lg={6} md={6} xs={6}>
           <Typography variant="h1">Les templates</Typography>
           <Typography variant="body1">
             Ici tu peux modifier les locataires des logements ainsi qu'ajouter
@@ -86,36 +95,45 @@ const Templates = (props) => {
           </Typography>
         </Grid>
         <Grid item lg={6} md={6} xs={6} className={classes.cellRight}>
-          <Button variant="contained" onClick={handleAddTemplate}>Ajouter un template</Button>
+          <Button variant="contained" onClick={handleAddTemplate}>
+            Ajouter un template
+          </Button>
         </Grid>
-        
-        {listTemplate !== null && Object.values(listTemplate).map((template) => (
-          <>
-            <Grid item lg={4} md={4} xs={4} className={classes.title}>
-              <Card>
-                <CardHeader title={template.name} />
-                <CardContent className={classes.content}>
-                  <Chip icon={<FaceOutlined />} label={template.type}  />
-                  <Chip label={template.whom}  />
-                </CardContent>
-                <CardActions>
-                  <Button
-                    variant="contained"
-                    onClick={() => handleShowTemplate(template)}
-                  >
-                    Voir
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={() => editTemplate(template.id)}
-                  >
-                    Modifier
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          </>
-        ))}
+
+        {listTemplate !== null &&
+          Object.values(listTemplate).map((template) => (
+            <>
+              <Grid item lg={4} md={4} xs={4}>
+                <Card>
+                  <CardHeader title={<Typography variant= "h3" className={classes.title}>{template.name}</Typography>} />
+                  <CardContent className={classes.content}>
+                    <div className={classes.media}>
+                      <img alt="Logo" src="/images/file.svg" />
+                    </div>
+                  </CardContent>
+                  <CardActions>
+                    <div className={classes.cardActions}>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleShowTemplate(template)}
+                        color="primary"
+                        style={{ marginRight: 10 }}
+                      >
+                        Voir
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={() => editTemplate(template.id)}
+                        color="secondary"
+                      >
+                        Modifier
+                      </Button>
+                    </div>
+                  </CardActions>
+                </Card>
+              </Grid>
+            </>
+          ))}
       </Grid>
     </div>
   );

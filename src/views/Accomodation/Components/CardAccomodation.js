@@ -9,7 +9,9 @@ import {
   RadioGroup,
   FormControlLabel,
   Paper,
+  Snackbar
 } from "@material-ui/core";
+import MuiAlert from '@material-ui/lab/Alert';
 import { colors } from "@material-ui/core";
 import CreateRounded from "@material-ui/icons/CreateRounded";
 import Particulier from "./Particulier";
@@ -43,6 +45,10 @@ const CssTextField = withStyles({
     },
   },
 })(TextField);
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,10 +106,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CardAccommodation = (accomodationInfos) => {
+const CardAccommodation = (props) => {
+  const {accomodationInfos, indexes } = props;
   const classes = useStyles();
   const [currentAccommo, setCurrentAccommo] = useState({});
   const [isModifying, setModify] = useState(false);
+  const [openSnackBarError, setOpenSnackbarError] = useState(false);
+  const vertical = "top"
+  const horizontal = "center"
 
   const handleChange = (event) => {
     event.persist();
@@ -161,14 +171,49 @@ const CardAccommodation = (accomodationInfos) => {
     setModify((prev) => !prev);
   }
 
+  function revisionLoyer(){
+    const currentYear = new Date().toLocaleString("default", {year: "numeric"});
+    const previousYear = currentYear - 1
+    const trimestre = currentAccommo.loyer.insee
+    
+    var numFixe = Number(currentAccommo.loyer.fixe);
+
+    const tauxAnneeCurrent = indexes[`${currentYear}_T${trimestre}`];
+    const tauxAnneePrevious = indexes[`${previousYear}_T${trimestre}`];
+
+    if (!tauxAnneePrevious || !tauxAnneeCurrent){
+      setOpenSnackbarError(true)
+
+    } else {
+      const newFixe = (numFixe * tauxAnneeCurrent) / tauxAnneePrevious
+      currentAccommo.loyer.fixe = newFixe.toFixed(2)
+      updateAccomodation(currentAccommo);
+    }
+    
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbarError(false);
+  };
+
+
   useEffect(() => {
     if (accomodationInfos !== undefined) {
-      setCurrentAccommo(accomodationInfos.accomodationInfos);
+      setCurrentAccommo(accomodationInfos);
     }
   }, [accomodationInfos]);
 
   return (
     <Paper variant="outlined" className={classes.container}>
+      <Snackbar open={openSnackBarError} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{vertical,horizontal}}>
+        <Alert severity="error">
+          <Typography variant="h4" className={classes.textWhite} >Vous n'avez pas tous les index insee pour effectuer cette action</Typography>
+          
+        </Alert>
+      </Snackbar>
       <Paper elvation={0} className={classes.titleBar}>
         <Typography variant="h3" className={classes.textWhite}>
           {currentAccommo.address !== undefined && (
@@ -375,12 +420,11 @@ const CardAccommodation = (accomodationInfos) => {
       <Paper elevation={0} className={classes.paper}>
         <Grid container className={classes.containerTitle}>
           <Grid item md={4} xs={4}>
-            <Button variant="contained" color="secondary">
+            <Button variant="contained" color="secondary" onClick={revisionLoyer}>
               Revision de loyer
             </Button>
           </Grid>
           <Grid item md={8} xs={8} className={classes.right}>
-            <Button className={classes.button}>Supprimer</Button>
             <Button
               variant="contained"
               startIcon={<CreateRounded />}
