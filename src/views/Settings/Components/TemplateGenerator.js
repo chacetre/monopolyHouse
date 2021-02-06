@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 
 import { Divider, Grid, Typography } from "@material-ui/core";
+import { getTemplateByIdAPI } from "request/settingsAPI";
 
 const lastDay = {
   janvier: 31,
@@ -27,16 +28,26 @@ const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(3),
     margin: theme.spacing(2),
+    fontFamily: 'Roboto'
   },
   content: {
     marginBottom: theme.spacing(2),
   },
   destinataire: {
-    display: "row",
+    width: "50%",
+    display: "flex",
+    flexDirection: "column",
     textAlign: "left",
   },
   expediteur: {
-    textAlign: "right",
+    width: "50%",
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "left",
+    marginLeft: "auto"
+  },
+  alignRight:{
+    textAlign : "right"
   },
   page: {
     position: "absolute",
@@ -63,11 +74,15 @@ const TemplateGenerator = ({
   accomodation,
   date,
   display,
+  toPrint,
   template,
+  templateValue,
+  type,
   ...rest
 }) => {
   const classes = useStyles();
   const [templateLocal, setTemplate] = useState({});
+  const [templateFromApi, setTemplateFromApi] = useState({});
 
   function calculateTotal() {
     var numFixe = Number(accomodation.loyer.fixe);
@@ -77,7 +92,7 @@ const TemplateGenerator = ({
         ? Number(accomodation.loyer.tva)
         : 0;
 
-    return numFixe + numCharges + numTVA;
+    return (numFixe + numCharges + numTVA).toFixed(2);
   }
 
   function change(textChange) {
@@ -101,26 +116,45 @@ const TemplateGenerator = ({
     return textTranslate;
   }
 
-
-  useEffect(() => {
-    if (template.textBody !== undefined) {
-      var newTextBody = change(template.textBody);
-      var newTextStart = change(template.textStart || "");
-      var newTextEnd = change(template.textEnd || "");
-
+  function createDocument(templateValue) {
+    if (templateValue) {
+      var newTextBody = change(templateValue.textBody || "");
+      var newTextStart = change(templateValue.textStart || "");
+      var newTextEnd = change(templateValue.textEnd || "");
       setTemplate(() => ({
-        ...template,
+        ...templateValue,
         textBody: newTextBody,
         textStart: newTextStart,
         textEnd: newTextEnd,
       }));
     }
+  }
+  function getTemplateFromApi(id) {
+    getTemplateByIdAPI(id, (response) => {
+      console.log("response template", response);
+      setTemplateFromApi(response);
+    });
+  }
+
+  useEffect(() => {
+    if (template && type === "id") getTemplateFromApi(template);
   }, [template]);
 
+  useEffect(() => {
+    if (templateValue && type === "template") createDocument(templateValue);
+  }, [templateValue]);
+
+  useEffect(() => {
+    if (templateFromApi && type === "id") createDocument(templateFromApi);
+  }, [templateFromApi]);
+
   return (
-    <div id="divToPrint">
+    <div id="divToPrint" className={display && classes.page}>
       <div class="divToPrint">
-        <div className={classes.pageBis}>
+        <div
+          className={classes.pageBis}
+          style={toPrint ? { width: "210mm", height: "297mm" } : {}}
+        >
           <div className={classes.destinataire}>
             <Typography variant="letter">
               {!owner.isSociety
@@ -129,13 +163,9 @@ const TemplateGenerator = ({
                   owner.lastname.toUpperCase()
                 : owner.socialIdentity}
             </Typography>
-          </div>
-          <div className={classes.destinataire}>
             <Typography variant="letter">
               {owner.address.street.toUpperCase()}
             </Typography>
-          </div>
-          <div className={classes.destinataire}>
             <Typography variant="letter">
               {owner.address.postalCode.toUpperCase() +
                 " " +
@@ -143,32 +173,34 @@ const TemplateGenerator = ({
             </Typography>
           </div>
           <div className={classes.expediteur}>
-            {
+            
+              
+                <Typography variant="letter">
+                  {" "}
+                  {accomodation.rental.isParticulier
+                    ? accomodation.rental?.firstname?.toUpperCase() +
+                      " " +
+                      accomodation.rental?.lastname?.toUpperCase()
+                    : accomodation.rental?.socialIdentity}
+                </Typography>
+              
+            
+            
               <Typography variant="letter">
-                {" "}
-                {accomodation.rental.isParticulier
-                  ? accomodation.rental.firstname.toUpperCase() +
-                    " " +
-                    accomodation.rental.lastname.toUpperCase()
-                  : accomodation.rental.socialIdentity}
+                {accomodation.address.street.toUpperCase()}
               </Typography>
-            }
-          </div>
-          <div className={classes.expediteur}>
-            <Typography variant="letter">
-              {accomodation.address.street.toUpperCase()}
-            </Typography>
-          </div>
-          <div className={classes.expediteur}>
-            <Typography variant="letter">
-              {accomodation.address.postalCode.toUpperCase() +
-                " " +
-                accomodation.address.city.toUpperCase()}
-            </Typography>
+            
+            
+              <Typography variant="letter">
+                {accomodation.address.postalCode.toUpperCase() +
+                  " " +
+                  accomodation.address.city.toUpperCase()}
+              </Typography>
+            
           </div>
           <Divider className={classes.divider} />
 
-          <div className={classes.destinataire}>
+          <div>
             <Typography variant="letter">{templateLocal.textStart}</Typography>
             <Divider className={classes.divider} />
             <Typography variant="letter">
@@ -183,9 +215,9 @@ const TemplateGenerator = ({
               <Grid item xs={6}>
                 <Typography variant="letter">Loyer :</Typography>
               </Grid>
-              <Grid item xs={6} className={classes.expediteur}>
+              <Grid item xs={6} className={classes.alignRight}>
                 <Typography variant="letter">
-                  {accomodation.loyer.fixe},00
+                  {Number(accomodation.loyer.fixe).toFixed(2)}
                 </Typography>
               </Grid>
               <Grid item xs={9}>
@@ -193,9 +225,9 @@ const TemplateGenerator = ({
                   Provision sur charges :
                 </Typography>
               </Grid>
-              <Grid item xs={3} className={classes.expediteur}>
+              <Grid item xs={3} className={classes.alignRight}>
                 <Typography variant="letter">
-                  {accomodation.loyer.charges},00
+                  {Number(accomodation.loyer.charges).toFixed(2)}
                 </Typography>
               </Grid>
 
@@ -204,28 +236,28 @@ const TemplateGenerator = ({
                   <Grid item xs={6}>
                     <Typography variant="letter">TVA :</Typography>
                   </Grid>
-                  <Grid item xs={6} className={classes.expediteur}>
+                  <Grid item xs={6} className={classes.alignRight}>
                     <Typography variant="letter">
                       {" "}
-                      {accomodation.loyer.tva},00
+                      {accomodation.loyer.tva}
                     </Typography>
                   </Grid>
                 </>
               )}
               <Grid item xs={6} />
-              <Grid item xs={6} className={classes.expediteur}>
+              <Grid item xs={6} className={classes.alignRight}>
                 ------------
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="letter">Total :</Typography>
               </Grid>
-              <Grid item xs={6} className={classes.expediteur}>
-                <Typography variant="letter">{calculateTotal()},00</Typography>
+              <Grid item xs={6} className={classes.alignRight}>
+                <Typography variant="letter">{calculateTotal()}</Typography>
               </Grid>
             </Grid>
           </div>
           <Divider className={classes.divider} />
-          <div className={classes.destinataire}>
+          <div >
             <Typography variant="letter">
               Veuillez agréer,{" "}
               {civilityTranslation[accomodation.rental.civility]}, l'expression

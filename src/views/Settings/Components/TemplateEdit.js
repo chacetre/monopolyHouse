@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { makeStyles} from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles";
 import {
   Typography,
   Grid,
@@ -12,7 +12,11 @@ import {
   FormControl,
   Select,
 } from "@material-ui/core";
-import { getTemplateByIdAPI, updateTemplateAPI } from "request/settingsAPI";
+import {
+  getTemplateByIdAPI,
+  updateTemplateAPI,
+  createTemplateAPI,
+} from "request/settingsAPI";
 import { useParams } from "react-router-dom";
 import { InfoRounded } from "@material-ui/icons";
 import {
@@ -24,10 +28,10 @@ import TemplateGenerator from "./TemplateGenerator";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(6)
+    padding: theme.spacing(6),
   },
-  container : {
-marginBottom : 10
+  container: {
+    marginBottom: 10,
   },
   button: {
     marginBottom: 30,
@@ -87,9 +91,7 @@ const TemplateEdit = () => {
   const [template, setTemplate] = useState({});
 
   function getTemplate() {
-    console.log("idTemplate", idTemplate);
     getTemplateByIdAPI(idTemplate, (response) => {
-      console.log("response", response);
       setTemplate(response);
     });
   }
@@ -104,13 +106,17 @@ const TemplateEdit = () => {
   }
 
   function saveChange() {
-    updateTemplateAPI(idTemplate, template);
+    if (idTemplate === "new") {
+      createTemplateAPI(template);
+    } else {
+      updateTemplateAPI(idTemplate, template);
+    }
+
     history.goBack();
   }
 
   useEffect(() => {
-    if (idTemplate !== "new")
-    getTemplate();
+    if (idTemplate !== "new") getTemplate();
   }, [idTemplate]);
 
   return (
@@ -243,7 +249,13 @@ const TemplateEdit = () => {
               </IconButton>
             </Grid>
             <Grid item lg={12} md={12} xs={12} className={classes.cellRight}>
-              <Button variant="outlined" style={{marginRight : 10}} onClick={() => history.goBack()}>Annuler</Button>
+              <Button
+                variant="outlined"
+                style={{ marginRight: 10 }}
+                onClick={() => history.goBack()}
+              >
+                Annuler
+              </Button>
               <Button variant="contained" onClick={saveChange}>
                 Valider
               </Button>
@@ -255,7 +267,8 @@ const TemplateEdit = () => {
             accomodation={fakeAccomodation}
             owner={fakeOwner}
             date={fakeDate}
-            template={template}
+            templateValue={template}
+            type="template"
           />
         </Grid>
       </Grid>

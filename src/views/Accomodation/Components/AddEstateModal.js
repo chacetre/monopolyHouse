@@ -113,6 +113,19 @@ const schemaLoyer = {
   }
 };
 
+const initialValueAccomo = {
+  isValid: false,
+    values: {
+      rental: {
+        isParticulier : "true"
+      },
+      address: {},
+      loyer: {}
+    },
+    touched: {},
+    errors: {},
+}
+
 function getSteps() {
   return ['Informations Logement', 'Informations Locataire', 'Loyer'];
 }
@@ -123,18 +136,7 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
   const { ownerInformations } = useOwner();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
-  const [currentAccommo, setCurrentAccommo] = useState({
-    isValid: false,
-    values: {
-      rental: {
-        isParticulier : "true"
-      },
-      address: {},
-      loyer: {}
-    },
-    touched: {},
-    errors: {},
-  });
+  const [currentAccommo, setCurrentAccommo] = useState(initialValueAccomo);
 
   function createEstateDB() {
     const timestamp = Date.now();
@@ -143,12 +145,11 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
         timestamp,
         ownerInformations.id
     );
+    setCurrentAccommo(initialValueAccomo)
     onClose();
   }
 
   function createEstate() {
-
-    console.log("currentAccomo", currentAccommo.errors)
     if (currentAccommo.isValid) {
       createEstateDB();
     }
@@ -231,6 +232,8 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
   };
 
   const cancelClose = () => {
+    setCurrentAccommo(initialValueAccomo)
+    setActiveStep(0)
     onClose();
   };
 
@@ -238,7 +241,9 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
   const handleNext = () => {
     if (activeStep + 1 === steps.length){
       createEstate()
-    }
+      return
+    } 
+
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -276,6 +281,7 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
       errors: errors || {},
     }));
   }, [currentAccommo.values]);
+
 
   if (!open) {
     return null;
@@ -334,11 +340,11 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
             <Button onClick={cancelClose}>annuler</Button>
             <Button
                 variant="contained"
-                color="primary"
+                color="secondary"
                 onClick={handleNext}
                 className={classes.button}
             >
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+              {activeStep === steps.length - 1 ? 'Créer' : 'Suivant'}
             </Button>
           </CardActions>
         </Card>

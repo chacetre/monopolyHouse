@@ -12,6 +12,7 @@ import { useOwner } from "../../context/owner";
 import AddEstateModal from "./Components/AddEstateModal";
 import CardAccommodation from "./Components/CardAccomodation";
 import { getAccomodationByOwner } from "request/accomodationAPI";
+import { getIndexesAPI } from "request/settingsAPI";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -91,6 +92,7 @@ const Accommodation = () => {
   const [component, setComponent] = useState("");
   const [accommodations, setData] = useState(null);
   const [listFiltre, setFiltres] = useState([]);
+  const [indexes, setIndexes] = useState({});
 
   function getAccommodationsInformations() {
     if (ownerInformations.id !== undefined) {
@@ -98,6 +100,14 @@ const Accommodation = () => {
         setData(response);
       });
     }
+  }
+
+  function getIndexes() {
+    getIndexesAPI((response) => {
+
+      console.log("indexes index", response)
+      setIndexes(response)
+    });
   }
 
   const handleComponent = (event, newComponent) => {
@@ -117,7 +127,15 @@ const Accommodation = () => {
 
   useEffect(() => {
     getAccommodationsInformations();
-  }, []);
+  },[]);
+
+  useEffect(() => {
+    getIndexes();
+  },[]);
+
+  useEffect(() => {
+    console.log("change", indexes)
+  },[indexes]);
 
   useEffect(() => {
     getAccommodationsInformations();
@@ -147,7 +165,7 @@ const Accommodation = () => {
         <Grid item lg={6} md={6} xs={6} className={classes.cellRight}>
           <Button
             variant="contained"
-            color="secondary"
+            color="action"
             onClick={handleAddEstate}
           >
             {" "}
@@ -188,7 +206,7 @@ const Accommodation = () => {
             .filter(suffisammentGrand)
             .map((product) => (
               <Grid item xs={6}>
-                <CardAccommodation accomodationInfos={product} />
+                <CardAccommodation accomodationInfos={product} indexes={indexes}/>
               </Grid>
             ))}
       </Grid>
