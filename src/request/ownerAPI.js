@@ -1,22 +1,9 @@
 import Firebase from "firebase";
 
 
-export const saveNewComponentInDataBase = (owner, id) => {
+export const saveNewOwnerInDataBase = (owner, id) => {
   const existingUser = JSON.parse(localStorage.getItem("logged_user"));
-  Firebase.database().ref(existingUser + "/owners/" + id).set({
-    id: id,
-    civility: null,
-    lastname: null,
-    firstname: null,
-    isSociety: true,
-    socialIdentity: owner.socialIdentity,
-    address: {
-      postalCode: owner.postalCode,
-      city: owner.city,
-      street: owner.street,
-    },
-    isOwner: true,
-  })
+  Firebase.database().ref(existingUser + "/owners/" + id).set(owner)
 };
 
 export const deleteValueInDataBase = (type, soustype, index) => {
