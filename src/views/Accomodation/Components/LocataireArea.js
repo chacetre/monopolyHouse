@@ -1,5 +1,4 @@
 import React from "react";
-
 import { makeStyles } from "@material-ui/styles";
 import {
     TextField,
@@ -24,6 +23,12 @@ const useStyles = makeStyles((theme) => ({
     },
     startDate:{
         margin: 10
+    },
+    divCenter : {
+        display: "flex",
+        flexDirection : "row",
+        alignItems: "center",
+        justifyContent: "center"
     }
 }));
 
@@ -34,7 +39,8 @@ const LocataireArea = (props) => {
 
     return (
         <>
-            <FormControl className={classes.gridCell}>
+            <FormControl className={classes.divCenter}>
+               
                 <RadioGroup
                     row
                     name="isParticulier"
@@ -82,7 +88,6 @@ const LocataireArea = (props) => {
                         labelPlacement="right"
                     />
                 </RadioGroup>
-
                 <TextField
                     size="small"
                     className={classes.startDate}
@@ -95,7 +100,7 @@ const LocataireArea = (props) => {
                     onChange={handleChangeRental}
                     type="text"
                     value={
-                        ((currentAccommo.values.rental.startDate) || "")
+                        ((currentAccommo.values.rental.startDate) || "DD/MM/YEAR")
                     }
                     variant="outlined"
                 />

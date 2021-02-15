@@ -237,6 +237,10 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
     onClose();
   };
 
+  const goBackStep = (index) => {
+    setActiveStep(index)
+  }
+
 
   const handleNext = () => {
     if (activeStep + 1 === steps.length){
@@ -299,7 +303,7 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
                 const stepProps = {};
                 const labelProps = {};
                 return (
-                    <Step key={label} {...stepProps}>
+                    <Step key={label} {...stepProps} onClick={() => goBackStep(index)}>
                       <StepLabel {...labelProps}>{label}</StepLabel>
                     </Step>
                 );
@@ -310,7 +314,6 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
               {activeStep === 0 && <LogementArea handleChange={handleChange} currentAccommo={currentAccommo} hasError={hasError} handleChangeAddress ={handleChangeAddress} />}
               {activeStep === 1 && <LocataireArea handleChangeRental={handleChangeRental} currentAccommo={currentAccommo} hasError={hasError}/>}
               {activeStep === 2 &&
-
               <>
                 <TextField
                     size="small"
@@ -320,7 +323,7 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
                     helperText="Doit etre sous la forme : T1, T2, T3, T4"
                     label="Indice Insee de référence"
                     name="indiceInsee"
-                    onChange={handleChangeRental}
+                    onChange={handleChangeLoyer}
                     type="text"
                     value={
                       ((currentAccommo.values.loyer.indiceInsee) || "")

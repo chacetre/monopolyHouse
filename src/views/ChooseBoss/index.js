@@ -101,7 +101,7 @@ const ChooseBoos = (props) => {
           <img
             alt="Product"
             className={classes.imageHeader}
-            src={"/images/logos/logo_bis.svg"}
+            src={"/images/logos/logo_final.svg"}
             color="#FFF000"
           />
         </div>

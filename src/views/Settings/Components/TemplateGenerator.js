@@ -97,12 +97,12 @@ const TemplateGenerator = ({
 
   function change(textChange) {
     var textTranslate = textChange
-      .replace(
+      /*.replace(
         "[rent.civility]",
-        civilityTranslation[accomodation.rental.civility]
+        civilityTranslation[accomodation.rental.civility || ""]
       )
       .replace("[rent.firstname]", accomodation.rental.firstname.toUpperCase())
-      .replace("[rent.lastname]", accomodation.rental.lastname.toUpperCase())
+      .replace("[rent.lastname]", accomodation.rental.lastname.toUpperCase())*/
       .replace("[rent.city]", accomodation.address.city.toUpperCase())
       .replace("[rent.street]", accomodation.address.street.toUpperCase())
       .replace(
@@ -129,9 +129,10 @@ const TemplateGenerator = ({
       }));
     }
   }
+
+
   function getTemplateFromApi(id) {
     getTemplateByIdAPI(id, (response) => {
-      console.log("response template", response);
       setTemplateFromApi(response);
     });
   }
@@ -148,8 +149,9 @@ const TemplateGenerator = ({
     if (templateFromApi && type === "id") createDocument(templateFromApi);
   }, [templateFromApi]);
 
+
   return (
-    <div id="divToPrint" className={display && classes.page}>
+    <div id="divToPrint" className={!display ? classes.page : null}>
       <div class="divToPrint">
         <div
           className={classes.pageBis}
@@ -174,10 +176,8 @@ const TemplateGenerator = ({
           </div>
           <div className={classes.expediteur}>
             
-              
                 <Typography variant="letter">
-                  {" "}
-                  {accomodation.rental.isParticulier
+                  {accomodation.rental.isParticulier !== "false"
                     ? accomodation.rental?.firstname?.toUpperCase() +
                       " " +
                       accomodation.rental?.lastname?.toUpperCase()
