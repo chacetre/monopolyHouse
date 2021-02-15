@@ -70,8 +70,8 @@ const Receipt = () => {
   const [currentAccomodation, setCurrentAccommodation] = useState(null);
   const [dateReceipt, setDateReceipt] = useState({});
   const [showPicker, setShowPicker] = useState(false);
-  const defaultLoyerCall = 123
-  const defaultQuittance = 123
+  const defaultLoyerCall = 1612629230385
+  const defaultQuittance = 1612629230385
 
   function createPDF(currentAccomodation) {
     var namePDF =
