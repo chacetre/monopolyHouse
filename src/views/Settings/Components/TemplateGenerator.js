@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 
 import { Divider, Grid, Typography } from "@material-ui/core";
-import { getTemplateByIdAPI } from "request/settingsAPI";
+import {getTemplateByTypeAPI } from "request/settingsAPI";
 
 const lastDay = {
   janvier: 31,
@@ -55,6 +55,9 @@ const useStyles = makeStyles((theme) => ({
     pointerEvents: "none",
     fontSize: 30,
   },
+  pageDisplay: {
+    position: "absolute",
+  },
   pageBis: {
     padding: 30,
     fontSize: 20,
@@ -70,16 +73,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TemplateGenerator = ({
-  owner,
-  accomodation,
-  date,
-  display,
-  toPrint,
-  template,
-  templateValue,
-  type,
-  ...rest
-}) => {
+                             owner,
+                             accomodation,
+                             date,
+                             display,
+                             toPrint,
+                             template,
+                             templateValue,
+                             type
+                           }) => {
+
   const classes = useStyles();
   const [templateLocal, setTemplate] = useState({});
   const [templateFromApi, setTemplateFromApi] = useState({});
@@ -88,30 +91,37 @@ const TemplateGenerator = ({
     var numFixe = Number(accomodation.loyer.fixe);
     var numCharges = Number(accomodation.loyer.charges);
     var numTVA =
-      accomodation.isCommercial === undefined
-        ? Number(accomodation.loyer.tva)
-        : 0;
+        accomodation.isCommercial === undefined
+            ? Number(accomodation.loyer.tva)
+            : 0;
 
     return (numFixe + numCharges + numTVA).toFixed(2);
   }
 
   function change(textChange) {
-    var textTranslate = textChange
-      /*.replace(
-        "[rent.civility]",
-        civilityTranslation[accomodation.rental.civility || ""]
-      )
-      .replace("[rent.firstname]", accomodation.rental.firstname.toUpperCase())
-      .replace("[rent.lastname]", accomodation.rental.lastname.toUpperCase())*/
-      .replace("[rent.city]", accomodation.address.city.toUpperCase())
-      .replace("[rent.street]", accomodation.address.street.toUpperCase())
-      .replace(
-        "[rent.postalCode]",
-        accomodation.address.postalCode.toUpperCase()
-      )
-      .replace("[date.lastDay]", lastDay[date.month])
-      .replace("[date.month]", date.month)
-      .replace("[date.year]", date.year);
+    let textTranslate = textChange
+        .replace("[rent.city]", accomodation.address.city.toUpperCase())
+        .replace("[rent.street]", accomodation.address.street.toUpperCase())
+        .replace(
+            "[rent.postalCode]",
+            accomodation.address.postalCode.toUpperCase()
+        )
+        .replace("[date.lastDay]", lastDay[date.month])
+        .replace("[date.month]", date.month)
+        .replace("[date.year]", date.year);
+
+    if (accomodation.rental.isParticulier === "true"){
+      textTranslate
+          .replace("[rent.lastname]", accomodation.rental.lastname.toUpperCase())
+          .replace("[rent.firstname]", accomodation.rental.firstname.toUpperCase())
+          .replace(
+              "[rent.civility]",
+              civilityTranslation[accomodation.rental.civility || ""]
+          )
+    } else {
+
+
+    }
 
     return textTranslate;
   }
@@ -131,15 +141,21 @@ const TemplateGenerator = ({
   }
 
 
-  function getTemplateFromApi(id) {
-    getTemplateByIdAPI(id, (response) => {
-      setTemplateFromApi(response);
+  function getTemplateFromApi(type) {
+    getTemplateByTypeAPI(type, accomodation.rental.isParticulier, (response) => {
+      const listTemplates = Object.values(response)
+      const templateDisplay = listTemplates.find((template) => template.whom === accomodation.rental.isParticulier)
+      setTemplateFromApi(templateDisplay);
     });
   }
 
   useEffect(() => {
     if (template && type === "id") getTemplateFromApi(template);
   }, [template]);
+
+  useEffect(() => {
+    createDocument(template)
+  }, [accomodation]);
 
   useEffect(() => {
     if (templateValue && type === "template") createDocument(templateValue);
@@ -151,124 +167,122 @@ const TemplateGenerator = ({
 
 
   return (
-    <div id="divToPrint" className={!display ? classes.page : null}>
-      <div class="divToPrint">
-        <div
-          className={classes.pageBis}
-          style={toPrint ? { width: "210mm", height: "297mm" } : {}}
-        >
-          <div className={classes.destinataire}>
-            <Typography variant="letter">
-              {!owner.isSociety
-                ? owner.firstname.toUpperCase() +
-                  " " +
-                  owner.lastname.toUpperCase()
-                : owner.socialIdentity}
-            </Typography>
-            <Typography variant="letter">
-              {owner.address.street.toUpperCase()}
-            </Typography>
-            <Typography variant="letter">
-              {owner.address.postalCode.toUpperCase() +
+      <div id="divToPrint" className={!display ? classes.page : classes.pageDisplay}>
+        <div class={`divToPrint${accomodation.id}`}>
+          <div
+              className={classes.pageBis}
+              style={toPrint ? { width: "210mm", height: "297mm" } : {}}
+          >
+            <div className={classes.destinataire}>
+              <Typography variant="letter">
+                {!owner.isSociety
+                    ? owner.firstname.toUpperCase() +
+                    " " +
+                    owner.lastname.toUpperCase()
+                    : owner.socialIdentity}
+              </Typography>
+              <Typography variant="letter">
+                {owner.address.street.toUpperCase()}
+              </Typography>
+              <Typography variant="letter">
+                {owner.address.postalCode.toUpperCase() +
                 " " +
                 owner.address.city.toUpperCase()}
-            </Typography>
-          </div>
-          <div className={classes.expediteur}>
-            
-                <Typography variant="letter">
-                  {accomodation.rental.isParticulier !== "false"
+              </Typography>
+            </div>
+            <div className={classes.expediteur}>
+
+              <Typography variant="letter">
+                {accomodation.rental.isParticulier !== "false"
                     ? accomodation.rental?.firstname?.toUpperCase() +
-                      " " +
-                      accomodation.rental?.lastname?.toUpperCase()
+                    " " +
+                    accomodation.rental?.lastname?.toUpperCase()
                     : accomodation.rental?.socialIdentity}
-                </Typography>
-              
-            
-            
+              </Typography>
+
               <Typography variant="letter">
                 {accomodation.address.street.toUpperCase()}
               </Typography>
-            
-            
+
+
               <Typography variant="letter">
                 {accomodation.address.postalCode.toUpperCase() +
-                  " " +
-                  accomodation.address.city.toUpperCase()}
+                " " +
+                accomodation.address.city.toUpperCase()}
               </Typography>
-            
-          </div>
-          <Divider className={classes.divider} />
 
-          <div>
-            <Typography variant="letter">{templateLocal.textStart}</Typography>
+            </div>
             <Divider className={classes.divider} />
-            <Typography variant="letter">
-              {civilityTranslation[accomodation.rental.civility]},
-            </Typography>
-            <Divider className={classes.divider} />
-            <Typography variant="letter">{templateLocal.textBody}</Typography>
-          </div>
-          <Divider className={classes.divider} />
-          <div className={classes.montant}>
-            <Grid container>
-              <Grid item xs={6}>
-                <Typography variant="letter">Loyer :</Typography>
-              </Grid>
-              <Grid item xs={6} className={classes.alignRight}>
-                <Typography variant="letter">
-                  {Number(accomodation.loyer.fixe).toFixed(2)}
-                </Typography>
-              </Grid>
-              <Grid item xs={9}>
-                <Typography variant="letter">
-                  Provision sur charges :
-                </Typography>
-              </Grid>
-              <Grid item xs={3} className={classes.alignRight}>
-                <Typography variant="letter">
-                  {Number(accomodation.loyer.charges).toFixed(2)}
-                </Typography>
-              </Grid>
 
-              {!accomodation.isCommercial && (
-                <>
-                  <Grid item xs={6}>
-                    <Typography variant="letter">TVA :</Typography>
-                  </Grid>
-                  <Grid item xs={6} className={classes.alignRight}>
-                    <Typography variant="letter">
-                      {" "}
-                      {accomodation.loyer.tva}
-                    </Typography>
-                  </Grid>
-                </>
-              )}
-              <Grid item xs={6} />
-              <Grid item xs={6} className={classes.alignRight}>
-                ------------
+            <div>
+              <Typography variant="letter">{templateLocal.textStart}</Typography>
+              <Divider className={classes.divider} />
+              <Typography variant="letter">
+                {civilityTranslation[accomodation.rental.civility]},
+              </Typography>
+              <Divider className={classes.divider} />
+              <Typography variant="letter">{templateLocal.textBody}</Typography>
+            </div>
+            <Divider className={classes.divider} />
+            <div className={classes.montant}>
+              <Grid container>
+                <Grid item xs={6}>
+                  <Typography variant="letter">Loyer :</Typography>
+                </Grid>
+                <Grid item xs={6} className={classes.alignRight}>
+                  <Typography variant="letter">
+                    {Number(accomodation.loyer.fixe).toFixed(2)}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="letter">
+                    Provision sur charges :
+                  </Typography>
+                </Grid>
+                <Grid item xs={3} className={classes.alignRight}>
+                  <Typography variant="letter">
+                    {Number(accomodation.loyer.charges).toFixed(2)}
+                  </Typography>
+                </Grid>
+
+                {!accomodation.isCommercial && (
+                    <>
+                      <Grid item xs={6}>
+                        <Typography variant="letter">TVA :</Typography>
+                      </Grid>
+                      <Grid item xs={6} className={classes.alignRight}>
+                        <Typography variant="letter">
+                          {" "}
+                          {accomodation.loyer.tva}
+                        </Typography>
+                      </Grid>
+                    </>
+                )}
+                <Grid item xs={6} />
+                <Grid item xs={6} className={classes.alignRight}>
+                  ------------
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="letter">Total :</Typography>
+                </Grid>
+                <Grid item xs={6} className={classes.alignRight}>
+                  <Typography variant="letter">{calculateTotal()}</Typography>
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <Typography variant="letter">Total :</Typography>
-              </Grid>
-              <Grid item xs={6} className={classes.alignRight}>
-                <Typography variant="letter">{calculateTotal()}</Typography>
-              </Grid>
-            </Grid>
+            </div>
+            <Divider className={classes.divider} />
+            <div >
+              <Typography variant="letter">
+                Veuillez agréer,{" "}
+                {civilityTranslation[accomodation.rental.civility]}, l'expression
+                de mes sentiments distingués{" "}
+              </Typography>
+            </div>
+            <Divider className={classes.divider} />
+            <Typography variant="letter">{templateLocal.textEnd}</Typography>
           </div>
-          <Divider className={classes.divider} />
-          <div >
-            <Typography variant="letter">
-              Veuillez agréer,{" "}
-              {civilityTranslation[accomodation.rental.civility]}, l'expression
-              de mes sentiments distingués{" "}
-            </Typography>
-          </div>
-          <Divider className={classes.divider} />
-          <Typography variant="letter">{templateLocal.textEnd}</Typography>
         </div>
       </div>
-    </div>
   );
 };
 

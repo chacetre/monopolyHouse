@@ -109,6 +109,7 @@ const Templates = ({ open, className, onClose, template, ...rest }) => {
             date = {fakeDate}
             template={template.id}
             type="id"
+            display
           />
         </CardContent>
         <CardActions disableSpacing>

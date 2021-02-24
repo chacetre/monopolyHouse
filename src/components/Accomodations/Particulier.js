@@ -42,7 +42,7 @@ const Particulier = ({ handleChange, currentOwner, disabled, ...rest }) => {
               />
             }
             label="Mr"
-            labelPlacement="right"
+            labelPlacement="end"
             disabled={!isModifying}
           />
           <FormControlLabel
@@ -57,7 +57,7 @@ const Particulier = ({ handleChange, currentOwner, disabled, ...rest }) => {
               />
             }
             label="Mme"
-            labelPlacement="right"
+            labelPlacement="end"
             disabled={!isModifying}
           />
         </RadioGroup>
@@ -103,11 +103,10 @@ const Particulier = ({ handleChange, currentOwner, disabled, ...rest }) => {
 Particulier.propTypes = {
   className: PropTypes.string,
   handleChange: PropTypes.func,
-  currentOwner: PropTypes.string,
+  currentOwner: PropTypes.object,
 };
 
 Particulier.defaultProps = {
-  currentOwner: "bidulle",
   handleChange: () => {},
 };
 

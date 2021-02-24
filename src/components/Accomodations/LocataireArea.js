@@ -40,7 +40,6 @@ const LocataireArea = (props) => {
     return (
         <>
             <FormControl className={classes.divCenter}>
-               
                 <RadioGroup
                     row
                     name="isParticulier"
@@ -59,7 +58,7 @@ const LocataireArea = (props) => {
                             />
                         }
                         label="Particulier"
-                        labelPlacement="right"
+                        labelPlacement="end"
                     />
                     <FormControlLabel
                         value={"false"}
@@ -72,7 +71,7 @@ const LocataireArea = (props) => {
                             />
                         }
                         label="Entreprise"
-                        labelPlacement="right"
+                        labelPlacement="end"
                     />
                     <FormControlLabel
                         value={"null"}
@@ -85,7 +84,7 @@ const LocataireArea = (props) => {
                             />
                         }
                         label="Vide"
-                        labelPlacement="right"
+                        labelPlacement="end"
                     />
                 </RadioGroup>
                 <TextField
@@ -97,11 +96,10 @@ const LocataireArea = (props) => {
                     }
                     label="Date d'entrée"
                     name="startDate"
+                    placeholder="DD/MM/YEAR"
                     onChange={handleChangeRental}
                     type="text"
-                    value={
-                        ((currentAccommo.values.rental.startDate) || "DD/MM/YEAR")
-                    }
+                    value={currentAccommo.values.rental.startDate}
                     variant="outlined"
                 />
             </FormControl>

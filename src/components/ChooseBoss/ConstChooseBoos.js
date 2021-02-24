@@ -1,0 +1,1 @@
+export const steps = ['Informations personelles', 'Informations Adrresse']

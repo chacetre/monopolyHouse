@@ -10,7 +10,6 @@ export const deleteValueInDataBase = (type, soustype, index) => {
   Firebase.database()
     .ref(`/stock/componentsStock/${type}/${soustype}/${index}`)
     .set(null);
-  console.log("DATA SAVED");
 };
 
 
@@ -19,7 +18,6 @@ export const updateOwner = (owner) => {
   Firebase.database()
     .ref(`${existingUser}/owners/${owner.id}`)
     .set(owner);
-  console.log("DATA SAVED");
 };
 
 export const getOwnerDataBase = (callback) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
-import { Typography, Button, Paper, Grid } from "@material-ui/core";
-import AddOwnerModal from "./components/AddOwnerModal";
+import { Typography, Paper, Grid } from "@material-ui/core";
+import AddOwnerModal from "../../components/ChooseBoss/AddOwnerModal";
 import { getOwnerDataBase } from "request/ownerAPI";
 import { useOwner } from "../../context/owner";
 
@@ -116,7 +116,7 @@ const ChooseBoos = (props) => {
 
       <AddOwnerModal
         open={showAddOwner}
-        onClose={(pedal) => {
+        onClose={() => {
           setShowAddOwner(false);
         }}
       />
