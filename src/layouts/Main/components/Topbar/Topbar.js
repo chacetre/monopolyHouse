@@ -98,8 +98,8 @@ const Topbar = (props) => {
                 className={classes.title}
               >
                 {owners !== null &&
-                  Object.values(owners).map((owner) => (
-                    <MenuItem value={owner.id}>
+                  Object.values(owners).map((owner, index) => (
+                    <MenuItem value={owner.id} key={index}>
                       {!owner.isSociety ? owner.firstname + " " + owner.lastname : owner.socialIdentity}
                     </MenuItem>
                   ))}

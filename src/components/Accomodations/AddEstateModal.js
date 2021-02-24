@@ -13,7 +13,7 @@ import {
   Button,
   TextField,
 } from "@material-ui/core";
-import { useOwner } from "../../../context/owner";
+import { useOwner } from "../../context/owner";
 import { saveNewAccommodation } from "request/accomodationAPI";
 import Loyer from "./Loyer";
 import Stepper from "@material-ui/core/Stepper";
@@ -22,6 +22,14 @@ import StepLabel from "@material-ui/core/StepLabel";
 import LogementArea from "./LogementArea";
 import LocataireArea from "./LocataireArea";
 import Paper from "@material-ui/core/Paper";
+import {
+  initialValueAccomo,
+  schema,
+  schemaAddress,
+  schemaLoyer,
+  schemaRental,
+  steps
+} from "../../views/Accomodation/ConstEstateModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,27 +47,11 @@ const useStyles = makeStyles((theme) => ({
   actions: {
     justifyContent: "flex-end",
   },
-  center: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   divider: {
     margin: 10,
   },
-  titleSection: {
-    marginRight: 15,
-    marginLeft: 10,
-  },
-  gridCell: {
-    alignItems: "center",
-  },
   textField: {
     marginTop: theme.spacing(2),
-  },
-  container: {
-    marginTop: 0,
-    marginBottom: theme.spacing(2),
   },
   paper:{
     padding: 10
@@ -76,66 +68,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const schema = {
-  address: {
-    presence: { allowEmpty: false, message: "is required" },
-  },
-  isCommercial: {
-    presence: { allowEmpty: false, message: "is required" },
-  },
-};
-
-const schemaAddress = {
-  postalCode: {
-    presence: { allowEmpty: false, message: "is required" },
-    length: {
-      maximum: 5,
-      minimum: 5,
-    },
-  },
-  street: {
-    presence: { allowEmpty: false, message: "is required" },
-  },
-  city: {
-    presence: { allowEmpty: false, message: "is required" },
-  },
-};
-
-const schemaLoyer = {
-  fixe: {
-    presence: { allowEmpty: false, message: "is required" },
-  },
-  charges: {
-    presence: { allowEmpty: false, message: "is required" },
-  },
-  indiceInsee: {
-    presence: { allowEmpty: false, message: "is required" },
-  }
-};
-
-const initialValueAccomo = {
-  isValid: false,
-    values: {
-      rental: {
-        isParticulier : "true"
-      },
-      address: {},
-      loyer: {}
-    },
-    touched: {},
-    errors: {},
-}
-
-function getSteps() {
-  return ['Informations Logement', 'Informations Locataire', 'Loyer'];
-}
-const schemaRental = {};
 
 function AddEstateModal({ open, className, onClose, ...rest }) {
   const classes = useStyles();
   const { ownerInformations } = useOwner();
   const [activeStep, setActiveStep] = React.useState(0);
-  const steps = getSteps();
   const [currentAccommo, setCurrentAccommo] = useState(initialValueAccomo);
 
   function createEstateDB() {
@@ -241,7 +178,6 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
     setActiveStep(index)
   }
 
-
   const handleNext = () => {
     if (activeStep + 1 === steps.length){
       createEstate()
@@ -251,10 +187,12 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
+  const activateButton = (activeStep === 0 && validate(currentAccommo.values.address, schemaAddress)) ||
+      (activeStep === 1 && validate(currentAccommo.values.rental, schemaRental)) ||
+      (activeStep === 2 && validate(currentAccommo.values.loyer, schemaLoyer))
+
   const hasError = (field) =>
-      currentAccommo.touched[field] && currentAccommo.errors[field]
-          ? true
-          : false;
+      !!(currentAccommo.touched[field] && currentAccommo.errors[field]);
 
   useEffect(() => {
     const errorsGeneral = validate(currentAccommo.values, schema);
@@ -277,16 +215,14 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
       errors = undefined;
     }
 
-    console.log("errors", errors)
-
     setCurrentAccommo((formState) => ({
       ...formState,
-      isValid: errors ? false : true,
+      isValid: !errors,
       errors: errors || {},
     }));
   }, [currentAccommo.values]);
 
-
+  console.log('errors', currentAccommo.errors)
   if (!open) {
     return null;
   }
@@ -297,7 +233,6 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
           <CardHeader title={"Ajouter un nouveau bien"} />
           <Divider />
           <CardContent>
-
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => {
                 const stepProps = {};
@@ -346,6 +281,7 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
                 color="secondary"
                 onClick={handleNext}
                 className={classes.button}
+                disabled={activateButton}
             >
               {activeStep === steps.length - 1 ? 'Créer' : 'Suivant'}
             </Button>

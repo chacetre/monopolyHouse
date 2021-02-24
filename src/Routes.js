@@ -3,7 +3,7 @@ import React from "react";
 import { Switch, Redirect } from "react-router-dom";
 import Accommodation from "views/Accomodation";
 import ChooseBoos from "views/ChooseBoss";
-import Receipt from "views/Receipt";
+import Receipts from "views/Receipt/Receipts";
 import Settings from "views/Settings";
 import TemplateEdit from "views/Settings/Components/TemplateEdit";
 
@@ -34,7 +34,7 @@ const Routes = () => {
         path="/account"
       />
       <PrivateRoute
-        component={Receipt}
+        component={Receipts}
         exact
         layout={MainLayout}
         path="/receipts"

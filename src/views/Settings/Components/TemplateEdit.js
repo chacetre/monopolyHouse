@@ -19,12 +19,7 @@ import {
 } from "request/settingsAPI";
 import { useParams } from "react-router-dom";
 import { InfoRounded } from "@material-ui/icons";
-import {
-  fakeAccomodation,
-  fakeDate,
-  fakeOwner,
-} from "../../../components/Constants/const";
-import TemplateGenerator from "./TemplateGenerator";
+import TemplateShow from "./TemplateShow";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
   boxPreview: {
     backgroundColor: theme.palette.white,
+    padding: 4
   },
 }));
 
@@ -55,7 +51,7 @@ const matching = [
   "Nom du locataire : [name_rental]",
   "Civilité du locataire : [civility]",
   "Adresse complete : [complete_address]",
-  "Ville du logement : [city]",
+  "Ville du logement : [rent.city]",
 ];
 
 const whom = {
@@ -64,11 +60,11 @@ const whom = {
     label: "Tous le monde",
   },
   particular: {
-    value: "particular",
+    value: "true",
     label: "Particulier",
   },
   society: {
-    value: "society",
+    value: "false",
     label: "Entreprise",
   },
 };
@@ -89,6 +85,7 @@ const TemplateEdit = () => {
   let history = useHistory();
   let { idTemplate } = useParams();
   const [template, setTemplate] = useState({});
+  const [showTemplate, setShowTemplate] = useState(false);
 
   function getTemplate() {
     getTemplateByIdAPI(idTemplate, (response) => {
@@ -121,6 +118,13 @@ const TemplateEdit = () => {
 
   return (
     <div className={classes.root}>
+      <TemplateShow
+          open={showTemplate}
+          template={template}
+          onClose={(pedal) => {
+            setShowTemplate(false);
+          }}
+      />
       <Grid container spacing={10} className={classes.container}>
         <Grid item lg={12} md={12} xs={12}>
           <Typography variant="subtitle1">
@@ -132,8 +136,7 @@ const TemplateEdit = () => {
             <Typography variant="subtitle1">{value}</Typography>
           ))}
         </Grid>
-
-        <Grid item lg={6} md={6} xs={6}>
+        <Grid item lg={10} md={10} xs={10}>
           <Grid container spacing={2}>
             <Grid item lg={12} md={12} xs={12}>
               <TextField
@@ -163,6 +166,7 @@ const TemplateEdit = () => {
                   onChange={handleChange}
                   value={template.type || ""}
                   name="type"
+                  disabled
                 >
                   {Object.values(type).map((value) => (
                     <MenuItem value={value.value}>
@@ -188,6 +192,7 @@ const TemplateEdit = () => {
                   onChange={handleChange}
                   value={template.whom || ""}
                   name="whom"
+                  disabled
                 >
                   {Object.values(whom).map((value) => (
                     <MenuItem value={value.value}>
@@ -256,20 +261,17 @@ const TemplateEdit = () => {
               >
                 Annuler
               </Button>
+              <Button
+                  color="primary"
+                  variant="contained" onClick={() => setShowTemplate(true)}
+                  style={{ marginRight: 10 }}>
+                Voir
+              </Button>
               <Button variant="contained" onClick={saveChange}>
                 Valider
               </Button>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item lg={6} md={6} xs={6} className={classes.boxPreview}>
-          <TemplateGenerator
-            accomodation={fakeAccomodation}
-            owner={fakeOwner}
-            date={fakeDate}
-            templateValue={template}
-            type="template"
-          />
         </Grid>
       </Grid>
     </div>

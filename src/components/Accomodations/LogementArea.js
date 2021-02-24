@@ -7,32 +7,13 @@ import {
     FormControlLabel, FormControl,
 } from "@material-ui/core";
 import Address from "./Address";
+import {Field, Form, Formik} from "formik";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        padding: theme.spacing(2)
-    },
-    imageContainer: {
-        marginRight: 20,
-        border: `1px solid ${theme.palette.divider}`,
-        borderRadius: "5px",
-        overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        justifyItems: "center",
-    },
-    image: {
-        width: "100%",
-    },
     formControl: {
         display: "flex",
         alignItems: "center",
-    },
-    statsIcon: {
-        color: theme.palette.icon,
-        marginRight: theme.spacing(1),
-    },
+    }
 }));
 
 
@@ -63,7 +44,7 @@ const LogementArea = (props) => {
                             />
                         }
                         label="Habitation"
-                        labelPlacement="right"
+                        labelPlacement="end"
                     />
                     <FormControlLabel
                         value={"true"}
@@ -74,7 +55,7 @@ const LogementArea = (props) => {
                             />
                         }
                         label="Local Commercial"
-                        labelPlacement="right"
+                        labelPlacement="end"
                     />
                 </RadioGroup>
                 {hasError("isCommercial") ? (

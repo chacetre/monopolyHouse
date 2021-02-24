@@ -9,8 +9,8 @@ import { colors } from "@material-ui/core";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { useOwner } from "../../context/owner";
-import AddEstateModal from "./Components/AddEstateModal";
-import CardAccommodation from "./Components/CardAccomodation";
+import AddEstateModal from "../../components/Accomodations/AddEstateModal";
+import CardAccommodation from "../../components/Accomodations/CardAccomodation";
 import { getAccomodationByOwner } from "request/accomodationAPI";
 import { getIndexesAPI } from "request/settingsAPI";
 
@@ -127,15 +127,9 @@ const Accommodation = () => {
 
   useEffect(() => {
     getAccommodationsInformations();
-  },[]);
-
-  useEffect(() => {
     getIndexes();
   },[]);
 
-  useEffect(() => {
-    console.log("change", indexes)
-  },[indexes]);
 
   useEffect(() => {
     getAccommodationsInformations();
@@ -165,7 +159,6 @@ const Accommodation = () => {
         <Grid item lg={6} md={6} xs={6} className={classes.cellRight}>
           <Button
             variant="contained"
-            color="action"
             onClick={handleAddEstate}
           >
             {" "}
@@ -193,8 +186,8 @@ const Accommodation = () => {
           <ToggleButton value={""} aria-label="left aligned">
             Tous
           </ToggleButton>
-          {listFiltre.map((filtre) => (
-            <ToggleButton value={filtre} aria-label="left aligned">
+          {listFiltre.map((filtre, index) => (
+            <ToggleButton value={filtre} aria-label="left aligned" key={index}>
               {filtre}
             </ToggleButton>
           ))}
@@ -204,8 +197,8 @@ const Accommodation = () => {
         {accommodations !== null &&
           Object.values(accommodations)
             .filter(suffisammentGrand)
-            .map((product) => (
-              <Grid item xs={6}>
+            .map((product, index) => (
+              <Grid item xs={6} key={index}>
                 <CardAccommodation accomodationInfos={product} indexes={indexes}/>
               </Grid>
             ))}

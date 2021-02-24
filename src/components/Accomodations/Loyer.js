@@ -4,34 +4,15 @@ import PropTypes from "prop-types";
 import {
   TextField,
   Paper,
-  Grid
+  Grid,
+  Switch,
+  FormControlLabel
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
       padding: theme.spacing(2)
-  },
-  imageContainer: {
-    marginRight: 20,
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: "5px",
-    overflow: "hidden",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    justifyItems: "center",
-  },
-  image: {
-    width: "100%",
-  },
-  statsItem: {
-    display: "flex",
-    alignItems: "center",
-  },
-  statsIcon: {
-    color: theme.palette.icon,
-    marginRight: theme.spacing(1),
-  },
+  }
 }));
 
 const CssTextField = withStyles({
@@ -67,12 +48,12 @@ const Loyer = (props) => {
   const {handleChange, currentEstate} = props;
   const classes = useStyles();
   const [currentEstateL, setCurrentEstateL] = useState({});
-  
-  function calculateTotal(){
+  const [activeTVA, setActiveTVA] = useState(false);
 
+  function calculateTotal(){
     var numFixe = Number(currentEstateL.loyer.fixe)
     var numCharges = Number(currentEstateL.loyer.charges)
-    var numTVA = currentEstateL.isCommercial !== "false" ? Number(currentEstateL.loyer.tva) : 0
+    var numTVA = activeTVA ? Number(currentEstateL.loyer.tva) : 0
 
     return numFixe + numCharges + numTVA
   }
@@ -83,10 +64,22 @@ const Loyer = (props) => {
   }, [currentEstate]);
 
   return (
-    
-      
     <Paper elevation={0} className={classes.paper}>
     <Grid container spacing={2}>
+      <Grid item lg={12} md={12} xs={12}>
+        <FormControlLabel
+            labelPlacement="start"
+            control={
+              <Switch
+                  checked={activeTVA}
+                  onChange={() => setActiveTVA(prev => !prev)}
+                  name="activeTVA"
+                  color="primary"
+              />
+            }
+            label="TVA : "
+        />
+      </Grid>
       <Grid item lg={3} md={3} xs={3}>
         <TextField
           size="small"
@@ -100,6 +93,7 @@ const Loyer = (props) => {
       </Grid>
 
       <Grid item lg={3} md={3} xs={3}>
+
         <TextField
           size="small"
           label="Charges"
@@ -110,7 +104,7 @@ const Loyer = (props) => {
           onChange={handleChange}
         />
       </Grid>
-      {currentEstateL.isCommercial === "true" && (
+      {activeTVA && (
         <Grid item lg={3} md={3} xs={3}>
           <TextField
             size="small"

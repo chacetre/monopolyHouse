@@ -247,7 +247,7 @@ const CardAccommodation = (props) => {
               />
             }
             label="Habitation"
-            labelPlacement="right"
+            labelPlacement="end"
             disabled={!isModifying}
           />
           <FormControlLabel
@@ -260,7 +260,7 @@ const CardAccommodation = (props) => {
             }
             label="Local Commercial"
             disabled={!isModifying}
-            labelPlacement="right"
+            labelPlacement="end"
           />
         </RadioGroup>
 
@@ -300,7 +300,7 @@ const CardAccommodation = (props) => {
                 }
                 label="Particulier"
                 disabled={!isModifying}
-                labelPlacement="right"
+                labelPlacement="end"
               />
               <FormControlLabel
                 value={"false"}
@@ -314,7 +314,7 @@ const CardAccommodation = (props) => {
                   />
                 }
                 label="Entreprise"
-                labelPlacement="right"
+                labelPlacement="end"
                 disabled={!isModifying}
               />
             </RadioGroup>

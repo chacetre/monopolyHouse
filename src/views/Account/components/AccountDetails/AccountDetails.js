@@ -86,7 +86,7 @@ const AccountDetails = (props) => {
                     />
                   }
                   label="Particulier"
-                  labelPlacement="right"
+                  labelPlacement="end"
                   disabled={false}
                 />
                 <FormControlLabel
@@ -99,7 +99,7 @@ const AccountDetails = (props) => {
                   }
                   label="Entreprise"
                   disabled={false}
-                  labelPlacement="right"
+                  labelPlacement="end"
                 />
               </RadioGroup>
             </Grid>
@@ -120,7 +120,7 @@ const AccountDetails = (props) => {
                     />
                   }
                   label="M."
-                  labelPlacement="right"
+                  labelPlacement="end"
                   disabled={false}
                 />
                 <FormControlLabel
@@ -133,7 +133,7 @@ const AccountDetails = (props) => {
                   }
                   label="Mme"
                   disabled={false}
-                  labelPlacement="right"
+                  labelPlacement="end"
                 />
               </RadioGroup>
             </Grid>
