@@ -80,7 +80,7 @@ const Topbar = (props) => {
             <RouterLink className={classes.rootLink} to="/">
               <img
                 alt="Logo"
-                src="/images/logos/logo_bis_white.svg"
+                src="/images/logos/logo_final_white.svg"
                 width="200"
               />
             </RouterLink>

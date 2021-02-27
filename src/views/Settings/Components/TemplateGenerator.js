@@ -3,10 +3,11 @@ import { makeStyles } from "@material-ui/styles";
 
 import { Divider, Grid, Typography } from "@material-ui/core";
 import {getTemplateByTypeAPI } from "request/settingsAPI";
+import {calculateTotal, calculTVA} from "../../../components/Utils/calculs";
 
 const lastDay = {
   janvier: 31,
-  fevrier: 28,
+  février: 28,
   mars: 31,
   avril: 30,
   mai: 31,
@@ -16,7 +17,7 @@ const lastDay = {
   septembre: 30,
   octobre: 31,
   novembre: 30,
-  decembe: 31,
+  décembe: 31,
 };
 
 const civilityTranslation = {
@@ -87,40 +88,34 @@ const TemplateGenerator = ({
   const [templateLocal, setTemplate] = useState({});
   const [templateFromApi, setTemplateFromApi] = useState({});
 
-  function calculateTotal() {
-    var numFixe = Number(accomodation.loyer.fixe);
-    var numCharges = Number(accomodation.loyer.charges);
-    var numTVA =
-        accomodation.isCommercial === undefined
-            ? Number(accomodation.loyer.tva)
-            : 0;
-
-    return (numFixe + numCharges + numTVA).toFixed(2);
-  }
-
   function change(textChange) {
     let textTranslate = textChange
-        .replace("[rent.city]", accomodation.address.city.toUpperCase())
-        .replace("[rent.street]", accomodation.address.street.toUpperCase())
-        .replace(
-            "[rent.postalCode]",
-            accomodation.address.postalCode.toUpperCase()
-        )
-        .replace("[date.lastDay]", lastDay[date.month])
-        .replace("[date.month]", date.month)
-        .replace("[date.year]", date.year);
+        .replaceAll("[rent.city]", accomodation.address.city.toUpperCase())
+        .replaceAll("[rent.street]", accomodation.address.street.toUpperCase())
+        .replaceAll("[rent.postalCode]", accomodation.address.postalCode.toUpperCase())
+        .replaceAll("[date.lastDay]", lastDay[date.month])
+        .replaceAll("[date.firstDay]", "1er")
+        .replaceAll("[date.month]", date.month)
+        .replaceAll("[date.year]", date.year)
 
     if (accomodation.rental.isParticulier === "true"){
       textTranslate
-          .replace("[rent.lastname]", accomodation.rental.lastname.toUpperCase())
-          .replace("[rent.firstname]", accomodation.rental.firstname.toUpperCase())
-          .replace(
-              "[rent.civility]",
-              civilityTranslation[accomodation.rental.civility || ""]
-          )
+          .replaceAll("[rent.lastname]", accomodation.rental.lastname.toUpperCase())
+          .replaceAll("[rent.firstname]", accomodation.rental.firstname.toUpperCase())
+          .replaceAll("[rent.civility]", civilityTranslation[accomodation.rental.civility || ""])
     } else {
+      textTranslate
+          .replaceAll("[rent.lastname]", accomodation.rental.socialIdentity.toUpperCase())
+          .replaceAll("[rent.firstname]", "")
+          .replaceAll("[rent.civility]", "")
+    }
 
-
+    if (owner.isSociety){
+      textTranslate
+          .replaceAll("[owner]", owner.socialIdentity.toUpperCase())
+    } else {
+      textTranslate
+          .replaceAll("[owner]", owner.lastname.toUpperCase() + " " + owner.firstname.toUpperCase())
     }
 
     return textTranslate;
@@ -245,15 +240,14 @@ const TemplateGenerator = ({
                   </Typography>
                 </Grid>
 
-                {!accomodation.isCommercial && (
+                {accomodation.activeTVA && (
                     <>
                       <Grid item xs={6}>
                         <Typography variant="letter">TVA :</Typography>
                       </Grid>
                       <Grid item xs={6} className={classes.alignRight}>
                         <Typography variant="letter">
-                          {" "}
-                          {accomodation.loyer.tva}
+                          {calculTVA(accomodation.loyer)}
                         </Typography>
                       </Grid>
                     </>
@@ -266,7 +260,7 @@ const TemplateGenerator = ({
                   <Typography variant="letter">Total :</Typography>
                 </Grid>
                 <Grid item xs={6} className={classes.alignRight}>
-                  <Typography variant="letter">{calculateTotal()}</Typography>
+                  <Typography variant="letter">{calculateTotal(accomodation.loyer)}</Typography>
                 </Grid>
               </Grid>
             </div>

@@ -107,14 +107,14 @@ const Templates = (props) => {
                   </CardContent>
                   <CardActions>
                     <div className={classes.cardActions}>
-                      <Button
+                      {/*<Button
                         variant="contained"
                         onClick={() => handleShowTemplate(template)}
                         color="primary"
                         style={{ marginRight: 10 }}
                       >
                         Voir
-                      </Button>
+                      </Button>*/}
                       <Button
                         variant="contained"
                         onClick={() => editTemplate(template.id)}

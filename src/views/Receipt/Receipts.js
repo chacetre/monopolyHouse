@@ -17,6 +17,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import {createPDF} from "./FileUtils";
+import {calculateTotal} from "../../components/Utils/calculs";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-document.body.style.overflow = "hidden"
+
 
 const Receipts = () => {
   const classes = useStyles();
@@ -76,15 +77,6 @@ const Receipts = () => {
   const handleDownload = (event, accomodation) => {
     const input = document.querySelector(`.divToPrint${accomodation.id}`);
     createPDF(accomodation, dateReceipt, fileSelected, input)
-  }
-
-  // TODO add variable Total in base
-  function calculateLoyer(estate) {
-    const numFixe = Number(estate.loyer.fixe);
-    const numCharges = Number(estate.loyer.charges);
-    const tva = estate.isCommercial === undefined ? 1 : 1.2;
-
-    return (numFixe + numCharges) * tva ;
   }
 
   function getAccommodationsInformations() {
@@ -114,6 +106,13 @@ const Receipts = () => {
       }));
     }
   }, [currentDate]);
+
+  // TODO CHANGE
+  React.useEffect(() => {
+    document.body.style.overflow = "hidden"
+    return () => document.body.style.overflow = "scroll"
+  }, []);
+
 
   return (
       <div className={classes.root}>
@@ -172,7 +171,7 @@ const Receipts = () => {
                           row.rental.lastname.toUpperCase()
                           : row.rental.socialIdentity}
                     </TableCell>
-                    <TableCell>{calculateLoyer(row)} €</TableCell>
+                    <TableCell>{calculateTotal(row.loyer)} €</TableCell>
                     <TableCell>
                       <div className={classes.center}>
                         <Button

@@ -261,12 +261,12 @@ const TemplateEdit = () => {
               >
                 Annuler
               </Button>
-              <Button
+              {/*<Button
                   color="primary"
                   variant="contained" onClick={() => setShowTemplate(true)}
                   style={{ marginRight: 10 }}>
                 Voir
-              </Button>
+              </Button>*/}
               <Button variant="contained" onClick={saveChange}>
                 Valider
               </Button>
