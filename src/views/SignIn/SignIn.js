@@ -7,6 +7,8 @@ import { Grid, Button, TextField, Typography } from "@material-ui/core";
 import { useAuth } from "../../context/auth";
 import { useUser } from "../../context/userInformations";
 import firebase from "firebase/app";
+import {constant} from "underscore";
+import {version} from "../../data/constantes";
 
 const schema = {
   email: {
@@ -223,7 +225,7 @@ const SignIn = (props) => {
             </div>
             <div>
               <Typography className={classes.title} variant="caption">
-                Version 0.2
+                Version {version}
               </Typography>
             </div>
           </div>

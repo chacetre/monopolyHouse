@@ -8,6 +8,7 @@ import {
   Switch,
   FormControlLabel
 } from "@material-ui/core";
+import {calculateTotal, calculTVA} from "../Utils/calculs";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,14 +51,6 @@ const Loyer = (props) => {
   const [currentEstateL, setCurrentEstateL] = useState({});
   const [activeTVA, setActiveTVA] = useState(false);
 
-  function calculateTotal(){
-    var numFixe = Number(currentEstateL.loyer.fixe)
-    var numCharges = Number(currentEstateL.loyer.charges)
-    var numTVA = activeTVA ? Number(currentEstateL.loyer.tva) : 0
-
-    return numFixe + numCharges + numTVA
-  }
-
   useEffect(() => {
     if (currentEstate !== undefined) setCurrentEstateL(currentEstate);
     
@@ -71,8 +64,12 @@ const Loyer = (props) => {
             labelPlacement="start"
             control={
               <Switch
+                  value={activeTVA}
                   checked={activeTVA}
-                  onChange={() => setActiveTVA(prev => !prev)}
+                  onChange={(event) => {
+                    handleChange(event)
+                    setActiveTVA(prev => !prev)
+                  }}
                   name="activeTVA"
                   color="primary"
               />
@@ -112,8 +109,7 @@ const Loyer = (props) => {
             variant="outlined"
             fullWidth
             name="tva"
-            value={currentEstateL.loyer !== undefined ? currentEstateL.loyer.tva : ""}
-            onChange={handleChange}
+            value={currentEstateL.loyer !== undefined && calculTVA(currentEstateL.loyer)}
           />
         </Grid>
       )}
@@ -127,7 +123,7 @@ const Loyer = (props) => {
           disabled
           value={
             currentEstateL.loyer !== undefined &&
-            calculateTotal()
+            calculateTotal(currentEstateL.loyer)
           }
         />
       </Grid>

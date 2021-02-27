@@ -1,15 +1,14 @@
-export function revisionLoyer(){
+export function calculateTotal(loyer){
+    if (!loyer) {return 0}
 
-    console.log('current year', currentYear)
-    var numFixe = Number(currentAccommo.loyer.fixe);
+    var numFixe = Number(loyer.fixe)
+    var numCharges = Number(loyer.charges)
 
-    const tauxAnneeCurrent = 130.52
-    const tauxAnneePrevious = 130.26
+    return loyer.activeTVA ? ((numFixe + numCharges) * 1.20).toFixed(2) : ((numFixe + numCharges)).toFixed(2)
+}
 
-    const newFixe = (numFixe * tauxAnneeCurrent) / tauxAnneePrevious
-
-    console.log("New taux", newFixe.toFixed(2))
-
-    currentAccommo.loyer.fixe = newFixe.toFixed(2)
-    //updateAccomodation(currentAccommo);
-  }
+export const calculTVA = (loyer) => {
+    var numFixe = Number(loyer.fixe)
+    var numCharges = Number(loyer.charges)
+    return ((numFixe + numCharges) * 0.20).toFixed(2)
+}

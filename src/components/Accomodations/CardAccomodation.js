@@ -17,6 +17,7 @@ import CreateRounded from "@material-ui/icons/CreateRounded";
 import Particulier from "./Particulier";
 import Society from "./Society";
 import { updateAccomodation } from "request/accomodationAPI";
+import {calculateTotal, calculTVA} from "../Utils/calculs";
 
 const CssTextField = withStyles({
   root: {
@@ -151,18 +152,6 @@ const CardAccommodation = (props) => {
       },
     }));
   };
-
-  function calculateTotal() {
-    var numFixe = Number(currentAccommo.loyer.fixe);
-    var numCharges = Number(currentAccommo.loyer.charges);
-    var numTVA =
-      currentAccommo.isCommercial !== "false"
-        ? Number(currentAccommo.loyer.tva)
-        : 0;
-
-    var totalTVA = numTVA !== 0 ? (numTVA * numFixe / 100) : 0
-    return numFixe + numCharges + totalTVA;
-  }
 
   function handleModify() {
     if (isModifying) {
@@ -385,19 +374,17 @@ const CardAccommodation = (props) => {
               onChange={handleChangeLoyer}
             />
           </Grid>
-          {currentAccommo.isCommercial === "true" && (
+          {currentAccommo.loyer !== undefined && currentAccommo.loyer.activeTVA === "true" && (
             <Grid item lg={3} md={3} xs={3}>
               <TextField
                 size="small"
                 label="TVA en %"
                 variant="outlined"
                 fullWidth
-                disabled={!isModifying}
+                disabled
                 name="tva"
                 value={
-                  (currentAccommo.loyer !== undefined &&
-                    currentAccommo.loyer.tva) ||
-                  ""
+                  (calculTVA(currentAccommo.loyer) || "")
                 }
                 onChange={handleChangeLoyer}
               />
@@ -410,7 +397,7 @@ const CardAccommodation = (props) => {
               label="Total"
               variant="outlined"
               fullWidth
-              value={currentAccommo.loyer !== undefined && calculateTotal()}
+              value={calculateTotal(currentAccommo.loyer)}
               disabled
               inputProps={{ "aria-label": "naked" }}
             />

@@ -1,7 +1,7 @@
 import React, {useState } from "react";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import { ThemeProvider } from "@material-ui/styles";
+import {makeStyles, ThemeProvider} from "@material-ui/styles";
 import validate from "validate.js";
 import theme from "./theme";
 import "react-perfect-scrollbar/dist/css/styles.css";
@@ -51,21 +51,21 @@ const App = (props) => {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <AuthContext.Provider value={{ authTokens, setAuthTokens: setTokens }}>
-        <UserContext.Provider
-          value={{ userInformations, setUserInformations: setUser }}
-        >
-          <OwnerContext.Provider
-            value={{ ownerInformations, setOwnerInformations: setOwner }}
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider value={{ authTokens, setAuthTokens: setTokens }}>
+          <UserContext.Provider
+              value={{ userInformations, setUserInformations: setUser }}
           >
-            <Router history={browserHistory}>
-              <Routes />
-            </Router>
-          </OwnerContext.Provider>
-        </UserContext.Provider>
-      </AuthContext.Provider>
-    </ThemeProvider>
+            <OwnerContext.Provider
+                value={{ ownerInformations, setOwnerInformations: setOwner }}
+            >
+              <Router history={browserHistory}>
+                  <Routes />
+              </Router>
+            </OwnerContext.Provider>
+          </UserContext.Provider>
+        </AuthContext.Provider>
+      </ThemeProvider>
   );
 };
 
