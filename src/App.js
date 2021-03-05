@@ -59,9 +59,11 @@ const App = (props) => {
             <OwnerContext.Provider
                 value={{ ownerInformations, setOwnerInformations: setOwner }}
             >
+
               <Router history={browserHistory}>
                   <Routes />
               </Router>
+
             </OwnerContext.Provider>
           </UserContext.Provider>
         </AuthContext.Provider>

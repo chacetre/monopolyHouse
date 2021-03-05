@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
 const AccountDetails = (props) => {
   const { className, ...rest } = props;
   const classes = useStyles();
-  const { ownerInformations } = useOwner();
+  const { ownerInformations, setOwnerInformations } = useOwner();
   const [localOwner, setLocalOwner] = useState({
     firstname: "",
     lastname: "",
@@ -51,7 +51,7 @@ const AccountDetails = (props) => {
   };
 
   function handleUpdateOwner(){
-    console.log(localOwner)
+    setOwnerInformations(localOwner)
     updateOwner(localOwner)
   }
 

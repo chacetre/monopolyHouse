@@ -52,7 +52,8 @@ const fakeAccomodation = {
   isCommercial: "false",
   loyer: {
     charges: "11",
-    fixe: "11",
+    fixe: "11", indexInsee: false
+
   },
   owner: 1610293593160,
   rental: {

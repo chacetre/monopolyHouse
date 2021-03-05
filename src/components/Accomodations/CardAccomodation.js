@@ -163,12 +163,12 @@ const CardAccommodation = (props) => {
   function revisionLoyer(){
     const currentYear = new Date().toLocaleString("default", {year: "numeric"});
     const previousYear = currentYear - 1
-    const trimestre = currentAccommo.loyer.insee
-    
+    const trimestre = currentAccommo.loyer.indiceInsee
+
     var numFixe = Number(currentAccommo.loyer.fixe);
 
-    const tauxAnneeCurrent = indexes[`${currentYear}_T${trimestre}`];
-    const tauxAnneePrevious = indexes[`${previousYear}_T${trimestre}`];
+    const tauxAnneeCurrent = indexes[`${currentYear}_${trimestre.toUpperCase()}`];
+    const tauxAnneePrevious = indexes[`${previousYear}_${trimestre.toUpperCase()}`];
 
     if (!tauxAnneePrevious || !tauxAnneeCurrent){
       setOpenSnackbarError(true)
@@ -178,7 +178,7 @@ const CardAccommodation = (props) => {
       currentAccommo.loyer.fixe = newFixe.toFixed(2)
       updateAccomodation(currentAccommo);
     }
-    
+
   }
 
   const handleClose = (event, reason) => {
@@ -196,234 +196,247 @@ const CardAccommodation = (props) => {
   }, [accomodationInfos]);
 
   return (
-    <Paper variant="outlined" className={classes.container}>
-      <Snackbar open={openSnackBarError} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{vertical,horizontal}}>
-        <Alert severity="error">
-          <Typography variant="h4" className={classes.textWhite} >Vous n'avez pas tous les index insee pour effectuer cette action</Typography>
-          
-        </Alert>
-      </Snackbar>
-      <Paper elvation={0} className={classes.titleBar}>
-        <Typography variant="h3" className={classes.textWhite}>
-          {currentAccommo.address !== undefined && (
-            <>
-              {currentAccommo.address.street} -{" "}
-              {currentAccommo.address.postalCode}{" "}
-              {currentAccommo.address.city.toUpperCase()}
-            </>
-          )}
-        </Typography>
+      <Paper variant="outlined" className={classes.container}>
+        <Snackbar open={openSnackBarError} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{vertical,horizontal}}>
+          <Alert severity="error">
+            <Typography variant="h4" className={classes.textWhite} >Vous n'avez pas tous les index insee pour effectuer cette action</Typography>
 
-        <Typography variant="h4" className={classes.textWhite}>
-          {currentAccommo.address !== undefined &&
+          </Alert>
+        </Snackbar>
+        <Paper elvation={0} className={classes.titleBar}>
+          <Typography variant="h3" className={classes.textWhite}>
+            {currentAccommo.address !== undefined && (
+                <>
+                  {currentAccommo.address.street} -{" "}
+                  {currentAccommo.address.postalCode}{" "}
+                  {currentAccommo.address.city.toUpperCase()}
+                </>
+            )}
+          </Typography>
+
+          <Typography variant="h4" className={classes.textWhite}>
+            {currentAccommo.address !== undefined &&
             currentAccommo.address.otherInformations}
-        </Typography>
-      </Paper>
-      <Paper elevation={0}>
-        <RadioGroup
-          row
-          name="isCommercial"
-          defaultValue="top"
-          onChange={handleChange}
-          className={classes.center}
-        >
-          <FormControlLabel
-            value={"false"}
-            control={
-              <Radio
-                color="secondary"
-                checked={currentAccommo.isCommercial === "false"}
-              />
-            }
-            label="Habitation"
-            labelPlacement="end"
-            disabled={!isModifying}
-          />
-          <FormControlLabel
-            value={"true"}
-            control={
-              <Radio
-                color="secondary"
-                checked={currentAccommo.isCommercial === "true"}
-              />
-            }
-            label="Local Commercial"
-            disabled={!isModifying}
-            labelPlacement="end"
-          />
-        </RadioGroup>
-
-        <Grid container spacing={4} className={classes.containerTitle}>
-          <Grid item className={classes.gridCell}>
-            <div className={classes.containerTitle}>
-              <Typography variant="h4" className={classes.titleSection}>
-                Locataire
-              </Typography>
-              <Typography variant="overline" className={classes.titleSection}>
-                Date d'entrée :{" "}
-                {currentAccommo.rental !== undefined
-                  ? currentAccommo.rental.startDate
-                  : ""}
-              </Typography>
-            </div>
-          </Grid>
-          <Grid item className={classes.gridCell}>
-            <RadioGroup
+          </Typography>
+        </Paper>
+        <Paper elevation={0}>
+          <RadioGroup
               row
-              aria-label="position"
-              name="isParticulier"
+              name="isCommercial"
               defaultValue="top"
-              onChange={handleChangeRental}
-              className={classes.paper}
-            >
-              <FormControlLabel
-                value={"true"}
-                control={
-                  <Radio
-                    color="secondary"
-                    checked={
-                      currentAccommo.rental !== undefined &&
-                      currentAccommo.rental.isParticulier === "true"
-                    }
-                  />
-                }
-                label="Particulier"
-                disabled={!isModifying}
-                labelPlacement="end"
-              />
-              <FormControlLabel
+              onChange={handleChange}
+              className={classes.center}
+          >
+            <FormControlLabel
                 value={"false"}
                 control={
                   <Radio
-                    color="secondary"
-                    checked={
-                      currentAccommo.rental !== undefined &&
-                      currentAccommo.rental.isParticulier === "false"
-                    }
+                      color="secondary"
+                      checked={currentAccommo.isCommercial === "false"}
                   />
                 }
-                label="Entreprise"
+                label="Habitation"
                 labelPlacement="end"
                 disabled={!isModifying}
-              />
-            </RadioGroup>
-          </Grid>
-        </Grid>
+            />
+            <FormControlLabel
+                value={"true"}
+                control={
+                  <Radio
+                      color="secondary"
+                      checked={currentAccommo.isCommercial === "true"}
+                  />
+                }
+                label="Local Commercial"
+                disabled={!isModifying}
+                labelPlacement="end"
+            />
+          </RadioGroup>
 
-        {currentAccommo.rental !== undefined &&
+          <Grid container spacing={4} className={classes.containerTitle}>
+            <Grid item className={classes.gridCell}>
+              <div className={classes.containerTitle}>
+                <Typography variant="h4" className={classes.titleSection}>
+                  Locataire
+                </Typography>
+                <Typography variant="overline" className={classes.titleSection}>
+                  Date d'entrée :{" "}
+                  {currentAccommo.rental !== undefined
+                      ? currentAccommo.rental.startDate
+                      : ""}
+                </Typography>
+              </div>
+            </Grid>
+            <Grid item className={classes.gridCell}>
+              <RadioGroup
+                  row
+                  aria-label="position"
+                  name="isParticulier"
+                  defaultValue="top"
+                  onChange={handleChangeRental}
+                  className={classes.paper}
+              >
+                <FormControlLabel
+                    value={"true"}
+                    control={
+                      <Radio
+                          color="secondary"
+                          checked={
+                            currentAccommo.rental !== undefined &&
+                            currentAccommo.rental.isParticulier === "true"
+                          }
+                      />
+                    }
+                    label="Particulier"
+                    disabled={!isModifying}
+                    labelPlacement="end"
+                />
+                <FormControlLabel
+                    value={"false"}
+                    control={
+                      <Radio
+                          color="secondary"
+                          checked={
+                            currentAccommo.rental !== undefined &&
+                            currentAccommo.rental.isParticulier === "false"
+                          }
+                      />
+                    }
+                    label="Entreprise"
+                    labelPlacement="end"
+                    disabled={!isModifying}
+                />
+              </RadioGroup>
+            </Grid>
+          </Grid>
+
+          {currentAccommo.rental !== undefined &&
           currentAccommo.rental.isParticulier === "true" && (
-            <Paper elevation={0} className={classes.paper}>
-              <Particulier
-                disabled={isModifying}
-                currentOwner={currentAccommo}
-                handleChange={handleChangeRental}
-              />
-            </Paper>
+              <Paper elevation={0} className={classes.paper}>
+                <Particulier
+                    disabled={isModifying}
+                    currentOwner={currentAccommo}
+                    handleChange={handleChangeRental}
+                />
+              </Paper>
           )}
 
-        {currentAccommo.rental !== undefined &&
+          {currentAccommo.rental !== undefined &&
           currentAccommo.rental.isParticulier === "false" && (
-            <Paper elevation={0} className={classes.paper}>
-              <Society
-                disabled={isModifying}
-                currentEstate={currentAccommo}
-                handleChange={handleChangeRental}
-              />
-            </Paper>
+              <Paper elevation={0} className={classes.paper}>
+                <Society
+                    disabled={isModifying}
+                    currentEstate={currentAccommo}
+                    handleChange={handleChangeRental}
+                />
+              </Paper>
           )}
-      </Paper>
-      <Typography variant="h4" className={classes.titleSection}>
-        Loyer
-      </Typography>
-      <Typography variant="overline" className={classes.titleSection}>
-        Indice Insee de ref : {currentAccommo.loyer !== undefined && currentAccommo.loyer.insee}
-      </Typography>
+        </Paper>
+        <Typography variant="h4" className={classes.titleSection}>
+          Loyer
+        </Typography>
 
-      <Paper elevation={0} className={classes.paper}>
-        <Grid container spacing={2}>
-          <Grid item lg={3} md={3} xs={3}>
-            <TextField
-              size="small"
-              label="Fixe"
-              variant="outlined"
-              fullWidth
-              disabled={!isModifying}
-              name="fixe"
-              value={
-                (currentAccommo.loyer !== undefined &&
-                  currentAccommo.loyer.fixe) ||
-                ""
-              }
-              onChange={handleChangeLoyer}
-            />
-          </Grid>
-
-          <Grid item lg={3} md={3} xs={3}>
-            <TextField
-              size="small"
-              label="Charges"
-              variant="outlined"
-              fullWidth
-              disabled={!isModifying}
-              name="charges"
-              value={
-                (currentAccommo.loyer !== undefined &&
-                  currentAccommo.loyer.charges) ||
-                ""
-              }
-              onChange={handleChangeLoyer}
-            />
-          </Grid>
-          {currentAccommo.loyer !== undefined && currentAccommo.loyer.activeTVA === "true" && (
+        <Paper elevation={0} className={classes.paper}>
+          <Grid container spacing={2}>
             <Grid item lg={3} md={3} xs={3}>
               <TextField
-                size="small"
-                label="TVA en %"
-                variant="outlined"
-                fullWidth
-                disabled
-                name="tva"
-                value={
-                  (calculTVA(currentAccommo.loyer) || "")
-                }
-                onChange={handleChangeLoyer}
+                  size="small"
+                  label="Fixe"
+                  variant="outlined"
+                  fullWidth
+                  disabled={!isModifying}
+                  name="fixe"
+                  value={
+                    (currentAccommo.loyer !== undefined &&
+                        currentAccommo.loyer.fixe) ||
+                    ""
+                  }
+                  onChange={handleChangeLoyer}
               />
             </Grid>
-          )}
 
-          <Grid item lg={3} md={3} xs={3} className={classes.gridCell}>
-            <CssTextField
-              size="small"
-              label="Total"
-              variant="outlined"
-              fullWidth
-              value={calculateTotal(currentAccommo.loyer)}
-              disabled
-              inputProps={{ "aria-label": "naked" }}
-            />
+            <Grid item lg={3} md={3} xs={3}>
+              <TextField
+                  size="small"
+                  label="Charges"
+                  variant="outlined"
+                  fullWidth
+                  disabled={!isModifying}
+                  name="charges"
+                  value={
+                    (currentAccommo.loyer !== undefined &&
+                        currentAccommo.loyer.charges) ||
+                    ""
+                  }
+                  onChange={handleChangeLoyer}
+              />
+            </Grid>
+            {currentAccommo.loyer !== undefined && currentAccommo.loyer.activeTVA === "true" && (
+                <Grid item lg={3} md={3} xs={3}>
+                  <TextField
+                      size="small"
+                      label="TVA en %"
+                      variant="outlined"
+                      fullWidth
+                      disabled
+                      name="tva"
+                      value={
+                        (calculTVA(currentAccommo.loyer) || "")
+                      }
+                      onChange={handleChangeLoyer}
+                  />
+                </Grid>
+            )}
+
+            <Grid item lg={3} md={3} xs={3} className={classes.gridCell}>
+              <CssTextField
+                  size="small"
+                  label="Total"
+                  variant="outlined"
+                  fullWidth
+                  value={calculateTotal(currentAccommo.loyer)}
+                  disabled
+                  inputProps={{ "aria-label": "naked" }}
+              />
+            </Grid>
           </Grid>
-        </Grid>
+          <div style={{marginTop: 10}}>
+            {isModifying ? <TextField
+                size="small"
+                label="Indice Insee de ref"
+                variant="outlined"
+                name="indiceInsee"
+                value={
+                  (currentAccommo.loyer !== undefined &&
+                      currentAccommo.loyer.indiceInsee) ||
+                  ""
+                }
+                onChange={handleChangeLoyer}
+            /> : <Typography variant="overline">
+              Indice Insee de ref : {currentAccommo.loyer !== undefined && currentAccommo.loyer.indiceInsee}
+            </Typography>}
+          </div>
+        </Paper>
+        <Paper elevation={0} className={classes.paper}>
+          <Grid container className={classes.containerTitle}>
+            <Grid item md={4} xs={4}>
+              <Button variant="contained" color="secondary" onClick={revisionLoyer}>
+                Revision de loyer
+              </Button>
+            </Grid>
+            <Grid item md={8} xs={8} className={classes.right}>
+              <Button
+                  variant="contained"
+                  startIcon={<CreateRounded />}
+                  onClick={handleModify}
+              >
+                {!isModifying && "Modifier"}
+                {isModifying && "Sauvegarder"}
+              </Button>
+            </Grid>
+          </Grid>
+        </Paper>
       </Paper>
-      <Paper elevation={0} className={classes.paper}>
-        <Grid container className={classes.containerTitle}>
-          <Grid item md={4} xs={4}>
-            <Button variant="contained" color="secondary" onClick={revisionLoyer}>
-              Revision de loyer
-            </Button>
-          </Grid>
-          <Grid item md={8} xs={8} className={classes.right}>
-            <Button
-              variant="contained"
-              startIcon={<CreateRounded />}
-              onClick={handleModify}
-            >
-              {!isModifying && "Modifier"}
-              {isModifying && "Sauvegarder"}
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>
-    </Paper>
   );
 };
 
