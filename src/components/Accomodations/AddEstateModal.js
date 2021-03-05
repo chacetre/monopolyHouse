@@ -222,7 +222,6 @@ function AddEstateModal({ open, className, onClose, ...rest }) {
     }));
   }, [currentAccommo.values]);
 
-  console.log('errors', currentAccommo.errors)
   if (!open) {
     return null;
   }

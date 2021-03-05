@@ -86,6 +86,7 @@ const Loyer = (props) => {
           name="fixe"
             value={(currentEstateL.loyer !== undefined && currentEstateL.loyer.fixe) || ""}
           onChange={handleChange}
+          type="number"
         />
       </Grid>
 
@@ -99,6 +100,7 @@ const Loyer = (props) => {
           name="charges"
             value={(currentEstateL.loyer !== undefined && currentEstateL.loyer.charges) || ""}
           onChange={handleChange}
+          type="number"
         />
       </Grid>
       {activeTVA && (
@@ -110,6 +112,9 @@ const Loyer = (props) => {
             fullWidth
             name="tva"
             value={currentEstateL.loyer !== undefined && calculTVA(currentEstateL.loyer)}
+            InputProps={{
+              readOnly: true,
+            }}
           />
         </Grid>
       )}
@@ -125,6 +130,9 @@ const Loyer = (props) => {
             currentEstateL.loyer !== undefined &&
             calculateTotal(currentEstateL.loyer)
           }
+          InputProps={{
+            readOnly: true,
+          }}
         />
       </Grid>
     </Grid>
