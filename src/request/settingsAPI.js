@@ -47,6 +47,14 @@ export const getTemplatesAPI = (callback) => {
   });
 };
 
+export const getTemplatesDefaultAPI = (callback) => {
+  let ref = Firebase.database().ref("/templatesDefault");
+  ref.on("value", (snapshot) => {
+    const data = snapshot.val();
+    callback(data);
+  });
+};
+
 export const getTemplateByIdAPI = (id, callback) => {
   const existingUser = JSON.parse(localStorage.getItem("logged_user"));
   let ref = Firebase.database().ref(existingUser + "/templates/" + id);

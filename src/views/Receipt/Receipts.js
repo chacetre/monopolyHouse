@@ -15,10 +15,10 @@ import MonthYearPicker from "components/MonthYearPicker";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
-import {fetchUserEmail, generateName, getTemplateFromApi, MyDocument} from "./FileUtils";
+import {generateName, MyDocument} from "./FileUtils";
 import {calculateTotal} from "../../components/Utils/calculs";
 import {PDFDownloadLink} from "@react-pdf/renderer";
-import {getTemplatesAPI} from "../../request/settingsAPI";
+import {getTemplatesAPI, getTemplatesDefaultAPI} from "../../request/settingsAPI";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -90,7 +90,13 @@ const Receipts = () => {
 
   function getTemplates(){
     getTemplatesAPI((response) => {
-      setTemplates(response);
+      if (response !== null){
+        setTemplates(response);
+      } else {
+        getTemplatesDefaultAPI((responseDefault) => {
+            setTemplates(responseDefault);
+        });
+      }
     });
   }
 
@@ -219,7 +225,7 @@ const Receipts = () => {
                             fileName={generateName(row,dateReceipt) || "null"}
                             className={classes.icon}
                         >
-                          {({ blob, url, loading, error }) =>
+                          {({loading}) =>
                               loading ? "Loading document..." :  <GetAppRounded />
                           }
                         </PDFDownloadLink>

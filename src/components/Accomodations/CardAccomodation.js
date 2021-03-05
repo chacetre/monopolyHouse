@@ -113,6 +113,7 @@ const CardAccommodation = (props) => {
   const [currentAccommo, setCurrentAccommo] = useState({});
   const [isModifying, setModify] = useState(false);
   const [openSnackBarError, setOpenSnackbarError] = useState(false);
+  const [openSnackBarSuccess, setOpenSnackbarSuccess] = useState(false);
   const vertical = "top"
   const horizontal = "center"
 
@@ -128,17 +129,14 @@ const CardAccommodation = (props) => {
   const handleChangeLoyer = (event) => {
     event.persist();
 
-    const re = /^[0-9\b]+$/;
+    setCurrentAccommo((formState) => ({
+      ...formState,
+      loyer: {
+        ...formState.loyer,
+        [event.target.name]: event.target.value,
+      },
+    }));
 
-    if (event.target.value === "" || re.test(event.target.value)) {
-      setCurrentAccommo((formState) => ({
-        ...formState,
-        loyer: {
-          ...formState.loyer,
-          [event.target.name]: event.target.value,
-        },
-      }));
-    }
   };
 
   const handleChangeRental = (event) => {
@@ -156,6 +154,8 @@ const CardAccommodation = (props) => {
   function handleModify() {
     if (isModifying) {
       updateAccomodation(currentAccommo);
+      // TODO mettre un callBack
+      setOpenSnackbarSuccess(true)
     }
     setModify((prev) => !prev);
   }
@@ -186,6 +186,7 @@ const CardAccommodation = (props) => {
       return;
     }
     setOpenSnackbarError(false);
+    setOpenSnackbarSuccess(false);
   };
 
 
@@ -200,7 +201,11 @@ const CardAccommodation = (props) => {
         <Snackbar open={openSnackBarError} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{vertical,horizontal}}>
           <Alert severity="error">
             <Typography variant="h4" className={classes.textWhite} >Vous n'avez pas tous les index insee pour effectuer cette action</Typography>
-
+          </Alert>
+        </Snackbar>
+        <Snackbar open={openSnackBarSuccess} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{vertical,horizontal}}>
+          <Alert severity="success">
+            <Typography variant="h4" className={classes.textWhite} >Sauvegardé avec succès</Typography>
           </Alert>
         </Snackbar>
         <Paper elvation={0} className={classes.titleBar}>
@@ -352,6 +357,7 @@ const CardAccommodation = (props) => {
                     ""
                   }
                   onChange={handleChangeLoyer}
+                  type="number"
               />
             </Grid>
 
@@ -368,6 +374,7 @@ const CardAccommodation = (props) => {
                         currentAccommo.loyer.charges) ||
                     ""
                   }
+                  type="number"
                   onChange={handleChangeLoyer}
               />
             </Grid>
@@ -384,6 +391,9 @@ const CardAccommodation = (props) => {
                         (calculTVA(currentAccommo.loyer) || "")
                       }
                       onChange={handleChangeLoyer}
+                      InputProps={{
+                        readOnly: true,
+                      }}
                   />
                 </Grid>
             )}

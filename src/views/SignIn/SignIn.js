@@ -7,7 +7,6 @@ import { Grid, Button, TextField, Typography } from "@material-ui/core";
 import { useAuth } from "../../context/auth";
 import { useUser } from "../../context/userInformations";
 import firebase from "firebase/app";
-import {constant} from "underscore";
 import {version} from "../../data/constantes";
 
 const schema = {
@@ -136,6 +135,13 @@ const SignIn = (props) => {
       })
       .catch((error) => {
         console.log("autre error", error.message);
+        setFormState((formState) => ({
+          ...formState,
+          errors: {
+            ...formState.errors,
+            password: ["Le mot de passe ou l'identifiant est incorrect"],
+          },
+        }));
       });
   }
 
@@ -159,7 +165,7 @@ const SignIn = (props) => {
   };
 
   const hasError = (field) => {
-    return formState.touched[field] && formState.errors[field] ? true : false;
+    return (formState.touched[field] && formState.errors[field]) ? true : false;
   };
 
   return (
