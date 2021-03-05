@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     textAlign: "left",
+    marginBottom: 30
   },
   expediteur: {
     width: "50%",
@@ -100,24 +101,23 @@ const TemplateGenerator = ({
 
     if (accomodation.rental.isParticulier === "true"){
       textTranslate
-          .replaceAll("[rent.lastname]", accomodation.rental.lastname.toUpperCase())
-          .replaceAll("[rent.firstname]", accomodation.rental.firstname.toUpperCase())
+          .replaceAll("[rent.lastname]", accomodation.rental.lastname)
+          .replaceAll("[rent.firstname]", accomodation.rental.firstname)
           .replaceAll("[rent.civility]", civilityTranslation[accomodation.rental.civility || ""])
     } else {
       textTranslate
-          .replaceAll("[rent.lastname]", accomodation.rental.socialIdentity.toUpperCase())
+          .replaceAll("[rent.lastname]", accomodation.rental.socialIdentity)
           .replaceAll("[rent.firstname]", "")
           .replaceAll("[rent.civility]", "")
     }
 
     if (owner.isSociety){
       textTranslate
-          .replaceAll("[owner]", owner.socialIdentity.toUpperCase())
+          .replaceAll("[owner]", owner.socialIdentity)
     } else {
       textTranslate
-          .replaceAll("[owner]", owner.lastname.toUpperCase() + " " + owner.firstname.toUpperCase())
+          .replaceAll("[owner]", owner.lastname + " " + owner.firstname)
     }
-
     return textTranslate;
   }
 
@@ -163,7 +163,7 @@ const TemplateGenerator = ({
 
   return (
       <div id="divToPrint" className={!display ? classes.page : classes.pageDisplay}>
-        <div class={`divToPrint${accomodation.id}`}>
+        <div class={`divToPrint${accomodation?.id}`}>
           <div
               className={classes.pageBis}
               style={toPrint ? { width: "210mm", height: "297mm" } : {}}
@@ -171,9 +171,9 @@ const TemplateGenerator = ({
             <div className={classes.destinataire}>
               <Typography variant="letter">
                 {!owner.isSociety
-                    ? owner.firstname.toUpperCase() +
+                    ? owner.lastname +
                     " " +
-                    owner.lastname.toUpperCase()
+                    owner.firstname
                     : owner.socialIdentity}
               </Typography>
               <Typography variant="letter">
@@ -189,9 +189,9 @@ const TemplateGenerator = ({
 
               <Typography variant="letter">
                 {accomodation.rental.isParticulier !== "false"
-                    ? accomodation.rental?.firstname?.toUpperCase() +
+                    ? accomodation.rental?.lastname +
                     " " +
-                    accomodation.rental?.lastname?.toUpperCase()
+                    accomodation.rental?.firstname
                     : accomodation.rental?.socialIdentity}
               </Typography>
 
@@ -267,9 +267,8 @@ const TemplateGenerator = ({
             <Divider className={classes.divider} />
             <div >
               <Typography variant="letter">
-                Veuillez agréer,{" "}
-                {civilityTranslation[accomodation.rental.civility]}, l'expression
-                de mes sentiments distingués{" "}
+                Veuillez agréer,{civilityTranslation[accomodation.rental.civility]} l'expression
+                de mes sentiments distingués
               </Typography>
             </div>
             <Divider className={classes.divider} />

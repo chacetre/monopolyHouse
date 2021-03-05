@@ -49,7 +49,9 @@ export const initialValueAccomo = {
             isParticulier : "true"
         },
         address: {},
-        loyer: {}
+        loyer: {
+            activeTVA: false
+        }
     },
     touched: {},
     errors: {},

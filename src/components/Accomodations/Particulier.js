@@ -41,7 +41,7 @@ const Particulier = ({ handleChange, currentOwner, disabled, ...rest }) => {
                 }
               />
             }
-            label="Mr"
+            label="M."
             labelPlacement="end"
             disabled={!isModifying}
           />

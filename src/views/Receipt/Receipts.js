@@ -12,26 +12,33 @@ import {CalendarTodayRounded, GetAppRounded} from "@material-ui/icons";
 import {useOwner} from "../../context/owner";
 import {getAccomodationByOwner} from "request/accomodationAPI";
 import MonthYearPicker from "components/MonthYearPicker";
-import TemplateGenerator from "../Settings/Components/TemplateGenerator";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
-import {createPDF} from "./FileUtils";
+import {fetchUserEmail, generateName, getTemplateFromApi, MyDocument} from "./FileUtils";
 import {calculateTotal} from "../../components/Utils/calculs";
+import {PDFDownloadLink} from "@react-pdf/renderer";
+import {getTemplatesAPI} from "../../request/settingsAPI";
 
 
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(3),
     margin: theme.spacing(2),
+    height: "100%"
   },
   content: {
     marginBottom: theme.spacing(2),
   },
   icon: {
+   textAlign: "center",
+    backgroundColor: theme.palette.action.main,
+    padding: 5,
     marginLeft: 10,
-    height: 30,
-    width: 20,
+    color: theme.palette.action.contrastText,
+    width: 60,
+    border: "solid",
+    borderRadius: 10
   },
   iconDate: {
     marginLeft: 10,
@@ -65,6 +72,7 @@ const Receipts = () => {
   const [dateReceipt, setDateReceipt] = useState({});
   const [showPicker, setShowPicker] = useState(false);
   const [fileSelected, setFileSelected] = useState({})
+  const [templates, setTemplates] = useState({})
 
   const handleSelectFile = (event, id) => {
     event.persist()
@@ -74,15 +82,25 @@ const Receipts = () => {
     }));
   }
 
-  const handleDownload = (event, accomodation) => {
-    const input = document.querySelector(`.divToPrint${accomodation.id}`);
-    createPDF(accomodation, dateReceipt, fileSelected, input)
-  }
-
   function getAccommodationsInformations() {
     getAccomodationByOwner(ownerInformations.id, (response) => {
       setData(response);
     });
+  }
+
+  function getTemplates(){
+    getTemplatesAPI((response) => {
+      setTemplates(response);
+    });
+  }
+
+  function getSelectedTemplate(row){
+    const typeTemplate = fileSelected[row.id] || "quittance"
+    if (templates !== undefined){
+      return Object.values(templates).find((template) => template.whom === row.rental.isParticulier && template.type === typeTemplate)
+    } else {
+      return {}
+    }
   }
 
   function showCalendar(currentAccomodation) {
@@ -92,6 +110,7 @@ const Receipts = () => {
 
   useEffect(() => {
     getAccommodationsInformations();
+    getTemplates();
   }, []);
 
   useEffect(() => {
@@ -107,12 +126,9 @@ const Receipts = () => {
     }
   }, [currentDate]);
 
-  // TODO CHANGE
-  React.useEffect(() => {
-    document.body.style.overflow = "hidden"
-    return () => document.body.style.overflow = "scroll"
-  }, []);
+  useEffect(() => {
 
+  }, [templates]);
 
   return (
       <div className={classes.root}>
@@ -166,9 +182,9 @@ const Receipts = () => {
                       {row.rental.isParticulier !== "false"
                           ? row.rental.civility.toUpperCase() +
                           " " +
-                          row.rental.firstname.toUpperCase() +
+                          row.rental.lastname.toUpperCase() +
                           " " +
-                          row.rental.lastname.toUpperCase()
+                          row.rental.firstname.toUpperCase()
                           : row.rental.socialIdentity}
                     </TableCell>
                     <TableCell>{calculateTotal(row.loyer)} €</TableCell>
@@ -193,22 +209,20 @@ const Receipts = () => {
                             <MenuItem value="moneyCall">Appel de loyer</MenuItem>
                           </Select>
                         </FormControl>
-                        <Button
-                            variant="contained"
+                        <PDFDownloadLink
+                            document={<MyDocument
+                                owner={ownerInformations}
+                                accomodation={row}
+                                date={dateReceipt[row.id] || dateReceipt.default}
+                                textsTemplate={getSelectedTemplate(row)}
+                            />}
+                            fileName={generateName(row,dateReceipt) || "null"}
                             className={classes.icon}
-                            onClick={(event) => handleDownload(event,row)}
                         >
-                          <GetAppRounded />
-                        </Button>
-                        <TemplateGenerator
-                            owner={ownerInformations}
-                            accomodation={row}
-                            date={dateReceipt[row.id] || dateReceipt.default}
-                            template={fileSelected[row.id] || "quittance"}
-                            display={false}
-                            toPrint
-                            type="id"
-                        />
+                          {({ blob, url, loading, error }) =>
+                              loading ? "Loading document..." :  <GetAppRounded />
+                          }
+                        </PDFDownloadLink>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -217,6 +231,8 @@ const Receipts = () => {
           </Table>
         </TableContainer>
       </div>
+
+
   );
 };
 
