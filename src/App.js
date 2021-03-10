@@ -11,8 +11,8 @@ import Routes from "./Routes";
 import firebase from "firebase/app";
 import config from "./components/Firebase/config";
 import { AuthContext } from "./context/auth";
-import { UserContext } from "context/userInformations";
-import { OwnerContext } from "context/owner";
+import { UserContext } from "./context/userInformations";
+import { OwnerContext } from "./context/owner";
 
 const browserHistory = createBrowserHistory();
 

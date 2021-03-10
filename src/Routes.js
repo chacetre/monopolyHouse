@@ -1,13 +1,10 @@
-import PrivateRoute from "components/PrivateRoute";
 import React from "react";
 import { Switch, Redirect } from "react-router-dom";
-import Accommodation from "views/Accomodation";
-import ChooseBoos from "views/ChooseBoss";
-import Receipts from "views/Receipt/Receipts";
-import Settings from "views/Settings";
-import TemplateEdit from "views/Settings/Components/TemplateEdit";
-
-import { RouteWithLayout } from "./components";
+import Accommodation from "./views/Accomodation";
+import ChooseBoos from "./views/ChooseBoss";
+import Receipts from "./views/Receipt/Receipts";
+import Settings from "./views/Settings";
+import TemplateEdit from "./views/Settings/Components/TemplateEdit";
 import { Main as MainLayout, Minimal as MinimalLayout } from "./layouts";
 
 import {
@@ -15,6 +12,8 @@ import {
   SignIn,
   Account,
 } from "./views";
+import PrivateRoute from "./components/PrivateRoute";
+import RouteWithLayout from "./components/RouteWithLayout";
 
 const Routes = () => {
   return (

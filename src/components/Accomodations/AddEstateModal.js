@@ -14,7 +14,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import { useOwner } from "../../context/owner";
-import { saveNewAccommodation } from "request/accomodationAPI";
+import { saveNewAccommodation } from "../../request/accomodationAPI";
 import Loyer from "./Loyer";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";

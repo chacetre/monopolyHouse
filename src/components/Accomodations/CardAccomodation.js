@@ -16,7 +16,7 @@ import { colors } from "@material-ui/core";
 import CreateRounded from "@material-ui/icons/CreateRounded";
 import Particulier from "./Particulier";
 import Society from "./Society";
-import { updateAccomodation } from "request/accomodationAPI";
+import { updateAccomodation } from "../../request/accomodationAPI";
 import {calculateTotal, calculTVA} from "../Utils/calculs";
 
 const CssTextField = withStyles({

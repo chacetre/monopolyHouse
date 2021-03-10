@@ -11,8 +11,8 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { useOwner } from "../../context/owner";
 import AddEstateModal from "../../components/Accomodations/AddEstateModal";
 import CardAccommodation from "../../components/Accomodations/CardAccomodation";
-import { getAccomodationByOwner } from "request/accomodationAPI";
-import { getIndexesAPI } from "request/settingsAPI";
+import { getAccomodationByOwner } from "../../request/accomodationAPI";
+import { getIndexesAPI } from "../../request/settingsAPI";
 
 const useStyles = makeStyles((theme) => ({
   root: {

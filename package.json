@@ -37,6 +37,10 @@
     "@material-ui/styles": "^4.2.1",
     "@react-firebase/database": "^0.3.11",
     "@react-pdf/renderer": "^1.6.13",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.33",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.2",
     "autoprefixer": "^9.8.6",
     "axios": "^0.21.1",
     "clsx": "^1.0.4",
@@ -71,6 +75,6 @@
     "prettier": "^1.17.1",
     "prettier-eslint": "^8.8.2",
     "prettier-eslint-cli": "^5.0.0",
-    "typescript": "^3.5.1"
+    "typescript": "^3.9.9"
   }
 }
