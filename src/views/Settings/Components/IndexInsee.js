@@ -4,7 +4,7 @@ import { Typography, Grid, TextField, Button } from "@material-ui/core";
 import {
   getIndexesAPI,
   updateIndexesAPI,
-} from "request/settingsAPI";
+} from "../../../request/settingsAPI";
 
 const trimesters = ["T1", "T2", "T3", "T4"];
 

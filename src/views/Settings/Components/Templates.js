@@ -9,7 +9,7 @@ import {
   CardContent,
   CardActions
 } from "@material-ui/core";
-import { getTemplatesAPI } from "request/settingsAPI";
+import { getTemplatesAPI } from "../../../request/settingsAPI";
 import TemplateShow from "./TemplateShow";
 import { useHistory } from "react-router-dom";
 

@@ -1,29 +1,18 @@
 import React, { useState, useEffect } from "react";
+// @ts-ignore
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import validate from "validate.js";
 import { makeStyles, withStyles } from "@material-ui/styles";
-import { Grid, Button, TextField, Typography } from "@material-ui/core";
+import {Grid, Button, TextField, Typography} from "@material-ui/core";
 import { useAuth } from "../../context/auth";
 import { useUser } from "../../context/userInformations";
 import firebase from "firebase/app";
 import {version} from "../../data/constantes";
+import {FormStaLogin, initialValuesSignIn, schema} from "./Const";
+// @ts-ignore
+import UserCredential from "firebase.auth.UserCredential";
 
-const schema = {
-  email: {
-    presence: { allowEmpty: false, message: "is required" },
-    email: true,
-    length: {
-      maximum: 64,
-    },
-  },
-  password: {
-    presence: { allowEmpty: false, message: "is required" },
-    length: {
-      maximum: 128,
-    },
-  },
-};
 
 const CssTextField = withStyles((theme) => ({
   root: {
@@ -34,7 +23,7 @@ const CssTextField = withStyles((theme) => ({
   },
 }))(TextField);
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme : any) => ({
   root: {
     backgroundColor: theme.palette.background.default,
     height: "100%",
@@ -92,17 +81,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignIn = (props) => {
+type SignInProps = {
+ history : any
+}
+
+const SignIn = (props : SignInProps) => {
   const { history } = props;
   const classes = useStyles();
   const { setUserInformations } = useUser();
 
-  const [formState, setFormState] = useState({
-    isValid: false,
-    values: {},
-    touched: {},
-    errors: {},
-  });
+  const [formState, setFormState] = useState<FormStaLogin>(initialValuesSignIn);
   const { setAuthTokens } = useAuth();
 
   useEffect(() => {
@@ -122,8 +110,7 @@ const SignIn = (props) => {
         formState.values.email,
         formState.values.password
       )
-      .then((user) => {
-        console.log("user", user.user.uid);
+      .then((user : UserCredential) => {
         if (user.user !== null) {
           setUserInformations(user.user.uid);
           var dateNow = new Date().getTime() + 86400000;
@@ -145,7 +132,7 @@ const SignIn = (props) => {
       });
   }
 
-  const handleChange = (event) => {
+  const handleChange = (event: any) => {
     event.persist();
 
     setFormState((formState) => ({
@@ -164,7 +151,8 @@ const SignIn = (props) => {
     }));
   };
 
-  const hasError = (field) => {
+
+  const hasError = (field : any) => {
     return (formState.touched[field] && formState.errors[field]) ? true : false;
   };
 

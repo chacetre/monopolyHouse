@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 
 import { Divider, Grid, Typography } from "@material-ui/core";
-import {getTemplateByTypeAPI } from "request/settingsAPI";
+import {getTemplateByTypeAPI } from "../../../request/settingsAPI";
 import {calculateTotal, calculTVA} from "../../../components/Utils/calculs";
 
 const lastDay = {

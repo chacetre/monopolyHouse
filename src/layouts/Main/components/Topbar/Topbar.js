@@ -11,8 +11,8 @@ import {
   FormControl,
   Grid,
 } from "@material-ui/core";
-import { getOwnerDataBase } from "request/ownerAPI";
-import { useOwner } from "context/owner";
+import { getOwnerDataBase } from "../../../../request/ownerAPI";
+import { useOwner } from "../../../../context/owner";
 
 const useStyles = makeStyles((theme) => ({
   root: {
