@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { makeStyles} from "@material-ui/styles";
@@ -22,8 +22,9 @@ import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import {steps} from "./ConstChooseBoos";
+import {initialsValuesAccount, OwnerInformations} from "../Account/ConstAccount";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme : any) => ({
   root: {
     position: "absolute",
     top: "50%",
@@ -58,18 +59,19 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function AddOwnerModal({ open, className, onClose, ...rest }) {
+type PropsOwnerModal = {
+  open : boolean,
+  className: any,
+  onClose: () => void
+}
+
+function AddOwnerModal(props : PropsOwnerModal) {
+  const { open, className, onClose, ...rest }= props
   const classes = useStyles();
-  var database = firebase.database();
-  const [currentOwner, setCurrentOwner] = useState({
-    isValid: false,
-    values: {},
-    touched: {},
-    errors: {},
-  });
+  const [currentOwner, setCurrentOwner] = useState<OwnerInformations>(initialsValuesAccount);
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const goBackStep = (index) => {
+  const goBackStep = (index: number) => {
     setActiveStep(index)
   }
 
@@ -78,7 +80,6 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
       createProprio()
       return
     }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -86,16 +87,15 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
     const timestamp = Date.now();
     const owner = {
       id: timestamp,
-      civility: currentOwner.values.civility,
-      lastname: currentOwner.values.lastname,
-      firstname: currentOwner.values.firstname,
+      civility: currentOwner.civility,
+      lastname: currentOwner.lastname,
+      firstname: currentOwner.firstname,
       isSociety: false,
       socialIdentity: null,
-
       address: {
-        postalCode: "92789",
-        city: "Marseille",
-        street: "23 rue henri martin",
+        postalCode: currentOwner.address.postalCode,
+        city: currentOwner.address.city,
+        street: currentOwner.address.street
       },
       isOwner: true,
     }
@@ -106,49 +106,71 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
 
   function createProprioEntreprise() {
     const timestamp = Date.now();
-
-    database.ref("id_user/owners/" + timestamp).set({
-      id: timestamp,
+    const owner = {
       civility: null,
       lastname: null,
       firstname: null,
       isSociety: true,
-      socialIdentity: currentOwner.values.socialIdentity,
+      socialIdentity: currentOwner.socialIdentity,
       address: {
-        postalCode: currentOwner.values.postalCode,
-        city: currentOwner.values.city,
-        street: currentOwner.values.street,
+        postalCode: currentOwner.address.postalCode,
+        city: currentOwner.address.city,
+        street: currentOwner.address.street,
       },
       isOwner: true,
-    });
-
+    }
+    saveNewOwnerInDataBase(owner, timestamp)
     onClose();
   }
 
   function createProprio(){
-    if (currentOwner.values.isParticulier === "true"){
+    if (!currentOwner.isSociety){
       createProprioParticulier()
     } else {
       createProprioEntreprise()
     }
   }
 
-  const handleChange = (event) => {
+  const convertBoolToString = (valueBool: boolean) : string => {
+    if (valueBool) return "true"
+    else return "false"
+  }
+
+  const convertStringToBool = (valueString: string) : boolean => {
+    return valueString === "true";
+  }
+
+  const handleChange = (event: any) => {
+    event.persist();
+    setCurrentOwner((currentOwner : OwnerInformations) => ({
+      ...currentOwner,
+      [event.target.name]:
+          event.target.type === "radio"
+              ? convertStringToBool(event.target.value)
+              : event.target.value
+    }));
+  };
+
+  const handleChangeCivility = (event: any) => {
+    event.persist();
+    setCurrentOwner((currentOwner : OwnerInformations) => ({
+      ...currentOwner,
+      [event.target.name]:
+          event.target.type === "checkbox"
+              ? event.target.checked
+              : event.target.value
+    }));
+  };
+
+  const handleChangeAddress = (event: any) => {
     event.persist();
 
-    setCurrentOwner((currentOwner) => ({
+    setCurrentOwner((currentOwner : OwnerInformations) => ({
       ...currentOwner,
-      values: {
-        ...currentOwner.values,
-        [event.target.name]:
-            event.target.type === "checkbox"
-                ? event.target.checked
-                : event.target.value,
-      },
-      touched: {
-        ...currentOwner.touched,
-        [event.target.name]: true,
-      },
+      address : {
+        ...currentOwner.address,
+        [event.target.name]: event.target.value
+      }
     }));
   };
 
@@ -156,12 +178,11 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
     onClose();
   };
 
-  const hasError = (field) =>
-      currentOwner.touched[field] && currentOwner.errors[field] ? true : false;
 
   if (!open) {
     return null;
   }
+
 
   return (
       <Modal onClose={onClose} open={open}>
@@ -187,28 +208,27 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
                 < RadioGroup
                     row
                     aria-label="position"
-                    name="isParticulier"
+                    name="isSociety"
                     defaultValue="top"
                     onChange={handleChange}
-                    className={classes.gridCell}
                 >
                   <FormControlLabel
-                      value={"true"}
+                      value={"false"}
                       control={
                         <Radio
                             color="primary"
-                            checked={currentOwner.values.isParticulier === "true"}
+                            checked={convertBoolToString(currentOwner.isSociety) === "false"}
                         />
                       }
                       label="Particulier"
                       labelPlacement="end"
                   />
                   <FormControlLabel
-                      value={"false"}
+                      value={"true"}
                       control={
                         <Radio
                             color="primary"
-                            checked={currentOwner.values.isParticulier === "false"}
+                            checked={convertBoolToString(currentOwner.isSociety) === "true"}
                         />
                       }
                       label="Entreprise"
@@ -217,21 +237,21 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
                 </RadioGroup>
               </div>
 
-              {currentOwner.values.isParticulier === "true" && (
+              {!currentOwner.isSociety && (
                   <>
                     <RadioGroup
                         row
                         aria-label="civility"
                         name="civility"
                         defaultValue="top"
-                        onChange={handleChange}
+                        onChange={handleChangeCivility}
                     >
                       <FormControlLabel
                           value={"mr"}
                           control={
                             <Radio
                                 color="primary"
-                                checked={currentOwner.values.civility === "mr"}
+                                checked={currentOwner.civility === "mr"}
                             />
                           }
                           label="M."
@@ -242,7 +262,7 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
                           control={
                             <Radio
                                 color="primary"
-                                checked={currentOwner.values.civility === "mme"}
+                                checked={currentOwner.civility === "mme"}
                             />
                           }
                           label="Mme"
@@ -252,53 +272,37 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
 
                     <TextField
                         className={classes.textField}
-                        error={hasError("firstname")}
                         fullWidth
-                        helperText={
-                          hasError("firstname")
-                              ? currentOwner.errors.firstname[0]
-                              : null
-                        }
                         label="Prénom"
                         name="firstname"
                         onChange={handleChange}
                         type="text"
-                        value={currentOwner.values.firstname || ""}
+                        value={currentOwner.firstname || ""}
                         variant="outlined"
                     />
                     <TextField
                         className={classes.textField}
-                        error={hasError("lastname")}
                         fullWidth
-                        helperText={
-                          hasError("lastname") ? currentOwner.errors.lastname[0] : null
-                        }
                         label="Nom"
                         name="lastname"
                         onChange={handleChange}
                         type="text"
-                        value={currentOwner.values.lastname || ""}
+                        value={currentOwner.lastname || ""}
                         variant="outlined"
                     />
                   </>
               )}
 
-              {currentOwner.values.isParticulier === "false" && (
+              {currentOwner.isSociety && (
                   <>
                     <TextField
                         className={classes.textField}
-                        error={hasError("socialIdentity")}
                         fullWidth
-                        helperText={
-                          hasError("socialIdentity")
-                              ? currentOwner.errors.socialIdentity[0]
-                              : null
-                        }
                         label="Raison Social"
                         name="socialIdentity"
                         onChange={handleChange}
                         type="text"
-                        value={currentOwner.values.socialIdentity || ""}
+                        value={currentOwner.socialIdentity || ""}
                         variant="outlined"
                     />
                   </>
@@ -311,48 +315,36 @@ function AddOwnerModal({ open, className, onClose, ...rest }) {
               <Grid item xs={12}>
                 <TextField
                     className={classes.textField}
-                    error={hasError("street")}
                     fullWidth
-                    helperText={
-                      hasError("street") ? currentOwner.errors.street[0] : null
-                    }
                     label="Numero et rue"
                     name="street"
-                    onChange={handleChange}
+                    onChange={handleChangeAddress}
                     type="text"
-                    value={currentOwner.values.street || ""}
+                    value={currentOwner.address.street || ""}
                     variant="outlined"
                 />
               </Grid>
               <Grid item xs={3}>
                 <TextField
                     className={classes.textField}
-                    error={hasError("postalCode")}
                     fullWidth
-                    helperText={
-                      hasError("postalCode") ? currentOwner.errors.postalCode[0] : null
-                    }
                     label="Code Postal"
                     name="postalCode"
-                    onChange={handleChange}
+                    onChange={handleChangeAddress}
                     type="text"
-                    value={currentOwner.values.postalCode || ""}
+                    value={currentOwner.address.postalCode || ""}
                     variant="outlined"
                 />
               </Grid>
               <Grid item xs={9}>
                 <TextField
                     className={classes.textField}
-                    error={hasError("city")}
                     fullWidth
-                    helperText={
-                      hasError("city") ? currentOwner.errors.city[0] : null
-                    }
                     label="City"
                     name="city"
-                    onChange={handleChange}
+                    onChange={handleChangeAddress}
                     type="text"
-                    value={currentOwner.values.city || ""}
+                    value={currentOwner.address.city || ""}
                     variant="outlined"
                 />
               </Grid>

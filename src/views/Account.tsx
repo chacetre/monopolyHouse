@@ -1,9 +1,9 @@
 import React from "react";
 import { makeStyles } from "@material-ui/styles";
+import AccountDetails from "../components/Account/AccountDetails";
 
-import { AccountDetails } from "./components";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme : any) => ({
   root: {
     padding: theme.spacing(4),
   },

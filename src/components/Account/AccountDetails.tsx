@@ -15,32 +15,23 @@ import {
   RadioGroup,
   FormControlLabel,
 } from "@material-ui/core";
-import { useOwner } from "../../../../context/owner";
-import { updateOwner } from "../../../../request/ownerAPI";
+import { useOwner } from "../../context/owner";
+import { updateOwner } from "../../request/ownerAPI";
+import {OwnerInformations, initialsValuesAccount} from "./ConstAccount";
 
-const useStyles = makeStyles(() => ({
-  root: {},
-}));
-
-const AccountDetails = (props) => {
+const AccountDetails = (props : any) => {
   const { className, ...rest } = props;
-  const classes = useStyles();
   const { ownerInformations, setOwnerInformations } = useOwner();
-  const [localOwner, setLocalOwner] = useState({
-    firstname: "",
-    lastname: "",
-    address: "",
-  });
+  const [localOwner, setLocalOwner] = useState<OwnerInformations>(initialsValuesAccount);
 
-  const handleChange = (event) => {
-    console.log(event.target.value)
+  const handleChange = (event :any) => {
     setLocalOwner({
       ...localOwner,
       [event.target.name]: event.target.value,
     });
   };
 
-  const handleAddress = (event) => {
+  const handleAddress = (event : any) => {
     setLocalOwner({
       ...localOwner,
       address: {
@@ -57,13 +48,12 @@ const AccountDetails = (props) => {
 
   useEffect(() => {
     if (ownerInformations !== undefined) {
-      console.log("owner", ownerInformations);
       setLocalOwner(ownerInformations);
     }
   }, [ownerInformations]);
 
   return (
-    <Card {...rest} className={clsx(classes.root, className)}>
+    <Card {...rest}>
       <form autoComplete="off" noValidate>
         <CardHeader title="Profil" />
         <Divider />
@@ -75,7 +65,6 @@ const AccountDetails = (props) => {
                 name="isSociety"
                 defaultValue="top"
                 onChange={handleChange}
-                className={classes.center}
               >
                 <FormControlLabel
                   value={"false"}
@@ -109,7 +98,6 @@ const AccountDetails = (props) => {
                 name="civility"
                 defaultValue="top"
                 onChange={handleChange}
-                className={classes.center}
               >
                 <FormControlLabel
                   value={"m"}

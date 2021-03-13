@@ -7,13 +7,11 @@ import Settings from "./views/Settings";
 import TemplateEdit from "./views/Settings/Components/TemplateEdit";
 import { Main as MainLayout, Minimal as MinimalLayout } from "./layouts";
 
-import {
-  NotFound as NotFoundView,
-  SignIn,
-  Account,
-} from "./views";
 import PrivateRoute from "./components/PrivateRoute";
 import RouteWithLayout from "./components/RouteWithLayout";
+import Account from "./views/Account";
+import NotFound from "./views/NotFound";
+import SignIn from "./views/SignIn/SignIn";
 
 const Routes = () => {
   return (
@@ -46,7 +44,7 @@ const Routes = () => {
       />
       
       <RouteWithLayout
-        component={NotFoundView}
+        component={NotFound}
         exact
         layout={MinimalLayout}
         path="/not-found"
