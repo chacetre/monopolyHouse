@@ -5,7 +5,7 @@ import ChooseBoos from "./views/ChooseBoss";
 import Receipts from "./views/Receipt/Receipts";
 import Settings from "./views/Settings";
 import TemplateEdit from "./views/Settings/Components/TemplateEdit";
-import { Main as MainLayout, Minimal as MinimalLayout } from "./layouts";
+import { Main as MainLayout, Minimal as MinimalLayout } from "./components/layouts";
 
 import PrivateRoute from "./components/PrivateRoute";
 import RouteWithLayout from "./components/RouteWithLayout";

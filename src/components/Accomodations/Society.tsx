@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import {
-  Grid,
-  TextField
-} from "@material-ui/core";
+import React, {useEffect, useState} from "react";
+import {Grid, TextField} from "@material-ui/core";
+import {Estate, initialValueEstate} from "../../constantes/LoyerC";
 
 
-const Society = (props) => {
+type SocietyProps = {
+  handleChange : (event: any) => void,
+  currentEstate : Estate,
+  disabled : boolean
+}
+
+const Society = (props : SocietyProps) => {
   const { disabled, handleChange, currentEstate } = props;
-  const [currentEstateL, setCurrentEstateL] = useState({});
-  const [isModifying, setModify] =useState(false);
-
+  const [currentEstateL, setCurrentEstateL] = useState<Estate>(initialValueEstate);
+  const [isModifying, setModify] =useState<boolean>(false);
 
   useEffect(() => {
     if (disabled !== undefined) setModify(disabled);
-    
   }, [disabled]);
 
   useEffect(() => {
@@ -38,11 +39,6 @@ const Society = (props) => {
       </Grid>
     
   );
-};
-
-Society.propTypes = {
-  className: PropTypes.string,
-  product: PropTypes.object.isRequired,
 };
 
 export default Society;

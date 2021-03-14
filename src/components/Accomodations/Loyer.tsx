@@ -1,16 +1,10 @@
-import React, { useState, useEffect} from "react";
-import { makeStyles, withStyles } from "@material-ui/styles";
-import PropTypes from "prop-types";
-import {
-  TextField,
-  Paper,
-  Grid,
-  Switch,
-  FormControlLabel
-} from "@material-ui/core";
+import React, {useEffect, useState} from "react";
+import {makeStyles, withStyles} from "@material-ui/styles";
+import {FormControlLabel, Grid, Paper, Switch, TextField} from "@material-ui/core";
 import {calculateTotal, calculTVA} from "../Utils/calculs";
+import {Estate, initialValueEstate} from "../../constantes/LoyerC";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme : any) => ({
   root: {
       padding: theme.spacing(2)
   }
@@ -43,28 +37,30 @@ const CssTextField = withStyles({
       },
     },
   })(TextField);
-  
 
-const Loyer = (props) => {
+type LoyerProps = {
+  currentEstate : Estate,
+  handleChange : (event : any) => void
+}
+
+const Loyer = (props : LoyerProps) => {
   const {handleChange, currentEstate} = props;
-  const classes = useStyles();
-  const [currentEstateL, setCurrentEstateL] = useState({});
-  const [activeTVA, setActiveTVA] = useState(false);
+  const [currentEstateL, setCurrentEstateL] = useState<Estate>(initialValueEstate);
+  const [activeTVA, setActiveTVA] = useState<boolean>(false);
 
   useEffect(() => {
     if (currentEstate !== undefined) setCurrentEstateL(currentEstate);
-    
   }, [currentEstate]);
 
   return (
-    <Paper elevation={0} className={classes.paper}>
+    <Paper elevation={0}>
     <Grid container spacing={2}>
       <Grid item lg={12} md={12} xs={12}>
         <FormControlLabel
             labelPlacement="start"
             control={
               <Switch
-                  value={activeTVA}
+                  value={!activeTVA}
                   checked={activeTVA}
                   onChange={(event) => {
                     handleChange(event)
@@ -119,7 +115,7 @@ const Loyer = (props) => {
         </Grid>
       )}
 
-      <Grid item lg={3} md={3} xs={3} className={classes.gridCell}>
+      <Grid item lg={3} md={3} xs={3}>
         <CssTextField
           size="small"
           label="Total"
@@ -139,11 +135,6 @@ const Loyer = (props) => {
   </Paper>
     
   );
-};
-
-Loyer.propTypes = {
-  className: PropTypes.string,
-  product: PropTypes.object.isRequired,
 };
 
 export default Loyer;

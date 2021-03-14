@@ -15,7 +15,7 @@ import MonthYearPicker from "../../components/MonthYearPicker";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
-import {generateName, MyDocument} from "./FileUtils";
+import {generateName, MyDocument} from "../../components/Utils/FileUtils";
 import {calculateTotal} from "../../components/Utils/calculs";
 import {PDFDownloadLink} from "@react-pdf/renderer";
 import {getTemplatesAPI, getTemplatesDefaultAPI} from "../../request/settingsAPI";
@@ -103,7 +103,7 @@ const Receipts = () => {
   function getSelectedTemplate(row){
     const typeTemplate = fileSelected[row.id] || "quittance"
     if (templates !== undefined){
-      return Object.values(templates).find((template) => template.whom === row.rental.isParticulier && template.type === typeTemplate)
+      return Object.values(templates).find((template) => template.isParticulier === row.rental.isParticulier && template.type === typeTemplate)
     } else {
       return {}
     }
