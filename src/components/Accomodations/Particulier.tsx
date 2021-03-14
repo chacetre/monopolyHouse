@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import {
-  Grid,
-  TextField,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-} from "@material-ui/core";
+import {FormControlLabel, Grid, Radio, RadioGroup, TextField,} from "@material-ui/core";
+import {Estate} from "../../constantes/LoyerC";
 
+type ParticulierProps = {
+    handleChange : (event: any) => void,
+    currentOwner : Estate,
+    disabled : boolean
+}
 
-const Particulier = ({ handleChange, currentOwner, disabled, ...rest }) => {
+const Particulier = (props : ParticulierProps) => {
+    const { handleChange, currentOwner, disabled, ...rest } = props
   const [currentAccomodation, setCurrentAccomodation] = useState({});
   const [isModifying, setModify] = useState(false);
 

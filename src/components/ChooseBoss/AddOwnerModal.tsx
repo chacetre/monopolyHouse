@@ -23,6 +23,7 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import {steps} from "./ConstChooseBoos";
 import {initialsValuesAccount, OwnerInformations} from "../Account/ConstAccount";
+import {convertBoolToString, convertStringToBool} from "../Utils/converter";
 
 const useStyles = makeStyles((theme : any) => ({
   root: {
@@ -107,6 +108,7 @@ function AddOwnerModal(props : PropsOwnerModal) {
   function createProprioEntreprise() {
     const timestamp = Date.now();
     const owner = {
+      id: timestamp,
       civility: null,
       lastname: null,
       firstname: null,
@@ -129,15 +131,6 @@ function AddOwnerModal(props : PropsOwnerModal) {
     } else {
       createProprioEntreprise()
     }
-  }
-
-  const convertBoolToString = (valueBool: boolean) : string => {
-    if (valueBool) return "true"
-    else return "false"
-  }
-
-  const convertStringToBool = (valueString: string) : boolean => {
-    return valueString === "true";
   }
 
   const handleChange = (event: any) => {

@@ -1,7 +1,7 @@
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import React from "react";
-import {civilityTranslation, lastDay} from "./ConstFile";
-import {calculateTotal, calculTVA} from "../../components/Utils/calculs";
+import {civilityTranslation, lastDay} from "../Constants/ConstFile";
+import {calculateTotal, calculTVA} from "./calculs";
 
 export const generateName = (accomodation, date) => {
 
@@ -28,8 +28,6 @@ export const generateName = (accomodation, date) => {
 
 function replaceText(textChange, accomodation, owner, date) {
 
-    console.log("date", date)
-
     if (accomodation === undefined) return textChange
     let textTranslate = textChange
         .replaceAll("[rent.city]", accomodation.address.city.toUpperCase())
@@ -41,7 +39,7 @@ function replaceText(textChange, accomodation, owner, date) {
         .replaceAll("[date.year]", date.year)
 
 
-    if (accomodation.rental.isParticulier === "true"){
+    if (accomodation.rental.isParticulier){
         textTranslate
             .replaceAll("[rent.lastname]", accomodation.rental.lastname)
             .replaceAll("[rent.firstname]", accomodation.rental.firstname)
@@ -118,7 +116,7 @@ export function MyDocument (props) {
             </View>
             <View style={styles.sectionDestinatire}>
                 <View style={styles.destinataire}>
-                    <Text>{accomodation.rental.isParticulier !== "false" ? accomodation.rental?.lastname + " " + accomodation.rental?.firstname : accomodation.rental?.socialIdentity}</Text>
+                    <Text>{accomodation.rental.isParticulier ? accomodation.rental?.lastname + " " + accomodation.rental?.firstname : accomodation.rental?.socialIdentity}</Text>
                     <Text>{accomodation.address.street.toUpperCase()}</Text>
                     <Text>{accomodation.address.postalCode.toUpperCase() + " " + accomodation.address.city.toUpperCase()}</Text>
                 </View>

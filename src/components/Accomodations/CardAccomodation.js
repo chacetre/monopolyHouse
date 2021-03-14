@@ -18,6 +18,7 @@ import Particulier from "./Particulier";
 import Society from "./Society";
 import { updateAccomodation } from "../../request/accomodationAPI";
 import {calculateTotal, calculTVA} from "../Utils/calculs";
+import {convertBoolToString, convertStringToBool} from "../Utils/converter";
 
 const CssTextField = withStyles({
   root: {
@@ -122,7 +123,9 @@ const CardAccommodation = (props) => {
 
     setCurrentAccommo((formState) => ({
       ...formState,
-      [event.target.name]: event.target.value,
+      [event.target.name]: event.target.type === "radio"
+          ? convertStringToBool(event.target.value)
+          : event.target.value,
     }));
   };
 
@@ -146,7 +149,9 @@ const CardAccommodation = (props) => {
       ...formState,
       rental: {
         ...formState.rental,
-        [event.target.name]: event.target.value,
+        [event.target.name]: event.target.type === "radio"
+            ? convertStringToBool(event.target.value)
+            : event.target.value
       },
     }));
   };
@@ -237,7 +242,7 @@ const CardAccommodation = (props) => {
                 control={
                   <Radio
                       color="secondary"
-                      checked={currentAccommo.isCommercial === "false"}
+                      checked={convertBoolToString(currentAccommo.isCommercial) === "false"}
                   />
                 }
                 label="Habitation"
@@ -249,7 +254,7 @@ const CardAccommodation = (props) => {
                 control={
                   <Radio
                       color="secondary"
-                      checked={currentAccommo.isCommercial === "true"}
+                      checked={convertBoolToString(currentAccommo.isCommercial) === "true"}
                   />
                 }
                 label="Local Commercial"
@@ -288,7 +293,7 @@ const CardAccommodation = (props) => {
                           color="secondary"
                           checked={
                             currentAccommo.rental !== undefined &&
-                            currentAccommo.rental.isParticulier === "true"
+                            convertBoolToString(currentAccommo.rental.isParticulier) === "true"
                           }
                       />
                     }
@@ -303,7 +308,7 @@ const CardAccommodation = (props) => {
                           color="secondary"
                           checked={
                             currentAccommo.rental !== undefined &&
-                            currentAccommo.rental.isParticulier === "false"
+                            convertBoolToString(currentAccommo.rental.isParticulier) === "false"
                           }
                       />
                     }
@@ -316,7 +321,7 @@ const CardAccommodation = (props) => {
           </Grid>
 
           {currentAccommo.rental !== undefined &&
-          currentAccommo.rental.isParticulier === "true" && (
+          currentAccommo.rental.isParticulier && (
               <Paper elevation={0} className={classes.paper}>
                 <Particulier
                     disabled={isModifying}
@@ -327,7 +332,7 @@ const CardAccommodation = (props) => {
           )}
 
           {currentAccommo.rental !== undefined &&
-          currentAccommo.rental.isParticulier === "false" && (
+          !currentAccommo.rental.isParticulier && (
               <Paper elevation={0} className={classes.paper}>
                 <Society
                     disabled={isModifying}
@@ -378,7 +383,7 @@ const CardAccommodation = (props) => {
                   onChange={handleChangeLoyer}
               />
             </Grid>
-            {currentAccommo.loyer !== undefined && currentAccommo.loyer.activeTVA === "true" && (
+            {currentAccommo.loyer !== undefined && currentAccommo.loyer.activeTVA && (
                 <Grid item lg={3} md={3} xs={3}>
                   <TextField
                       size="small"

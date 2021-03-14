@@ -11,8 +11,8 @@ import {
   FormControl,
   Grid,
 } from "@material-ui/core";
-import { getOwnerDataBase } from "../../../../request/ownerAPI";
-import { useOwner } from "../../../../context/owner";
+import { getOwnerDataBase } from "../../../../../request/ownerAPI";
+import { useOwner } from "../../../../../context/owner";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,14 +62,11 @@ const Topbar = (props) => {
 
   function handleChangeUser(event)  {
     var currentOwner = Object.values(owners).find((user) => user.id = event.target.value)
-    console.log('ownerInfor handle',currentOwner )
     setOwnerInformations(currentOwner);
   };
 
   useEffect(() => {
-    console.log('ownerInfor',ownerInformations )
     getBossInformations();
-
   }, [ownerInformations]);
 
   return (

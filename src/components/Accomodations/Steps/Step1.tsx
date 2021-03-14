@@ -1,24 +1,25 @@
 import React from "react";
-import { makeStyles} from "@material-ui/styles";
-import {
-    Typography,
-    Radio,
-    RadioGroup,
-    FormControlLabel, FormControl,
-} from "@material-ui/core";
-import Address from "./Address";
-import {Field, Form, Formik} from "formik";
+import {makeStyles} from "@material-ui/styles";
+import {FormControl, FormControlLabel, Radio, RadioGroup,} from "@material-ui/core";
+import Address from "../Address";
+import {Estate} from "../../../constantes/LoyerC";
+import {convertBoolToString} from "../../Utils/converter";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     formControl: {
         display: "flex",
         alignItems: "center",
     }
 }));
 
+type Step1Props = {
+    handleChange: (event :any) => void,
+    currentAccommo: Estate,
+    handleChangeAddress: (event :any) => void,
+}
 
-const LogementArea = (props) => {
-    const {handleChange, currentAccommo,hasError,handleChangeAddress} = props;
+const Step1 = (props: Step1Props) => {
+    const {handleChange, currentAccommo,handleChangeAddress} = props;
     const classes = useStyles();
 
     return (
@@ -33,14 +34,13 @@ const LogementArea = (props) => {
                     name="isCommercial"
                     defaultValue="top"
                     onChange={handleChange}
-                    className={classes.gridCell}
                 >
                     <FormControlLabel
                         value={"false"}
                         control={
                             <Radio
                                 color="primary"
-                                checked={currentAccommo.values.isCommercial === "false"}
+                                checked={convertBoolToString(currentAccommo.isCommercial)=== "false"}
                             />
                         }
                         label="Habitation"
@@ -51,16 +51,13 @@ const LogementArea = (props) => {
                         control={
                             <Radio
                                 color="primary"
-                                checked={currentAccommo.values.isCommercial === "true"}
+                                checked={convertBoolToString(currentAccommo.isCommercial)=== "true"}
                             />
                         }
                         label="Local Commercial"
                         labelPlacement="end"
                     />
                 </RadioGroup>
-                {hasError("isCommercial") ? (
-                    <Typography>currentAccommo.errors.isCommercial[0]</Typography>
-                ) : null}
             </FormControl>
             <Address
                 handleChange={handleChangeAddress}
@@ -71,4 +68,4 @@ const LogementArea = (props) => {
     );
 };
 
-export default LogementArea;
+export default Step1;

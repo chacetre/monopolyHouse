@@ -1,15 +1,12 @@
 import React from "react";
-import { makeStyles } from "@material-ui/styles";
-import {
-    TextField,
-    Radio,
-    RadioGroup,
-    FormControlLabel, FormControl,
-} from "@material-ui/core";
-import Particulier from "./Particulier";
-import Society from "./Society";
+import {makeStyles} from "@material-ui/styles";
+import {FormControl, FormControlLabel, Radio, RadioGroup, TextField,} from "@material-ui/core";
+import Particulier from "../Particulier";
+import Society from "../Society";
+import {Estate} from "../../../constantes/LoyerC";
+import {convertBoolToString} from "../../Utils/converter";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme :any) => ({
     root: {
         padding: theme.spacing(2)
     },
@@ -32,9 +29,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
-const LocataireArea = (props) => {
-    const {handleChangeRental, currentAccommo,hasError } = props;
+type Step2Props = {
+    handleChangeRental : (event : any) => void ,
+    currentAccommo: Estate
+}
+const Step2 = (props: Step2Props) => {
+    const {handleChangeRental, currentAccommo } = props;
     const classes = useStyles();
 
     return (
@@ -53,7 +53,7 @@ const LocataireArea = (props) => {
                             <Radio
                                 color="primary"
                                 checked={
-                                    currentAccommo.values.rental.isParticulier === "true"
+                                    convertBoolToString(currentAccommo.rental.isParticulier) === "true"
                                 }
                             />
                         }
@@ -66,55 +66,38 @@ const LocataireArea = (props) => {
                             <Radio
                                 color="primary"
                                 checked={
-                                    currentAccommo.values.rental.isParticulier === "false"
+                                    convertBoolToString(currentAccommo.rental.isParticulier) === "false"
                                 }
                             />
                         }
                         label="Entreprise"
                         labelPlacement="end"
                     />
-                    <FormControlLabel
-                        value={"null"}
-                        control={
-                            <Radio
-                                color="primary"
-                                checked={
-                                    currentAccommo.values.rental.isParticulier === "null"
-                                }
-                            />
-                        }
-                        label="Vide"
-                        labelPlacement="end"
-                    />
                 </RadioGroup>
                 <TextField
                     size="small"
                     className={classes.startDate}
-                    error={hasError("startDate")}
-                    helperText={
-                        hasError("startDate") ? currentAccommo.errors.startDate[0] : null
-                    }
                     label="Date d'entrée"
                     name="startDate"
                     placeholder="DD/MM/YEAR"
                     onChange={handleChangeRental}
                     type="text"
-                    value={currentAccommo.values.rental.startDate}
+                    value={currentAccommo.rental.startDate}
                     variant="outlined"
                 />
             </FormControl>
             <div className={classes.container}>
-                {currentAccommo.values.rental.isParticulier === "true" && (
+                {currentAccommo.rental.isParticulier && (
                     <Particulier
                         handleChange={handleChangeRental}
-                        currentOwner={currentAccommo.values}
+                        currentOwner={currentAccommo}
                         disabled={true}
                     />
                 )}
-                {currentAccommo.values.rental.isParticulier === "false" && (
+                {!currentAccommo.rental.isParticulier && (
                     <Society
                         handleChange={handleChangeRental}
-                        currentEstate={currentAccommo.values}
+                        currentEstate={currentAccommo}
                         disabled={true}
                     />
                 )}
@@ -123,4 +106,4 @@ const LocataireArea = (props) => {
     );
 };
 
-export default LocataireArea;
+export default Step2;
