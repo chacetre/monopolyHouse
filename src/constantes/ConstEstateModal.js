@@ -42,19 +42,4 @@ export const schemaRental = {
     }
 };
 
-export const initialValueAccomo = {
-    isValid: false,
-    values: {
-        rental: {
-            isParticulier : "true"
-        },
-        address: {},
-        loyer: {
-            activeTVA: false
-        }
-    },
-    touched: {},
-    errors: {},
-}
-
 export const steps = ['Informations Logement', 'Informations Locataire', 'Loyer']

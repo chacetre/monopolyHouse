@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {makeStyles, withStyles} from "@material-ui/styles";
 import {FormControlLabel, Grid, Paper, Switch, TextField} from "@material-ui/core";
 import {calculateTotal, calculTVA} from "../Utils/calculs";
-import {Estate, initialValueEstate} from "../../constantes/LoyerC";
+import {Estate, initialValueEstate} from "../../constantes/ConstEstate";
 
 const useStyles = makeStyles((theme : any) => ({
   root: {

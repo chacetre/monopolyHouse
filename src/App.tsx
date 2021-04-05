@@ -1,7 +1,9 @@
-import React, {useState } from "react";
-import { Router } from "react-router-dom";
-import { createBrowserHistory } from "history";
-import {makeStyles, ThemeProvider} from "@material-ui/styles";
+import React, {useState} from "react";
+// @ts-ignore
+import {Router} from "react-router-dom";
+// @ts-ignore
+import {createBrowserHistory} from "history";
+import {ThemeProvider} from "@material-ui/styles";
 import validate from "validate.js";
 import theme from "./theme";
 import "react-perfect-scrollbar/dist/css/styles.css";
@@ -10,9 +12,10 @@ import validators from "./common/validators";
 import Routes from "./Routes";
 import firebase from "firebase/app";
 import config from "./components/Firebase/config";
-import { AuthContext } from "./context/auth";
-import { UserContext } from "./context/userInformations";
-import { OwnerContext } from "./context/owner";
+import {AuthContext} from "./context/auth";
+import {UserContext} from "./context/userInformations";
+import {OwnerContext} from "./context/owner";
+import {LoggedUser, OwnerInformations} from "./constantes/ConstAccount";
 
 const browserHistory = createBrowserHistory();
 
@@ -21,27 +24,34 @@ validate.validators = {
   ...validators,
 };
 
-const App = (props) => {
-  const existingTokens = JSON.parse(localStorage.getItem("tokens"));
-  const [authTokens, setAuthTokens] = useState(existingTokens);
+const App = () => {
 
-  const existingOwner = JSON.parse(localStorage.getItem("owner"));
-  const [ownerInformations, setOwnerInformations] = useState(existingOwner);
+  console.log("tokens", localStorage.getItem("tokens"))
+  let existingTokens = ""
+  if (localStorage.getItem("tokens")){
+    existingTokens = JSON.parse(localStorage.getItem("tokens") ? localStorage.getItem("tokens") || "" : "") || "";
+  }
 
-  const existingUser = JSON.parse(localStorage.getItem("logged_user"));
-  const [userInformations, setUserInformations] = useState(existingUser);
+  const [authTokens, setAuthTokens] = useState<string>(existingTokens);
 
-  const setTokens = (data) => {
+
+  const existingOwner = JSON.parse(localStorage.getItem("owner") || "");
+  const [ownerInformations, setOwnerInformations] = useState<OwnerInformations>(existingOwner);
+
+  const existingUser = JSON.parse(localStorage.getItem("logged_user") || "");
+  const [userInformations, setUserInformations] = useState<LoggedUser>(existingUser);
+
+  const setTokens = (data : string) => {
     localStorage.setItem("tokens", JSON.stringify(data));
     setAuthTokens(data);
   };
 
-  const setOwner = (data) => {
+  const setOwner = (data : OwnerInformations) => {
     localStorage.setItem("owner", JSON.stringify(data));
     setOwnerInformations(data);
   };
 
-  const setUser = (data) => {
+  const setUser = (data : LoggedUser) => {
     localStorage.setItem("logged_user", JSON.stringify(data));
     setUserInformations(data);
   };

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {FormControlLabel, Grid, Radio, RadioGroup, TextField,} from "@material-ui/core";
-import {Estate} from "../../constantes/LoyerC";
+import {Estate} from "../../constantes/ConstEstate";
 
 type ParticulierProps = {
     handleChange : (event: any) => void,

@@ -185,7 +185,7 @@ const Receipts = () => {
                       <div>{row.address.city.toUpperCase()}</div>
                     </TableCell>
                     <TableCell>
-                      {row.rental.isParticulier !== "false"
+                      {row.rental.isParticulier !== false
                           ? row.rental.civility.toUpperCase() +
                           " " +
                           row.rental.lastname.toUpperCase() +

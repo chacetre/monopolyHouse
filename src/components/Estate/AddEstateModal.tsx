@@ -11,8 +11,8 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Step1 from "./Steps/Step1";
 import Step2 from "./Steps/Step2";
 import Paper from "@material-ui/core/Paper";
-import {schema, schemaAddress, schemaLoyer, schemaRental, steps} from "../../views/Accomodation/ConstEstateModal";
-import {Estate, initialValueEstate} from "../../constantes/LoyerC";
+import {schema, schemaAddress, schemaLoyer, schemaRental, steps} from "../../constantes/ConstEstateModal";
+import {Estate, initialValueEstate} from "../../constantes/ConstEstate";
 import Step3 from "./Steps/Step3";
 import {convertStringToBool} from "../Utils/converter";
 
@@ -52,12 +52,11 @@ const useStyles = makeStyles((theme : any) => ({
 
 type AddEstateModalProps = {
   open : boolean,
-  className: any,
   onClose: () => void
 }
 
 const AddEstateModal = (props : AddEstateModalProps) => {
-  const { open, className, onClose, ...rest } = props
+  const { open, onClose, ...rest } = props
   const classes = useStyles();
   const { ownerInformations } = useOwner();
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -183,7 +182,7 @@ const AddEstateModal = (props : AddEstateModalProps) => {
 
   return (
       <Modal onClose={onClose} open={open}>
-        <Card {...rest} className={clsx(classes.root, className)}>
+        <Card {...rest} className={classes.root}>
           <CardHeader title={"Ajouter un nouveau bien"} />
           <Divider />
           <CardContent>
@@ -223,4 +222,4 @@ const AddEstateModal = (props : AddEstateModalProps) => {
   );
 }
 
-export default AddEstateModal
+export default AddEstateModal;

@@ -2,7 +2,7 @@ import React from "react";
 import {makeStyles} from "@material-ui/styles";
 import {FormControl, FormControlLabel, Radio, RadioGroup,} from "@material-ui/core";
 import Address from "../Address";
-import {Estate} from "../../../constantes/LoyerC";
+import {Estate} from "../../../constantes/ConstEstate";
 import {convertBoolToString} from "../../Utils/converter";
 
 const useStyles = makeStyles(() => ({

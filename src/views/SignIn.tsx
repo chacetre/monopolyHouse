@@ -5,11 +5,11 @@ import PropTypes from "prop-types";
 import validate from "validate.js";
 import { makeStyles, withStyles } from "@material-ui/styles";
 import {Grid, Button, TextField, Typography} from "@material-ui/core";
-import { useAuth } from "../../context/auth";
-import { useUser } from "../../context/userInformations";
+import { useAuth } from "../context/auth";
+import { useUser } from "../context/userInformations";
 import firebase from "firebase/app";
-import {version} from "../../data/constantes";
-import {FormStaLogin, initialValuesSignIn, schema} from "./Const";
+import {version} from "../constantes/const";
+import {FormStaLogin, initialValuesSignIn, schema} from "../constantes/ConstLogin";
 // @ts-ignore
 import UserCredential from "firebase.auth.UserCredential";
 

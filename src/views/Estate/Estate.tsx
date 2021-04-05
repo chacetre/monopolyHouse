@@ -9,12 +9,14 @@ import { colors } from "@material-ui/core";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { useOwner } from "../../context/owner";
-import AddEstateModal from "../../components/Accomodations/AddEstateModal";
-import CardAccommodation from "../../components/Accomodations/CardAccomodation";
+import AddEstateModal from "../../components/Estate/AddEstateModal";
+import CardAccommodation from "../../components/Estate/CardAccomodation";
 import { getAccomodationByOwner } from "../../request/accomodationAPI";
 import { getIndexesAPI } from "../../request/settingsAPI";
+import {Estate} from "../../constantes/ConstEstate";
+import {WSIndexesInsee} from "../../constantes/ConstWS";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     padding: theme.spacing(3),
   },
@@ -88,41 +90,42 @@ const StyledToggleButtonGroup = withStyles((theme) => ({
 const Accommodation = () => {
   const classes = useStyles();
   const { ownerInformations } = useOwner();
-  const [showAddEstateModal, setShowAddEstateModal] = useState(false);
-  const [component, setComponent] = useState("");
-  const [accommodations, setData] = useState(null);
-  const [listFiltre, setFiltres] = useState([]);
-  const [indexes, setIndexes] = useState({});
+  const [showAddEstateModal, setShowAddEstateModal] = useState<boolean>(false);
+  const [selectCity, setSelectedCity] = useState<string>("");
+  const [estateList, setEstateList] = useState<Estate[]>([]);
+  const [listFiltre, setFiltres] = useState<string[]>([]);
+  const [indexes, setIndexes] = useState<WSIndexesInsee>({});
 
   function getAccommodationsInformations() {
+
+
     if (ownerInformations.id !== undefined) {
-      getAccomodationByOwner(ownerInformations.id, (response) => {
-        setData(response);
+      getAccomodationByOwner(ownerInformations.id, (response : any) => {
+        const responseList = Object.values(response)
+        setEstateList(responseList);
       });
     }
   }
 
   function getIndexes() {
-    getIndexesAPI((response) => {
-
-      console.log("indexes index", response)
+    getIndexesAPI((response : WSIndexesInsee) => {
       setIndexes(response)
     });
   }
 
-  const handleComponent = (event, newComponent) => {
-    setComponent(newComponent);
+  const handleComponent = (event : any, newComponent: any) => {
+    setSelectedCity(newComponent);
   };
 
   function handleAddEstate() {
     setShowAddEstateModal(true);
   }
 
-  function suffisammentGrand(element) {
-    if (component === "") {
+  function matchCity(element : Estate) {
+    if (selectCity === "") {
       return true;
     }
-    return element.address.city === component;
+    return element.address.city === selectCity;
   }
 
   useEffect(() => {
@@ -136,20 +139,20 @@ const Accommodation = () => {
   }, [ownerInformations]);
 
   useEffect(() => {
-    if (accommodations) {
-      var listTemp = [];
-      Object.values(accommodations).forEach((element) => {
+    if (estateList) {
+      var listTemp :string[] = [];
+      Object.values(estateList).forEach((element) => {
         listTemp.push(element.address.city);
       });
 
       setFiltres(Array.from(new Set(listTemp)));
     }
-  }, [accommodations]);
+  }, [estateList]);
 
   return (
     <div className={classes.root}>
       <Grid container>
-        <Grid item lg={6} md={6} xs={6} className={classes.title}>
+        <Grid item lg={6} md={6} xs={6}>
           <Typography variant="h1">Tes logements</Typography>
           <Typography variant="body1">
             Ici tu peux modifier les locataires des logements ainsi qu'ajouter
@@ -169,7 +172,7 @@ const Accommodation = () => {
 
       <AddEstateModal
         open={showAddEstateModal}
-        onClose={(pedal) => {
+        onClose={() => {
           setShowAddEstateModal(false);
         }}
       />
@@ -177,7 +180,7 @@ const Accommodation = () => {
       <div>
         <StyledToggleButtonGroup
           size="small"
-          value={component}
+          value={selectCity}
           exclusive
           onChange={handleComponent}
           aria-label="text alignment"
@@ -194,10 +197,10 @@ const Accommodation = () => {
         </StyledToggleButtonGroup>
       </div>
       <Grid container spacing={5}>
-        {accommodations !== null &&
-          Object.values(accommodations)
-            .filter(suffisammentGrand)
-            .map((product, index) => (
+        {estateList !== null &&
+          estateList
+            .filter(matchCity)
+            .map((product: Estate, index : number) => (
               <Grid item xs={6} key={index}>
                 <CardAccommodation accomodationInfos={product} indexes={indexes}/>
               </Grid>

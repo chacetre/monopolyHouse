@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Redirect } from "react-router-dom";
-import Accommodation from "./views/Accomodation";
+import Accommodation from "./views/Estate/Estate";
 import ChooseBoos from "./views/ChooseBoss";
 import Receipts from "./views/Receipt/Receipts";
 import Settings from "./views/Settings";
@@ -11,7 +11,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import RouteWithLayout from "./components/RouteWithLayout";
 import Account from "./views/Account";
 import NotFound from "./views/NotFound";
-import SignIn from "./views/SignIn/SignIn";
+import SignIn from "./views/SignIn";
 
 const Routes = () => {
   return (
