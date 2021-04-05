@@ -17,7 +17,7 @@ import {
 } from "@material-ui/core";
 import { useOwner } from "../../context/owner";
 import { updateOwner } from "../../request/ownerAPI";
-import {OwnerInformations, initialsValuesAccount} from "./ConstAccount";
+import {OwnerInformations, initialsValuesAccount} from "../../constantes/ConstAccount";
 
 const AccountDetails = (props : any) => {
   const { className, ...rest } = props;

@@ -21,8 +21,8 @@ import { saveNewOwnerInDataBase } from "../../request/ownerAPI";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import {steps} from "./ConstChooseBoos";
-import {initialsValuesAccount, OwnerInformations} from "../Account/ConstAccount";
+import {steps} from "../../constantes/ConstChooseBoos";
+import {initialsValuesAccount, OwnerInformations} from "../../constantes/ConstAccount";
 import {convertBoolToString, convertStringToBool} from "../Utils/converter";
 
 const useStyles = makeStyles((theme : any) => ({

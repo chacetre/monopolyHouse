@@ -1,7 +1,7 @@
 import React from "react";
 import {TextField,} from "@material-ui/core";
 import Loyer from "../Loyer";
-import {Estate} from "../../../constantes/LoyerC";
+import {Estate} from "../../../constantes/ConstEstate";
 import {makeStyles} from "@material-ui/styles";
 
 const useStyles = makeStyles((theme : any) => ({

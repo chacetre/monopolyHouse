@@ -3,7 +3,7 @@ import {makeStyles} from "@material-ui/styles";
 import {FormControl, FormControlLabel, Radio, RadioGroup, TextField,} from "@material-ui/core";
 import Particulier from "../Particulier";
 import Society from "../Society";
-import {Estate} from "../../../constantes/LoyerC";
+import {Estate} from "../../../constantes/ConstEstate";
 import {convertBoolToString} from "../../Utils/converter";
 
 const useStyles = makeStyles((theme :any) => ({

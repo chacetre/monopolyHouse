@@ -1,6 +1,6 @@
 import React from "react";
 import {Grid, TextField} from "@material-ui/core";
-import {Estate} from "../../constantes/LoyerC";
+import {Estate} from "../../constantes/ConstEstate";
 
 type AddressProps = {
   handleChange : (event: any) => void,

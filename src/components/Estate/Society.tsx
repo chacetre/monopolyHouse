@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Grid, TextField} from "@material-ui/core";
-import {Estate, initialValueEstate} from "../../constantes/LoyerC";
+import {Estate, initialValueEstate} from "../../constantes/ConstEstate";
 
 
 type SocietyProps = {
