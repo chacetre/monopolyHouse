@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from "react";
 import validate from "validate.js";
-import clsx from "clsx";
 import {makeStyles} from "@material-ui/styles";
-import {Button, Card, CardActions, CardContent, CardHeader, Divider, Modal,} from "@material-ui/core";
+import {Button, Card, CardActions, CardContent, CardHeader, Divider, IconButton, Modal,} from "@material-ui/core";
 import {useOwner} from "../../context/owner";
-import {saveNewAccommodation} from "../../request/accomodationAPI";
+import {saveNewAccommodation} from "../../api/accomodationAPI";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
@@ -14,7 +13,8 @@ import Paper from "@material-ui/core/Paper";
 import {schema, schemaAddress, schemaLoyer, schemaRental, steps} from "../../constantes/ConstEstateModal";
 import {Estate, initialValueEstate} from "../../constantes/ConstEstate";
 import Step3 from "./Steps/Step3";
-import {convertStringToBool} from "../Utils/converter";
+import {CancelRounded} from "@material-ui/icons";
+import {red} from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme : any) => ({
   root: {
@@ -64,6 +64,7 @@ const AddEstateModal = (props : AddEstateModalProps) => {
   const [errors, setErrors] = useState({})
 
   function createEstateDB() {
+
     const timestamp = Date.now();
     saveNewAccommodation(
         currentAccommo,
@@ -71,6 +72,7 @@ const AddEstateModal = (props : AddEstateModalProps) => {
         ownerInformations.id
     );
     setCurrentAccommo(initialValueEstate)
+    setActiveStep(0);
     onClose();
   }
 
@@ -81,7 +83,8 @@ const AddEstateModal = (props : AddEstateModalProps) => {
   }
 
   const handleChange = (event : any) => {
-    event.persist();
+    if (event.persist)
+      event.persist();
 
     setCurrentAccommo((formState) => ({
       ...formState,
@@ -93,20 +96,23 @@ const AddEstateModal = (props : AddEstateModalProps) => {
   };
 
   const handleChangeLoyer = (event : any) => {
+
     event.persist();
     setCurrentAccommo((formState) => ({
       ...formState,
       loyer: {
         ...formState.loyer,
         [event.target.name]: event.target.type === "checkbox"
-            ? convertStringToBool(event.target.value)
+            ? event.target.checked
             : event.target.value,
       }
     }));
   };
 
   const handleChangeRental = (event : any) => {
-    event.persist();
+    if (event.persist)
+      event.persist();
+
     setCurrentAccommo((formState) => ({
       ...formState,
       rental: {
@@ -146,6 +152,14 @@ const AddEstateModal = (props : AddEstateModalProps) => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
+  const handlePrevious = () => {
+    if (activeStep - 1 < 0){
+      return
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
   const activateButton = (activeStep === 0 && validate(currentAccommo.address, schemaAddress)) ||
       (activeStep === 1 && validate(currentAccommo.rental, schemaRental)) ||
       (activeStep === 2 && validate(currentAccommo.loyer, schemaLoyer))
@@ -183,7 +197,11 @@ const AddEstateModal = (props : AddEstateModalProps) => {
   return (
       <Modal onClose={onClose} open={open}>
         <Card {...rest} className={classes.root}>
-          <CardHeader title={"Ajouter un nouveau bien"} />
+          <CardHeader title={"Ajouter un nouveau bien"} action={
+            <IconButton onClick={cancelClose}>
+              <CancelRounded style={{ color: red[500] }} />
+            </IconButton>
+          } />
           <Divider />
           <CardContent>
             <Stepper activeStep={activeStep}>
@@ -206,7 +224,14 @@ const AddEstateModal = (props : AddEstateModalProps) => {
           </CardContent>
           <Divider />
           <CardActions disableSpacing className={classes.right}>
-            <Button onClick={cancelClose}>annuler</Button>
+            <Button
+                variant="contained"
+                color="secondary"
+                onClick={handlePrevious}
+                className={classes.button}
+            >
+              Précedent
+            </Button>
             <Button
                 variant="contained"
                 color="secondary"

@@ -11,7 +11,7 @@ import "./assets/scss/index.scss";
 import validators from "./common/validators";
 import Routes from "./Routes";
 import firebase from "firebase/app";
-import config from "./components/Firebase/config";
+import config from "./Firebase/config";
 import {AuthContext} from "./context/auth";
 import {UserContext} from "./context/userInformations";
 import {OwnerContext} from "./context/owner";
@@ -26,7 +26,6 @@ validate.validators = {
 
 const App = () => {
 
-  console.log("tokens", localStorage.getItem("tokens"))
   let existingTokens = ""
   if (localStorage.getItem("tokens")){
     existingTokens = JSON.parse(localStorage.getItem("tokens") ? localStorage.getItem("tokens") || "" : "") || "";
@@ -35,7 +34,12 @@ const App = () => {
   const [authTokens, setAuthTokens] = useState<string>(existingTokens);
 
 
-  const existingOwner = JSON.parse(localStorage.getItem("owner") || "");
+  let existingOwner = {}
+  const storageOwner = localStorage.getItem("owner")
+  if (storageOwner){
+    console.log("get owner",localStorage.getItem("owner") )
+    existingOwner = JSON.parse(localStorage.getItem("owner") || "");
+  }
   const [ownerInformations, setOwnerInformations] = useState<OwnerInformations>(existingOwner);
 
   const existingUser = JSON.parse(localStorage.getItem("logged_user") || "");
@@ -47,6 +51,7 @@ const App = () => {
   };
 
   const setOwner = (data : OwnerInformations) => {
+    console.log("set owner", data)
     localStorage.setItem("owner", JSON.stringify(data));
     setOwnerInformations(data);
   };

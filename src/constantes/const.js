@@ -19,4 +19,4 @@ export const fakeDate = {
 };
 
 
-export const version = "0.5"
+export const version = "0.6"

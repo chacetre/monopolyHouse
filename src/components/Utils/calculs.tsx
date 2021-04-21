@@ -11,6 +11,5 @@ export function calculateTotal(loyer : Loyer){
 
 export const calculTVA = (loyer : Loyer) => {
     var numFixe : number = Number(loyer.fixe)
-    var numCharges : number = Number(loyer.charges)
     return ((numFixe) * 0.20).toFixed(2)
 }

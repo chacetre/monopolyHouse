@@ -4,16 +4,30 @@ export const civilityTranslation = {
 }
 
 export const lastDay = {
-  janvier: 31,
-  février: 28,
-  mars: 31,
-  avril: 30,
-  mai: 31,
-  juin: 30,
-  juillet: 31,
-  aout: 31,
-  septembre: 30,
-  octobre: 31,
-  novembre: 30,
-  décembe: 31,
+  "01": 31,
+  "02": 28,
+  "04": 31,
+  "03": 30,
+  "05": 31,
+  "06": 30,
+  "07": 31,
+  "08": 31,
+  "09": 30,
+  "10": 31,
+  "11": 30,
+  "12": 31,
 };
+
+export const month = {
+  "01" :"janvier",
+  "02" : "février",
+  "03" :"mars",
+  "04" : "avril",
+  "05":"mai",
+  "06":"juin",
+  "07":"juillet",
+  "08":"aout",
+  "09": "septembre",
+  "10": "octobre" ,
+  "11":"novembre",
+  "12":"decembre"}

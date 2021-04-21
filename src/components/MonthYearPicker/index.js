@@ -92,8 +92,8 @@ function MonthYearPicker({
 
   useEffect(() => {
     if (initialValue !== undefined) {
-      setYear(initialValue.split(" ")[1]);
-      setMonth(initialValue.split(" ")[0].toLowerCase());
+      setYear(initialValue.split("/")[1]);
+      setMonth(initialValue.split("/")[0].toLowerCase());
     }
   }, [initialValue]);
 

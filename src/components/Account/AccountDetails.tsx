@@ -16,7 +16,7 @@ import {
   FormControlLabel,
 } from "@material-ui/core";
 import { useOwner } from "../../context/owner";
-import { updateOwner } from "../../request/ownerAPI";
+import { updateOwner } from "../../api/ownerAPI";
 import {OwnerInformations, initialsValuesAccount} from "../../constantes/ConstAccount";
 
 const AccountDetails = (props : any) => {

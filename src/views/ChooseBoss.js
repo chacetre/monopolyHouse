@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Typography, Paper, Grid } from "@material-ui/core";
-import { getOwnerDataBase } from "../request/ownerAPI";
+import { getOwnerDataBase } from "../api/ownerAPI";
 import { useOwner } from "../context/owner";
 import AddOwnerModal from "../components/ChooseBoss/AddOwnerModal";
 

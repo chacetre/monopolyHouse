@@ -17,7 +17,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import firebase from "firebase/app";
-import { saveNewOwnerInDataBase } from "../../request/ownerAPI";
+import { saveNewOwnerInDataBase } from "../../api/ownerAPI";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
@@ -137,10 +137,7 @@ function AddOwnerModal(props : PropsOwnerModal) {
     event.persist();
     setCurrentOwner((currentOwner : OwnerInformations) => ({
       ...currentOwner,
-      [event.target.name]:
-          event.target.type === "radio"
-              ? convertStringToBool(event.target.value)
-              : event.target.value
+      [event.target.name]: event.target.value
     }));
   };
 

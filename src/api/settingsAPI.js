@@ -8,15 +8,30 @@ export const saveNewIndexAPI = (value, name) => {
     });
 };
 
-export const updateIndexesAPI = (value) => {
+export const updateIndexesParticularAPI = (value) => {
   Firebase.database()
-    .ref("indexes/")
+    .ref("indexes/particular")
     .set(value);
   console.log("DATA SAVED");
 };
 
-export const getIndexesAPI = (callback) => {
-  let ref = Firebase.database().ref("/indexes");
+export const updateIndexesSocietyAPI = (value) => {
+  Firebase.database()
+    .ref("indexes/society")
+    .set(value);
+  console.log("DATA SAVED");
+};
+
+export const getIndexesParticularAPI = (callback) => {
+  let ref = Firebase.database().ref("/indexes/particular");
+  ref.on("value", (snapshot) => {
+    const data = snapshot.val();
+    callback(data);
+  });
+};
+
+export const getIndexesSocietyAPI = (callback) => {
+  let ref = Firebase.database().ref("/indexes/society");
   ref.on("value", (snapshot) => {
     const data = snapshot.val();
     callback(data);

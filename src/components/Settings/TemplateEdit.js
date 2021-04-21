@@ -16,7 +16,7 @@ import {
   getTemplateByIdAPI,
   updateTemplateAPI,
   createTemplateAPI,
-} from "../../../request/settingsAPI";
+} from "../../api/settingsAPI";
 import { useParams } from "react-router-dom";
 import { InfoRounded } from "@material-ui/icons";
 import TemplateShow from "./TemplateShow";

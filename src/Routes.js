@@ -3,8 +3,8 @@ import { Switch, Redirect } from "react-router-dom";
 import Accommodation from "./views/Estate/Estate";
 import ChooseBoos from "./views/ChooseBoss";
 import Receipts from "./views/Receipt/Receipts";
-import Settings from "./views/Settings";
-import TemplateEdit from "./views/Settings/Components/TemplateEdit";
+import Settings from "./views/Settings/Settings";
+import TemplateEdit from "./components/Settings/TemplateEdit";
 import { Main as MainLayout, Minimal as MinimalLayout } from "./components/layouts";
 
 import PrivateRoute from "./components/PrivateRoute";
