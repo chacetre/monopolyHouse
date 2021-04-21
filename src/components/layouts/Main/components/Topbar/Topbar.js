@@ -1,18 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Link as RouterLink} from "react-router-dom";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/styles";
-import {
-  AppBar,
-  Toolbar,
-  Select,
-  MenuItem,
-  FormControl,
-  Grid,
-} from "@material-ui/core";
-import { getOwnerDataBase } from "../../../../../request/ownerAPI";
-import { useOwner } from "../../../../../context/owner";
+import {makeStyles} from "@material-ui/styles";
+import {AppBar, FormControl, Grid, MenuItem, Select, Toolbar} from "@material-ui/core";
+import {getOwnerDataBase} from "../../../../../api/ownerAPI";
+import {useOwner} from "../../../../../context/owner";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 200,
     paddingTop: 10,
     paddingRight: 40,
-    borderColor: theme.palette.secondary.main,
   },
 }));
 
@@ -88,7 +80,6 @@ const Topbar = (props) => {
                 labelId="demo-simple-select-outlined-label"
                 id="demo-simple-select-outlined"
                 fullWidth
-                label="Age"
                 value={ownerInformations.id}
                 onChange={handleChangeUser}
                 autoWidth={false}
@@ -100,7 +91,6 @@ const Topbar = (props) => {
                       {!owner.isSociety ? owner.firstname + " " + owner.lastname : owner.socialIdentity}
                     </MenuItem>
                   ))}
-        
               </Select>
             </FormControl>
           </Grid>

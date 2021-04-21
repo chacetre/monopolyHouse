@@ -1,42 +1,47 @@
 import React, {useEffect, useState} from "react";
 import {makeStyles, withStyles} from "@material-ui/styles";
-import {FormControlLabel, Grid, Paper, Switch, TextField} from "@material-ui/core";
+import {FormControlLabel, Grid, Paper, Switch, TextField, Typography} from "@material-ui/core";
 import {calculateTotal, calculTVA} from "../Utils/calculs";
 import {Estate, initialValueEstate} from "../../constantes/ConstEstate";
 
 const useStyles = makeStyles((theme : any) => ({
   root: {
-      padding: theme.spacing(2)
+    padding: theme.spacing(2)
+  },
+  title : {
+    display : "flex",
+    alignItems: "center",
+    justifyItems: "center"
   }
 }));
 
 const CssTextField = withStyles({
-    root: {
-      "& label.Mui-focused": {
-        color: "green",
+  root: {
+    "& label.Mui-focused": {
+      color: "green",
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "green",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "red",
       },
-      "& .MuiInput-underline:after": {
-        borderBottomColor: "green",
+      "&:hover fieldset": {
+        borderColor: "yellow",
       },
-      "& .MuiOutlinedInput-root": {
-        "& fieldset": {
-          borderColor: "red",
-        },
-        "&:hover fieldset": {
-          borderColor: "yellow",
-        },
-        "&.Mui-focused fieldset": {
-          borderColor: "green",
-        },
-        "&.Mui-disabled fieldset": {
-          borderColor: "#90D8FF",
-        },
+      "&.Mui-focused fieldset": {
+        borderColor: "green",
       },
-      "& label.Mui-disabled": {
-        color: "#486C7F",
+      "&.Mui-disabled fieldset": {
+        borderColor: "#90D8FF",
       },
     },
-  })(TextField);
+    "& label.Mui-disabled": {
+      color: "#486C7F",
+    },
+  },
+})(TextField);
 
 type LoyerProps = {
   currentEstate : Estate,
@@ -44,6 +49,7 @@ type LoyerProps = {
 }
 
 const Loyer = (props : LoyerProps) => {
+  const classes = useStyles();
   const {handleChange, currentEstate} = props;
   const [currentEstateL, setCurrentEstateL] = useState<Estate>(initialValueEstate);
   const [activeTVA, setActiveTVA] = useState<boolean>(false);
@@ -53,87 +59,88 @@ const Loyer = (props : LoyerProps) => {
   }, [currentEstate]);
 
   return (
-    <Paper elevation={0}>
-    <Grid container spacing={2}>
-      <Grid item lg={12} md={12} xs={12}>
-        <FormControlLabel
-            labelPlacement="start"
-            control={
-              <Switch
-                  value={!activeTVA}
-                  checked={activeTVA}
-                  onChange={(event) => {
-                    handleChange(event)
-                    setActiveTVA(prev => !prev)
-                  }}
-                  name="activeTVA"
-                  color="primary"
-              />
-            }
-            label="TVA : "
-        />
-      </Grid>
-      <Grid item lg={3} md={3} xs={3}>
-        <TextField
-          size="small"
-          label="Fixe"
-          variant="outlined"
-          fullWidth
-          name="fixe"
-            value={(currentEstateL.loyer !== undefined && currentEstateL.loyer.fixe) || ""}
-          onChange={handleChange}
-          type="number"
-        />
-      </Grid>
-
-      <Grid item lg={3} md={3} xs={3}>
-
-        <TextField
-          size="small"
-          label="Charges"
-          variant="outlined"
-          fullWidth
-          name="charges"
-            value={(currentEstateL.loyer !== undefined && currentEstateL.loyer.charges) || ""}
-          onChange={handleChange}
-          type="number"
-        />
-      </Grid>
-      {activeTVA && (
-        <Grid item lg={3} md={3} xs={3}>
-          <TextField
-            size="small"
-            label="TVA en %"
-            variant="outlined"
-            fullWidth
-            name="tva"
-            value={currentEstateL.loyer !== undefined && calculTVA(currentEstateL.loyer)}
-            InputProps={{
-              readOnly: true,
-            }}
+      <Paper elevation={0}>
+        <div className={classes.title}>
+          <Typography variant="h4" >Loyer</Typography>
+          <FormControlLabel
+              labelPlacement="start"
+              control={
+                <Switch
+                    value={!activeTVA}
+                    checked={activeTVA}
+                    onChange={(event) => {
+                      handleChange(event)
+                      setActiveTVA(prev => !prev)
+                    }}
+                    name="activeTVA"
+                    color="primary"
+                />
+              }
+              label="TVA : "
           />
-        </Grid>
-      )}
+        </div>
 
-      <Grid item lg={3} md={3} xs={3}>
-        <CssTextField
-          size="small"
-          label="Total"
-          variant="outlined"
-          fullWidth
-          disabled
-          value={
-            currentEstateL.loyer !== undefined &&
-            calculateTotal(currentEstateL.loyer)
-          }
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-      </Grid>
-    </Grid>
-  </Paper>
-    
+        <Grid container spacing={2}>
+          <Grid item lg={3} md={3} xs={3}>
+            <TextField
+                size="small"
+                label="Fixe"
+                variant="outlined"
+                fullWidth
+                name="fixe"
+                value={(currentEstateL.loyer !== undefined && currentEstateL.loyer.fixe) || ""}
+                onChange={handleChange}
+                type="number"
+            />
+          </Grid>
+
+          <Grid item lg={3} md={3} xs={3}>
+            <TextField
+                size="small"
+                label="Charges"
+                variant="outlined"
+                fullWidth
+                name="charges"
+                value={(currentEstateL.loyer !== undefined && currentEstateL.loyer.charges) || ""}
+                onChange={handleChange}
+                type="number"
+            />
+          </Grid>
+          {activeTVA && (
+              <Grid item lg={3} md={3} xs={3}>
+                <TextField
+                    size="small"
+                    label="TVA en %"
+                    variant="outlined"
+                    fullWidth
+                    name="tva"
+                    value={currentEstateL.loyer !== undefined && calculTVA(currentEstateL.loyer)}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                />
+              </Grid>
+          )}
+
+          <Grid item lg={3} md={3} xs={3}>
+            <CssTextField
+                size="small"
+                label="Total"
+                variant="outlined"
+                fullWidth
+                disabled
+                value={
+                  currentEstateL.loyer !== undefined &&
+                  calculateTotal(currentEstateL.loyer)
+                }
+                InputProps={{
+                  readOnly: true,
+                }}
+            />
+          </Grid>
+        </Grid>
+      </Paper>
+
   );
 };
 

@@ -11,8 +11,8 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { useOwner } from "../../context/owner";
 import AddEstateModal from "../../components/Estate/AddEstateModal";
 import CardAccommodation from "../../components/Estate/CardAccomodation";
-import { getAccomodationByOwner } from "../../request/accomodationAPI";
-import { getIndexesAPI } from "../../request/settingsAPI";
+import { getAccomodationByOwner } from "../../api/accomodationAPI";
+import {getIndexesParticularAPI, getIndexesSocietyAPI} from "../../api/settingsAPI";
 import {Estate} from "../../constantes/ConstEstate";
 import {WSIndexesInsee} from "../../constantes/ConstWS";
 
@@ -94,22 +94,31 @@ const Accommodation = () => {
   const [selectCity, setSelectedCity] = useState<string>("");
   const [estateList, setEstateList] = useState<Estate[]>([]);
   const [listFiltre, setFiltres] = useState<string[]>([]);
-  const [indexes, setIndexes] = useState<WSIndexesInsee>({});
+  const [indexesParticular, setIndexesParticular] = useState<WSIndexesInsee>({});
+  const [indexesSociety, setIndexesSociety] = useState<WSIndexesInsee>({});
 
   function getAccommodationsInformations() {
-
-
     if (ownerInformations.id !== undefined) {
       getAccomodationByOwner(ownerInformations.id, (response : any) => {
-        const responseList = Object.values(response)
-        setEstateList(responseList);
+        if(response) {
+          const responseList : Estate[] = Object.values(response)
+          setEstateList(responseList);
+        } else {
+          setEstateList([]);
+        }
       });
     }
   }
 
-  function getIndexes() {
-    getIndexesAPI((response : WSIndexesInsee) => {
-      setIndexes(response)
+  function getIndexesParticular() {
+    getIndexesParticularAPI((response : WSIndexesInsee) => {
+      setIndexesParticular(response)
+    });
+  }
+
+  function getIndexesSociety() {
+    getIndexesSocietyAPI((response : WSIndexesInsee) => {
+      setIndexesSociety(response)
     });
   }
 
@@ -130,7 +139,8 @@ const Accommodation = () => {
 
   useEffect(() => {
     getAccommodationsInformations();
-    getIndexes();
+    getIndexesSociety();
+    getIndexesParticular();
   },[]);
 
 
@@ -202,7 +212,7 @@ const Accommodation = () => {
             .filter(matchCity)
             .map((product: Estate, index : number) => (
               <Grid item xs={6} key={index}>
-                <CardAccommodation accomodationInfos={product} indexes={indexes}/>
+                <CardAccommodation accomodationInfos={product} indexes={product.rental.isParticulier ? indexesParticular : indexesSociety}/>
               </Grid>
             ))}
       </Grid>

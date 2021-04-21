@@ -8,17 +8,16 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import {CalendarTodayRounded, GetAppRounded} from "@material-ui/icons";
+import {GetAppRounded} from "@material-ui/icons";
 import {useOwner} from "../../context/owner";
-import {getAccomodationByOwner} from "../../request/accomodationAPI";
-import MonthYearPicker from "../../components/MonthYearPicker";
+import {getAccomodationByOwner} from "../../api/accomodationAPI";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import {generateName, MyDocument} from "../../components/Utils/FileUtils";
 import {calculateTotal} from "../../components/Utils/calculs";
 import {PDFDownloadLink} from "@react-pdf/renderer";
-import {getTemplatesAPI, getTemplatesDefaultAPI} from "../../request/settingsAPI";
+import {getTemplatesAPI, getTemplatesDefaultAPI} from "../../api/settingsAPI";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -31,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   icon: {
-   textAlign: "center",
+    textAlign: "center",
     backgroundColor: theme.palette.action.main,
     padding: 5,
     marginLeft: 10,
@@ -56,6 +55,14 @@ const useStyles = makeStyles((theme) => ({
   container: {
     maxHeight: "75%"
   },
+  datePicker : {
+    borderColor : theme.palette.gray,
+    borderRadius : 5,
+    padding : 5,
+    borderStyle : "solid",
+    borderWidth: 1,
+    fontFamily : "sans-serif"
+  }
 }));
 
 
@@ -63,14 +70,12 @@ const useStyles = makeStyles((theme) => ({
 const Receipts = () => {
   const classes = useStyles();
   const currentDate = new Date().toLocaleString("default", {
-    month: "long",
+    month: "numeric",
     year: "numeric",
   });
   const { ownerInformations } = useOwner();
   const [accommodations, setData] = useState(null);
-  const [currentAccomodation, setCurrentAccommodation] = useState(null);
   const [dateReceipt, setDateReceipt] = useState({});
-  const [showPicker, setShowPicker] = useState(false);
   const [fileSelected, setFileSelected] = useState({})
   const [templates, setTemplates] = useState({})
 
@@ -94,7 +99,7 @@ const Receipts = () => {
         setTemplates(response);
       } else {
         getTemplatesDefaultAPI((responseDefault) => {
-            setTemplates(responseDefault);
+          setTemplates(responseDefault);
         });
       }
     });
@@ -109,9 +114,27 @@ const Receipts = () => {
     }
   }
 
-  function showCalendar(currentAccomodation) {
-    setShowPicker((prev) => !prev);
-    setCurrentAccommodation(currentAccomodation);
+ function displayDatePicker(row) {
+
+    if (dateReceipt[row.id]){
+      return dateReceipt[row.id]?.year + "-" + dateReceipt[row.id]?.month
+    } else {
+      return dateReceipt.default.year + "-" + dateReceipt.default.month
+    }
+ }
+
+  function handleMonthPicker(event, currentAccomodation) {
+    console.log("event", event.target.value)
+
+    const parcingDate = event.target.value.split("-")
+
+    setDateReceipt((formState) => ({
+      ...formState,
+      [currentAccomodation.id]: {
+        month: parcingDate[1],
+        year: parcingDate[0],
+      },
+    }));
   }
 
   useEffect(() => {
@@ -121,7 +144,7 @@ const Receipts = () => {
 
   useEffect(() => {
     if (currentDate !== undefined) {
-      var splitDate = currentDate.split(" ");
+      var splitDate = currentDate.split("/");
       setDateReceipt((prev) => ({
         ...prev,
         default: {
@@ -147,23 +170,6 @@ const Receipts = () => {
             {currentDate.toLocaleString("default", { month: "long" })}
           </Typography>
         </div>
-
-        <MonthYearPicker
-            open={showPicker}
-            initialValue={currentDate.toLocaleString("default", { month: "long" })}
-            currentAccomodation={currentAccomodation}
-            ownerInformations={ownerInformations}
-            onClose={(monthReturn, yearReturn) => {
-              setDateReceipt((formState) => ({
-                ...formState,
-                [currentAccomodation.id]: {
-                  month: monthReturn,
-                  year: yearReturn,
-                },
-              }));
-              setShowPicker(false);
-            }}
-        />
 
         <TableContainer component={Paper} className={classes.container}>
           <Table stickyHeader className={classes.table} aria-label="simple table">
@@ -196,15 +202,14 @@ const Receipts = () => {
                     <TableCell>{calculateTotal(row.loyer)} €</TableCell>
                     <TableCell>
                       <div className={classes.center}>
-                        <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={() => showCalendar(row)}
-                        >
-                          {dateReceipt[row.id]?.month || dateReceipt.default.month}{" "}
-                          {dateReceipt[row.id]?.year || dateReceipt.default.year}
-                          <CalendarTodayRounded className={classes.iconDate} />
-                        </Button>
+                        <input
+                            className={classes.datePicker}
+                            type="month"
+                            min="2000-01"
+                            value={displayDatePicker(row)}
+                            required pattern="[0-9]{4}-[0-9]{2}}"
+                            onChange={(event) => handleMonthPicker(event, row)}
+                        />
                         <FormControl variant="outlined" >
                           <Select
                               value={fileSelected[row.id] || "quittance"}

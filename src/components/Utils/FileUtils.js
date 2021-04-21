@@ -1,6 +1,6 @@
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import React from "react";
-import {civilityTranslation, lastDay} from "../../constantes/ConstFile";
+import {civilityTranslation, lastDay, month} from "../../constantes/ConstFile";
 import {calculateTotal, calculTVA} from "./calculs";
 
 export const generateName = (accomodation, date) => {
@@ -28,14 +28,20 @@ export const generateName = (accomodation, date) => {
 
 function replaceText(textChange, accomodation, owner, date) {
 
+    const lastMonthDisplay = (Number(date.month) + Number(accomodation.loyer.recurrence || 1 ) - 1).toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false
+    })
+
     if (accomodation === undefined) return textChange
     let textTranslate = textChange
         .replaceAll("[rent.city]", accomodation.address.city.toUpperCase())
         .replaceAll("[rent.street]", accomodation.address.street.toUpperCase())
         .replaceAll("[rent.postalCode]", accomodation.address.postalCode.toUpperCase())
-        .replaceAll("[date.lastDay]", lastDay[date.month])
+        .replaceAll("[date.lastDay]", lastDay[lastMonthDisplay])
         .replaceAll("[date.firstDay]", "1er")
-        .replaceAll("[date.month]", date.month)
+        .replaceAll("[date.month]", month[date.month])
+        .replaceAll("[date.montLast]",month[lastMonthDisplay])
         .replaceAll("[date.year]", date.year)
 
 

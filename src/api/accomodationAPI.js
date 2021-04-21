@@ -2,6 +2,7 @@ import Firebase from "firebase";
 
 export const saveNewAccommodation = (accomodation, id, ownerId) => {
   const existingUser = JSON.parse(localStorage.getItem("logged_user"));
+  console.log("event",accomodation.loyer )
   Firebase.database()
     .ref(existingUser + "/accomodations/" + id)
     .set({
@@ -14,11 +15,12 @@ export const saveNewAccommodation = (accomodation, id, ownerId) => {
     });
 };
 
-export const deleteValueInDataBase = (type, soustype, index) => {
+export const deleteAccomodation = (accomodationId) => {
+    const existingUser = JSON.parse(localStorage.getItem("logged_user"));
   Firebase.database()
-    .ref(`/stock/componentsStock/${type}/${soustype}/${index}`)
+    .ref(`/${existingUser}/accomodations/${accomodationId}`)
     .set(null);
-  console.log("DATA SAVED");
+  console.log("DATA DELETED");
 };
 
 export const updateAccomodation = (value) => {

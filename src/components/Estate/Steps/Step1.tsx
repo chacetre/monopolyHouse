@@ -2,13 +2,15 @@ import React from "react";
 import {makeStyles} from "@material-ui/styles";
 import {FormControl, FormControlLabel, Radio, RadioGroup,} from "@material-ui/core";
 import Address from "../Address";
-import {Estate} from "../../../constantes/ConstEstate";
+import {Estate, listRadioButtonStep1} from "../../../constantes/ConstEstate";
 import {convertBoolToString} from "../../Utils/converter";
+import CustomRadioButton, {CustomeRadioButtonValue} from "../../Utils/CustomRadioButton";
 
 const useStyles = makeStyles(() => ({
     formControl: {
         display: "flex",
         alignItems: "center",
+        justifyContent: "center"
     }
 }));
 
@@ -18,47 +20,22 @@ type Step1Props = {
     handleChangeAddress: (event :any) => void,
 }
 
+
+
 const Step1 = (props: Step1Props) => {
     const {handleChange, currentAccommo,handleChangeAddress} = props;
     const classes = useStyles();
 
     return (
         <>
-            <FormControl
-                component="fieldset"
-                error={true}
-                className={classes.formControl}
-            >
-                <RadioGroup
-                    row
-                    name="isCommercial"
-                    defaultValue="top"
-                    onChange={handleChange}
-                >
-                    <FormControlLabel
-                        value={"false"}
-                        control={
-                            <Radio
-                                color="primary"
-                                checked={convertBoolToString(currentAccommo.isCommercial)=== "false"}
-                            />
-                        }
-                        label="Habitation"
-                        labelPlacement="end"
-                    />
-                    <FormControlLabel
-                        value={"true"}
-                        control={
-                            <Radio
-                                color="primary"
-                                checked={convertBoolToString(currentAccommo.isCommercial)=== "true"}
-                            />
-                        }
-                        label="Local Commercial"
-                        labelPlacement="end"
-                    />
-                </RadioGroup>
-            </FormControl>
+            <div className={classes.formControl}>
+            <CustomRadioButton
+                changeFunction={handleChange}
+                currentValue={currentAccommo.isCommercial}
+                values={listRadioButtonStep1}
+                nameRadio="isCommercial"
+            />
+            </div>
             <Address
                 handleChange={handleChangeAddress}
                 currentAccommo={currentAccommo}

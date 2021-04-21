@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 
 import { Divider, Grid, Typography } from "@material-ui/core";
-import {getTemplateByTypeAPI } from "../../../request/settingsAPI";
-import {calculateTotal, calculTVA} from "../../../components/Utils/calculs";
+import {getTemplateByTypeAPI } from "../../api/settingsAPI";
+import {calculateTotal, calculTVA} from "../Utils/calculs";
 
 const lastDay = {
   janvier: 31,
@@ -19,6 +19,8 @@ const lastDay = {
   novembre: 30,
   décembe: 31,
 };
+
+const month = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "aout", "septembre", "octobre" ,"novembre", "decembre"]
 
 const civilityTranslation = {
   m: "Monsieur",
@@ -89,6 +91,8 @@ const TemplateGenerator = ({
   const [templateLocal, setTemplate] = useState({});
   const [templateFromApi, setTemplateFromApi] = useState({});
 
+  console.log("date", date.month)
+
   function change(textChange) {
     let textTranslate = textChange
         .replaceAll("[rent.city]", accomodation.address.city.toUpperCase())
@@ -96,10 +100,11 @@ const TemplateGenerator = ({
         .replaceAll("[rent.postalCode]", accomodation.address.postalCode.toUpperCase())
         .replaceAll("[date.lastDay]", lastDay[date.month])
         .replaceAll("[date.firstDay]", "1er")
-        .replaceAll("[date.month]", date.month)
+        .replaceAll("[date.month]", month[date.month])
+        .replaceAll("[date.montLast]",month[(date.month + accomodation.loyer.recurrence - 1)])
         .replaceAll("[date.year]", date.year)
 
-    if (accomodation.rental.isParticulier === "true"){
+    if (accomodation.rental.isParticulier){
       textTranslate
           .replaceAll("[rent.lastname]", accomodation.rental.lastname)
           .replaceAll("[rent.firstname]", accomodation.rental.firstname)

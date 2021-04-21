@@ -3,8 +3,9 @@ import {makeStyles} from "@material-ui/styles";
 import {FormControl, FormControlLabel, Radio, RadioGroup, TextField,} from "@material-ui/core";
 import Particulier from "../Particulier";
 import Society from "../Society";
-import {Estate} from "../../../constantes/ConstEstate";
+import {Estate, listRadioButtonStep2} from "../../../constantes/ConstEstate";
 import {convertBoolToString} from "../../Utils/converter";
+import CustomRadioButton, {CustomeRadioButtonValue} from "../../Utils/CustomRadioButton";
 
 const useStyles = makeStyles((theme :any) => ({
     root: {
@@ -33,6 +34,8 @@ type Step2Props = {
     handleChangeRental : (event : any) => void ,
     currentAccommo: Estate
 }
+
+
 const Step2 = (props: Step2Props) => {
     const {handleChangeRental, currentAccommo } = props;
     const classes = useStyles();
@@ -40,50 +43,11 @@ const Step2 = (props: Step2Props) => {
     return (
         <>
             <FormControl className={classes.divCenter}>
-                <RadioGroup
-                    row
-                    name="isParticulier"
-                    defaultValue="top"
-                    onChange={handleChangeRental}
-
-                >
-                    <FormControlLabel
-                        value={"true"}
-                        control={
-                            <Radio
-                                color="primary"
-                                checked={
-                                    convertBoolToString(currentAccommo.rental.isParticulier) === "true"
-                                }
-                            />
-                        }
-                        label="Particulier"
-                        labelPlacement="end"
-                    />
-                    <FormControlLabel
-                        value={"false"}
-                        control={
-                            <Radio
-                                color="primary"
-                                checked={
-                                    convertBoolToString(currentAccommo.rental.isParticulier) === "false"
-                                }
-                            />
-                        }
-                        label="Entreprise"
-                        labelPlacement="end"
-                    />
-                </RadioGroup>
-                <TextField
-                    size="small"
-                    className={classes.startDate}
-                    label="Date d'entrée"
-                    name="startDate"
-                    placeholder="DD/MM/YEAR"
-                    onChange={handleChangeRental}
-                    type="text"
-                    value={currentAccommo.rental.startDate}
-                    variant="outlined"
+                <CustomRadioButton
+                    changeFunction={handleChangeRental}
+                    currentValue={currentAccommo.rental.isParticulier}
+                    values={listRadioButtonStep2}
+                    nameRadio="isParticulier"
                 />
             </FormControl>
             <div className={classes.container}>
